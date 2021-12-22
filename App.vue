@@ -1,0 +1,45 @@
+<script>
+	export default {
+		onLaunch: function() {
+			// console.log('App Launch')
+		},
+		onShow: function() {
+			// console.log('App Show')
+		},
+		onHide: function() {
+			// console.log('App Hide')
+		}
+	}
+</script>
+
+<style lang="less">
+/*每个页面公共css */
+@import "colorui/main.css";
+// #ifdef H5
+checkbox .uni-checkbox-input {
+	border-radius: 50%;
+}
+checkbox .uni-checkbox-input.uni-checkbox-input-checked {
+	border: 1px solid #ff4500;
+	background: #ff4500;
+	color: #fff !important;
+}
+checkbox .uni-checkbox-input.uni-checkbox-input-checked:before {
+	font-size: 18px;
+}
+// #endif
+
+// #ifdef APP-PLUS || MP-WEIXIN
+checkbox .wx-checkbox-input {
+	border-radius: 50%;
+}
+checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+	border: 1px solid #ff4500;
+	background: #ff4500;
+	color: #fff !important;
+}
+checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
+	font-size: 18px;
+}
+// #endif
+</style>

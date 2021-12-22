@@ -1,0 +1,63 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/cutWarehouse/cutWarehouse",
+			"style": {
+				"navigationBarTitleText": "裁片仓管理",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/cutWarehouse/cutInStorage",
+			"style": {
+				"navigationBarTitleText": "裁片入库",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/cutWarehouse/repealCutInStorage",
+			"style": {
+				"navigationBarTitleText": "撤销裁片入库",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/cutWarehouse/cutOutStorage",
+			"style": {
+				"navigationBarTitleText": "裁片出库",
+				"backgroundColor": "#FFFFFF"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#0C99F2",
+		"backgroundColor": "#FFFFFF"
+	}
+	// "tabBar": {
+	// 	"color": "#BCBCBC",
+	// 	"selectedColor": "#06A7E2",
+	// 	"borderStyle": "black",
+	// 	"backgroundColor": "#ffffff",
+	// 	"height": "54px",
+	// 	"fontSize": "10px",
+	// 	"iconWidth": "22px",
+	// 	"spacing": "5px",
+	// 	"list": [
+	// 		{
+	// 			"pagePath": "pages/cutWarehouse/cutWarehouse",
+	// 			"iconPath": "static/tabs/gzt-line@3x.png",
+	// 			"selectedIconPath": "static/tabs/gzt-surface@3x.png",
+	// 			"text": "裁片仓"
+	// 		}
+	// 	]
+	// }
+}

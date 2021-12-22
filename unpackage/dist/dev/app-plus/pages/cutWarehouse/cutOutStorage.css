@@ -1,0 +1,203 @@
+
+body[data-v-2f5306b8] {  
+        background-color: #f8f8f8;
+}
+.content[data-v-2f5306b8] {  
+        text-align: center;
+}  
+
+.mainContent[data-v-2e3d52fa] {
+  position: relative;
+  background-color: #F3F3F3;
+}
+.mainContent .location[data-v-2e3d52fa] {
+  position: relative;
+  margin: 0.625rem;
+}
+.mainContent .location .scanCodeBox[data-v-2e3d52fa] {
+  position: absolute;
+  left: 0.0625rem;
+  top: 0.0625rem;
+  width: 1.875rem;
+  height: 1.875rem;
+}
+.mainContent .location .scanInput[data-v-2e3d52fa] {
+  width: 88%;
+  height: 2.5rem;
+  border: 1px solid #767676;
+  background-color: #FFF;
+  padding: 0 0.3125rem;
+  margin-left: 2.1875rem;
+}
+.mainContent .storageLocation[data-v-2e3d52fa] {
+  margin: 0.625rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.mainContent .storageLocation .storageTitle[data-v-2e3d52fa] {
+  font-size: 0.78125rem;
+  font-weight: bold;
+}
+.mainContent .storageLocation .storageInput[data-v-2e3d52fa] {
+  width: 75%;
+  height: 2.5rem;
+  display: inline-block;
+  border: 0.03125rem solid #212121;
+  background-color: #F2F2F2;
+  padding: 0 0.3125rem;
+}
+.mainContent .radioLocation[data-v-2e3d52fa] {
+  text-align: right;
+  margin-right: 0.625rem;
+}
+.mainContent .radioLocation .checkboxStyle[data-v-2e3d52fa] {
+  display: inline-block;
+}
+.mainContent .pannelContent[data-v-2e3d52fa] {
+  height: calc(100vh - 10.9375rem);
+  overflow: auto;
+}
+.mainContent .pannelContent .storageItem[data-v-2e3d52fa] {
+  display: flex;
+  border: 0.03125rem solid #e4e4e4;
+  border-radius: 0.625rem;
+  margin: 0.625rem 0.15625rem;
+  position: relative;
+  overflow: hidden;
+}
+.mainContent .pannelContent .storageItem .selectLine[data-v-2e3d52fa] {
+  background-color: #84D3F9 !important;
+}
+.mainContent .pannelContent .storageItem .touch-list[data-v-2e3d52fa] {
+  position: absolute;
+  top: 0;
+  padding: 0.625rem 1.875rem;
+  background-color: #fff;
+  border-radius: 0.625rem;
+  overflow: hidden;
+}
+.mainContent .pannelContent .storageItem .list-touch[data-v-2e3d52fa] {
+  position: relative;
+  width: 100%;
+  z-index: 5;
+  transition: left 0.2s ease-in-out;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.mainContent .pannelContent .storageItem .list-touch .serialNumber[data-v-2e3d52fa] {
+  position: absolute;
+  left: 0.625rem;
+  top: 1.71875rem;
+  font-weight: bold;
+  font-size: 1.09375rem;
+}
+.mainContent .pannelContent .storageItem .list-touch .storageCode[data-v-2e3d52fa] {
+  font-weight: bold;
+}
+.mainContent .pannelContent .storageItem .list-touch .storageContent[data-v-2e3d52fa] {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.mainContent .pannelContent .storageItem .list-touch .storageContent .storageNum[data-v-2e3d52fa] {
+  font-weight: bold;
+}
+.mainContent .bottomLocation[data-v-2e3d52fa] {
+  width: 100%;
+  background-color: #fafafa;
+  border-top: 0.03125rem solid #dcdcdc;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  padding: 0.46875rem 0.9375rem 0.9375rem;
+}
+.mainContent .bottomLocation .scanNum[data-v-2e3d52fa] {
+  height: 2.34375rem;
+  line-height: 2.34375rem;
+  text-align: right;
+  color: #4a70f5;
+  font-size: 0.9375rem;
+  font-weight: bold;
+}
+.mainContent .bottomLocation .btnLocation[data-v-2e3d52fa] {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.mainContent .bottomLocation .btnLocation .moreBtn[data-v-2e3d52fa] {
+  background-color: #fca147;
+  cursor: pointer;
+}
+.mainContent .bottomLocation .btnLocation .inStorageBtn[data-v-2e3d52fa] {
+  background-color: #4a70f5;
+  cursor: pointer;
+}
+.mainContent .bottomLocation .btnLocation .noInStorageBtn[data-v-2e3d52fa] {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+.mainContent .btnModal[data-v-2e3d52fa] {
+  position: absolute;
+  left: 0.9375rem;
+  bottom: 0.625rem;
+  z-index: 10;
+}
+.mainContent .btnModal .modalImage[data-v-2e3d52fa] {
+  width: 9.375rem;
+  height: 5.1875rem;
+}
+.mainContent .commonBtn[data-v-2e3d52fa] {
+  display: inline-block;
+  text-align: center;
+  color: #fff;
+  padding: 0.625rem 1.71875rem;
+  border-radius: 0.46875rem;
+}
+.mainContent .emptyBtn[data-v-2e3d52fa] {
+  background-color: #FC361D;
+  position: absolute;
+  left: 2.03125rem;
+  top: 1.09375rem;
+}
+.mainContent .remindPopup[data-v-2e3d52fa] {
+  color: #666;
+  font-size: 0.9375rem;
+  font-weight: bold;
+  border-radius: 0.3125rem;
+  width: 15.625rem;
+  height: 2.5rem;
+  text-align: center;
+  line-height: 2.5rem;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -7.8125rem;
+  margin-top: -1.25rem;
+}
+.mainContent .successPopup[data-v-2e3d52fa] {
+  background-color: #F6FFEE;
+  border: 1px solid #B9EA93;
+}
+.mainContent .successPopup .successImage[data-v-2e3d52fa] {
+  display: inline-block;
+  background: url('../../static/cutWarehouse/success.png') no-repeat;
+  width: 1.5625rem;
+  height: 1.5625rem;
+  position: absolute;
+  left: 1.25rem;
+  top: 0.3125rem;
+}
+.mainContent .errorPopup[data-v-2e3d52fa] {
+  background-color: #FFF2F1;
+  border: 1px solid #FDA4A0;
+}
+.mainContent .errorPopup .errorImage[data-v-2e3d52fa] {
+  display: inline-block;
+  background: url('../../static/cutWarehouse/error.png') no-repeat;
+  width: 1.25rem;
+  height: 1.25rem;
+  position: absolute;
+  left: 1.25rem;
+  top: 0.625rem;
+}

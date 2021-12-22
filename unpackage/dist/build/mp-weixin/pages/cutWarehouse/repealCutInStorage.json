@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "撤销裁片入库",
+  "backgroundColor": "#FFFFFF",
+  "usingComponents": {
+    "scan-code": "/components/scan/scan"
+  }
+}
