@@ -1,6 +1,6 @@
 {
     "name" : "mesPDA",
-    "appid" : "__UNI__53B2A3C",
+    "appid" : "__UNI__160A3B3",
     "description" : "mes的pda",
     "versionName" : "1.0.3",
     "versionCode" : 3,
@@ -93,9 +93,10 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "1111",
+        "appid" : "wx513d5f25008ad4f2",
         "setting" : {
-            "urlCheck" : false
+            "urlCheck" : true,
+            "postcss" : true
         },
         "usingComponents" : true
     },

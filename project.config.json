@@ -36,7 +36,7 @@
     "compileType": "miniprogram",
     "libVersion": "2.21.2",
     "appid": "wx513d5f25008ad4f2",
-    "projectname": "ms-mobile-pda",
+    "projectname": "mes-mobile-pda",
     "debugOptions": {
         "hidedInDevtools": []
     },

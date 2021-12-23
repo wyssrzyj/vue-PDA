@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "裁片出库",
-  "backgroundColor": "#FFFFFF",
-  "usingComponents": {
-    "scan-code": "/components/scan/scan"
-  }
-}
