@@ -96,7 +96,8 @@
         "appid" : "wx513d5f25008ad4f2",
         "setting" : {
             "urlCheck" : true,
-            "postcss" : true
+            "postcss" : true,
+            "es6" : true
         },
         "usingComponents" : true
     },

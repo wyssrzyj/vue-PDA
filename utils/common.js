@@ -1,19 +1,29 @@
-export const cutWarehouseList = [{
+export const cutWarehouseList = [
+	{
 		title: '裁片入库',
-		src: '../../static/cutWarehouse/ruku.png',
-		color: 'linear-gradient(180deg, #08B0D0 0%, #06B8D7 100%)',
+		src: '../../static/outwardProcessing/裁片入库.png',
 		link: '/pages/cutWarehouse/cutInStorage'
 	},
 	{
 		title: '裁片出库',
-		src: '../../static/cutWarehouse/chuku.png',
-		color: 'linear-gradient(180deg, #4F94EF 0%, #438CF0 100%)',
+		src: '../../static/outwardProcessing/裁片出库.png',
 		link: '/pages/cutWarehouse/cutOutStorage'
 	},
 	{
 		title: '撤销裁片入库',
-		src: '../../static/cutWarehouse/chexiaoruku.png',
-		color: ' linear-gradient(0deg, #F0AA38 0%, #F48D34 100%)',
+		src: '../../static/outwardProcessing/撤销裁片入库.png',
 		link: '/pages/cutWarehouse/repealCutInStorage'
+	}
+]
+export const outwardProcessingList = [
+	{
+		title: '外发加工入库',
+		src: '../../static/outwardProcessing/外发加工入库.png',
+		link: '/pages/outwardProcessing/outsourcingReceipt'
+	},
+	{
+		title: '外发加工出库',
+		src: '../../static/outwardProcessing/外发加工出库.png',
+		link: '/pages/outwardProcessing/outsourcingDelivery'
 	}
 ]

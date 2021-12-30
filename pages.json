@@ -1,6 +1,13 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/outwardProcessing/outsourcingDelivery",
+			"style": {
+				"navigationBarTitleText": "外发加工出库",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "登录",
@@ -34,7 +41,15 @@
 				"navigationBarTitleText": "裁片出库",
 				"backgroundColor": "#FFFFFF"
 			}
+		},
+		{
+			"path": "pages/outwardProcessing/outsourcingReceipt",
+			"style": {
+				"navigationBarTitleText": "外发加工入库",
+				"backgroundColor": "#FFFFFF"
+			}
 		}
+		
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
