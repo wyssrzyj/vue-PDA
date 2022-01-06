@@ -80,9 +80,6 @@ export default defineComponent({
 
 
 <style lang="scss" scoped>
-page{
-	background-color:#FFFFFF;
-}
 .container {
 	width: 100%;
 	display: flex;

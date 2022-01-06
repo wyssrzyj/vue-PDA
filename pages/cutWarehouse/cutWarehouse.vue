@@ -5,7 +5,7 @@
 				本厂出入
 			</view>
 			<view class="factoryAccess">
-				<view v-for="(item, index) in list" :key="index" @tap="toList(item)" class="factoryAccessItem">
+				<view v-for="(item, index) in cutWarehouseList" :key="index" @tap="toList(item)" class="factoryAccessItem">
 					<image :src="item.src" class="image"></image>
 					<text class="boxItemTitle">{{ item.title }}</text>
 				</view>
@@ -16,7 +16,7 @@
 				外发加工出入
 			</view>
 			<view class="factoryAccess outboundProcessing">
-			<view v-for="(item, index) in outwardProcessingList" :key="index" class="factoryAccessItem " @tap="toList(item)" >
+			<view v-for="(item, index) in outwardProcessingList" :key="index" class="factoryAccessItem " @tap="toList(item)">
 				<image :src="item.src" class="image"></image>
 				<text class="boxItemTitle">{{ item.title }}</text>
 			</view>
@@ -27,14 +27,14 @@
 
 <script>
 import { defineComponent, reactive, toRefs } from 'vue';
-import { cutWarehouseList,outwardProcessingList } from '../../utils/common.js';
+import { cutWarehouseList, outwardProcessingList } from '../../utils/common.js';
 
 export default defineComponent({
 	name: 'cutWarehouse',
 	setup() {
 		const state = reactive({
-			list: cutWarehouseList,
-			outwardProcessingList
+			cutWarehouseList: cutWarehouseList,
+			outwardProcessingList: outwardProcessingList
 		})
 		
 		const toList = (item) =>{
@@ -92,33 +92,5 @@ export default defineComponent({
 			}
 		}
 	}
-	// width: 90%;
-	// display: flex;
-	// flex-wrap: wrap;
-	// margin: 30rpx auto;
-	// .boxItem {
-	// 	width: 47%;
-	// 	height: 175rpx;
-	// 	border-radius: 16rpx;
-	// 	padding: 30rpx 20rpx;
-	// 	color: #fff;
-	// 	margin-bottom: 30rpx;
-	// 	display: flex;
-	// 	align-items: center;
-	// 	justify-content: space-between;
-	// 	.image {
-	// 		width: 120rpx;
-	// 		height: 100rpx;
-	// 	}
-	// 	.boxItemTitle {
-	// 		font-family: Helvetica-Bold;
-	// 		font-size: 17px;
-	// 		color: #fff;
-	// 	}
-	// }
 }
-
-// .addRightMargin {
-// 	margin-right: 30rpx;
-// }
 </style>
