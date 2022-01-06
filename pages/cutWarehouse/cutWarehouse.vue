@@ -5,7 +5,7 @@
 				本厂出入
 			</view>
 			<view class="factoryAccess">
-				<view v-for="(item, index) in list" :key="index"  @tap="toList(item)" class="factoryAccessItem">
+				<view v-for="(item, index) in list" :key="index" @tap="toList(item)" class="factoryAccessItem">
 					<image :src="item.src" class="image"></image>
 					<text class="boxItemTitle">{{ item.title }}</text>
 				</view>
