@@ -27,7 +27,7 @@ export const touchMove = (e, startX, inStorageArr) => {
 		let moveX = e.touches[0].clientX;
 		//手指起始点位置与移动期间的差值
 		let disX = startX - moveX;
-		let delBtnWidth = 60;
+		let delBtnWidth = 50;
 		let txtStyle = "";
 		let list = inStorageArr;
 		if (disX == 0 || disX < 0) {//如果移动距离小于等于0，说明向右滑动，文本层位置不变
@@ -54,7 +54,7 @@ export const touchEnd = (e, startX, inStorageArr) => {
 		let endX = e.changedTouches[0].clientX;
 		//触摸开始与结束，手指移动的距离
 		let disX = startX - endX;
-		let delBtnWidth = 60;
+		let delBtnWidth = 50;
 		//如果距离小于删除按钮的1/2，不显示删除按钮
 		let txtStyle = disX > delBtnWidth / 2 ? "left:-" + delBtnWidth + "px" : "left:0px";
 		//获取手指触摸的是哪一项

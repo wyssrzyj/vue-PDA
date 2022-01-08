@@ -3,7 +3,9 @@ import { requestApi } from './request.js';
 
 // const API_ADDRESS = 'http://192.168.68.10:8081' // 周扬ip
 // const API_ADDRESS = 'http://172.26.0.56:8081' // 蔡鹏志ip
-const API_ADDRESS = 'http://192.168.99.140/proxyApi' // 线上地址
+// const API_ADDRESS = 'http://192.168.68.33:8081' // 周志建ip
+const API_ADDRESS = 'http://192.168.1.109:8081' // 周志建ip
+// const API_ADDRESS = 'http://192.168.99.140/proxyApi' // 线上地址
 // const API_ADDRESS = '/proxyApi'
 
 const Api = {
@@ -39,6 +41,30 @@ const Api = {
 	// 出库
 	outOfStock(reqData) {
 	  return requestApi(`${API_ADDRESS}/mes/mespiecesmarket/outOfStock`, 'POST', reqData)
+	},
+	//查询产品款号
+	productQuery(reqData){
+		return requestApi(`${API_ADDRESS}/MesSewingExecutionMessage/messewingexecutionmessage/fromSewGetProduce`, 'POST', reqData)
+	},
+	//查询产品款号
+	supplierQuery(reqData){
+		return requestApi(`${API_ADDRESS}/MesSewingExecutionMessage/messewingexecutionmessage/fromSewGetSupplier`, 'POST', reqData)
+	},
+	//获取领料明细
+	pickingDet(reqData){
+		return requestApi(`${API_ADDRESS}/MesSewingExecutionMessage/messewingexecutionmessage/getPickingDetails`, 'POST', reqData)
+	},
+	//外发出库
+	outboundDelivery(reqData){
+		return requestApi(`${API_ADDRESS}/MesSewingExecutionMessage/messewingexecutionmessage/getPickingDetails`, 'POST', reqData)
+	},
+	//扫描PCS码
+	outScanPCS(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mespiecesmarket/getOutwardProcessByPCSNum`, 'GET', reqData)
+	},
+	//外发加工出库
+	outOutsourcingDelivery(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mespiecesmarket/outwardProcessoutOfStock`, 'POST', reqData)
 	}
 }
 
