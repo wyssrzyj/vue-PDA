@@ -1,6 +1,13 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/outwardProcessing/print",
+			"style": {
+				"navigationBarTitleText": "打印",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "登录",

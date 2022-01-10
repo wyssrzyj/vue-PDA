@@ -330,26 +330,38 @@ export default defineComponent({
 				outProcessSupplier:state.supplierId
 			}).then(res => {
 				if (res.code === 0) {
-					uni.showToast({
-						title: '扫描PCS码成功！',
-						icon: 'none',
-						duration: 3000
+					const Find=state.alreadyOutStorageArr.find((item)=>{
+						item.subpackageId===res.data.subpackageId
 					})
-					state.outStorageArr.forEach((item)=>{
-						if(item.subpackageId===res.data.subpackageId){
-							item.isSelectScan=true
-						}
-					})
+					if(!Find){
+						uni.showToast({
+							title: '扫描PCS码成功！',
+							icon: 'none',
+							duration: 3000
+						})
+						state.outStorageArr.forEach((item)=>{
+							if(item.subpackageId===res.data.subpackageId){
+								item.isSelectScan=true
+							}
+						})
+						state.alreadyOutStorageArr.push(res.data)
+						state.alreadyCount+=+res.data.packageNum
+						// 数组去重
+						// state.alreadyOutStorageArr = arrayToHeavy(state.alreadyOutStorageArr)
+						// if(state.isSelectCheckbox) {
+						// 	outStorageMethods(false)
+						// }else {
+						// 	outStorageMethods(true)
+						// }
+					}else{
+						state.showErrorMessage = '该PCS码已扫描！'
+						state.showErrorPop = true
+						let timer = setTimeout(() => {
+							clearTimeout(timer)
+							state.showErrorPop = false
+						}, 2000)
+					}
 					
-					state.alreadyOutStorageArr.push(res.data)
-					state.alreadyCount+=+res.data.packageNum
-					// 数组去重
-					// state.alreadyOutStorageArr = arrayToHeavy(state.alreadyOutStorageArr)
-					// if(state.isSelectCheckbox) {
-					// 	outStorageMethods(false)
-					// }else {
-					// 	outStorageMethods(true)
-					// }
 				}else {
 					state.showErrorMessage = res.msg
 					state.showErrorPop = true
@@ -570,7 +582,7 @@ export default defineComponent({
 				right: 0; 
 				float: left;
 				width: 100rpx;
-				height: 155rpx;
+				height: 162rpx;
 				line-height: 155rpx;
 				padding: 5rpx 16rpx;
 				background-color: #EA5863;
