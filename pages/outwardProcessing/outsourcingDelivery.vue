@@ -129,7 +129,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, toRefs } from 'vue';
+// import { defineComponent, ref, reactive, toRefs } from 'vue';
 import { arrayToHeavy, toasting,touchStart, touchMove, touchEnd} from '../../utils/index.js'
 import Api from '../../service/api'
 import scanCode from "../../components/scan/scan.vue"
@@ -181,7 +181,8 @@ export default defineComponent({
 				supplierAbbreviation:""
 			},
 			startX:'',
-			alreadyCount:0
+			alreadyCount:0,
+			PCSData:{},
 		})
 		//产品查询
 		const productQuery=async ()=>{
@@ -281,107 +282,59 @@ export default defineComponent({
 			state.alreadyOutStorageArr.splice(index, 1)
 			state.alreadyCount-=item.packageNum
 		}
-		// const handleScanTask = (sewingExecutionNum) => { // 扫描缝制任务单号
-		// 	Api.getSewingExecution({
-		// 		sewingExecutionNum: sewingExecutionNum // 'FZ20211116014098380'
-		// 	}).then(res => {
-		// 		if (res.code === 0) {
-		// 			uni.showToast({
-		// 				title: '扫描缝制任务单号成功！',
-		// 				icon: 'none',
-		// 				duration: 3000
-		// 			})
-					
-		// 			state.sewingTaskRecord = res.data.sewingExecutionNum
-		// 			state.outStorageArr = res.data.list.map((item, index) => {
-		// 				return {
-		// 					id: item.id || "",
-		// 					productId: item.productId || "",
-		// 					produceId: item.produceId || "",
-		// 					subpackageId: item.subpackageId || "",
-		// 					proNum: item.proNum || "",
-		// 					colorCode: item.colorCode || "",
-		// 					colorName: item.colorName || "",
-		// 					sizeCode: item.sizeCode || "",
-		// 					sizeName: item.sizeName || "",
-		// 					packageNum: item.packageNum || "",
-		// 					inputNumber: item.inputNumber || "",
-		// 					outputNumber: 0,
-		// 					storageStatus: 0,
-		// 					isShowScan: true,
-		// 					isSelectScan: false
-		// 				}
-		// 			})
-		// 		}else {
-		// 			state.showErrorMessage = res.msg
-		// 			state.showErrorPop = true
-		// 			let timer = setTimeout(() => {
-		// 				clearTimeout(timer)
-		// 				state.showErrorPop = false
-		// 			}, 2000)
-		// 		}
-		// 	})
-		// }
 		
 		const handleScanPCS = (pcsNum) => { // 扫描PCS码
 			Api.outScanPCS({
-				pcsNum:'PD20211220060584073-0-00000058', // 'PD20211110090285439-0-00000116'
+				pcsNum:'PD20211220060584073-0-00000433', // 'PD20211110090285439-0-00000116'
 				proNum: state.productNum,
 				outProcessSupplier:state.supplierId
 			}).then(res => {
 				if (res.code === 0) {
-					const Find=state.alreadyOutStorageArr.find((item)=>{
-						item.subpackageId===res.data.subpackageId
-					})
-					if(!Find){
-						uni.showToast({
-							title: '扫描PCS码成功！',
-							icon: 'none',
-							duration: 3000
-						})
-						state.outStorageArr.forEach((item)=>{
-							if(item.subpackageId===res.data.subpackageId){
-								item.isSelectScan=true
+						const Find=state.alreadyOutStorageArr.find((item)=>{
+								item.subpackageId===res.data.subpackageId
+							})
+							if(!Find){
+								uni.showToast({
+									title: '扫描PCS码成功！',
+									icon: 'none',
+									duration: 3000
+								})
+								state.outStorageArr.forEach((item)=>{
+									if(item.packageNum===res.data.packageCode){
+										item.isSelectScan=true
+										state.alreadyCount+=+item.packageNum
+									}
+								})
+								state.alreadyOutStorageArr=state.outStorageArr.filter(item=>item.packageNum==res.data.packageCode)
+								state.PCSData=res.data
+								
+								// 数组去重
+								// state.alreadyOutStorageArr = arrayToHeavy(state.alreadyOutStorageArr)
+								// if(state.isSelectCheckbox) {
+								// 	outStorageMethods(false)
+								// }else {
+								// 	outStorageMethods(true)
+								// }
+							}else{
+								state.showErrorMessage = '该PCS码已扫描！'
+								state.showErrorPop = true
+								let timer = setTimeout(() => {
+									clearTimeout(timer)
+									state.showErrorPop = false
+								}, 2000)
 							}
-						})
-						state.alreadyOutStorageArr.push(res.data)
-						state.alreadyCount+=+res.data.packageNum
-						// 数组去重
-						// state.alreadyOutStorageArr = arrayToHeavy(state.alreadyOutStorageArr)
-						// if(state.isSelectCheckbox) {
-						// 	outStorageMethods(false)
-						// }else {
-						// 	outStorageMethods(true)
-						// }
-					}else{
-						state.showErrorMessage = '该PCS码已扫描！'
-						state.showErrorPop = true
-						let timer = setTimeout(() => {
-							clearTimeout(timer)
-							state.showErrorPop = false
-						}, 2000)
+							
+						}else {
+							state.showErrorMessage = res.msg
+							state.showErrorPop = true
+							let timer = setTimeout(() => {
+								clearTimeout(timer)
+								state.showErrorPop = false
+							}, 2000)
 					}
-					
-				}else {
-					state.showErrorMessage = res.msg
-					state.showErrorPop = true
-					let timer = setTimeout(() => {
-						clearTimeout(timer)
-						state.showErrorPop = false
-					}, 2000)
-				}
 			})
 		}
 		
-		// const checkboxChange = (e) => { // 全部
-		// 	if(state.isSelectCheckbox) { 
-		// 		state.isSelectCheckbox = false
-		// 		outStorageMethods(true)
-		// 	}else {
-		// 		state.isSelectCheckbox = true
-		// 		outStorageMethods(false)
-		// 	}
-		// }
 		
 		const handleMore = () => { // 更多
 			state.showModal = true
@@ -389,12 +342,22 @@ export default defineComponent({
 		
 		const handleOutStorage = () => { // 出库
 			Api.outOutsourcingDelivery({
-				PiecesMarketOutStorageVO:{
-					list: state.outStorageArr
-				}
+					mesOrderSubpackageOutwardDTOList :[
+						{
+						...state.PCSData,
+						mesPiecesMarketDTOList:state.alreadyOutStorageArr,
+						}
+					]
 			}).then(res => {
 				if (res.code === 0) {
-					state.outStorageArr = []
+					state.outStorageArr.forEach(item=>{
+						const Find=state.alreadyOutStorageArr.find((val)=>{
+							return val.packageNum==item.packageNum
+						})
+						if(Find){
+							Find.isSelectScan=false
+						}
+					})
 					state.alreadyOutStorageArr=[]
 					state.alreadyCount=0
 					state.showSuccessMessage = '出库并打印成功！'
@@ -674,6 +637,7 @@ export default defineComponent({
 		top: 50%;
 		margin-left: -250rpx;
 		margin-top: -40rpx;
+		z-index: 999;
 	}
 	.successPopup {
 		background-color: #F6FFEE;

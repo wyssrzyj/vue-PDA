@@ -93,3 +93,22 @@ export const toasting = (message, func = () => {}, time = 1000) => {
 		}
 	})
 }
+
+// //节流
+// export const throttle = (func, delay)=> {     
+//     var timer = null;     
+//     var startTime = Date.now();     
+//     return ()=> {             
+//         var curTime = Date.now();             
+//         var remaining = delay - (curTime - startTime);             
+//         var context = this;             
+//         var args = arguments;             
+//         clearTimeout(timer);              
+//         if (remaining <= 0) {                    
+//             func.apply(context, args);                    
+//             startTime = Date.now();              
+//         } else {                    
+//             timer = setTimeout(func, remaining);              
+//         }      
+//     }
+// }

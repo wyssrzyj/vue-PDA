@@ -12,7 +12,7 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 @import "/wxcomponents/vant/dist/common/index.wxss";
 /*每个页面公共css */
 @import "colorui/main.css";

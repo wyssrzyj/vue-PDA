@@ -35,7 +35,7 @@
     },
     "compileType": "miniprogram",
     "libVersion": "2.21.2",
-    "appid": "wx513d5f25008ad4f2",
+    // "appid": "wxb4201c9aec2ec790",
     "projectname": "mes-mobile-pda",
     "debugOptions": {
         "hidedInDevtools": []

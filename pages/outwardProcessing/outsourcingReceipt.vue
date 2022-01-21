@@ -70,12 +70,12 @@
 			<view class="errorImage"></view>
 			<view style="margin-left: 20rpx;">{{ showErrorMessage }}</view>
 		</view>
-		<scanCode></scanCode>
+		<scan-code></scan-code>
 	</view>
 </template>
 
 <script>
-import { defineComponent, ref, reactive, toRefs } from 'vue';
+// import { defineComponent, ref, reactive, toRefs } from 'vue';
 import { touchStart, touchMove, touchEnd, arrayToHeavy, toasting } from '../../utils/index.js'
 import Api from '../../service/api'
 import scanCode from "../../components/scan/scan.vue"
@@ -138,8 +138,8 @@ export default defineComponent({
 		}
 		
 		const handleScanStorage = (locationCode) => { // 扫描库位
-			Api.getLocation({
-				locationCode: locationCode // 'A-01'
+			Api.outReceiptScanLocation({
+				locationCode: 'A-03' ,// 'A-01'
 			}).then(res => {
 				if (res.code === 0) {
 					uni.showToast({
@@ -164,39 +164,53 @@ export default defineComponent({
 		const handleScanPCS = (pcsNum) => { // 扫描PCS码
 			state.inStorageArr = state.inStorageArr.reverse()
 			
-			Api.getInfoBySearch({
-				pcsNum: pcsNum, // 'PD20211110090285439-0-00000116'
-				type: state.typeMode,
-				wareHouseLocation: state.wareHouseLocation
+			Api.outReceiptScanPCS({
+				// pcsNum: 'PD20211220060584073-0-00000433', // 'PD20211110090285439-0-00000116'
+				// type: state.typeMode,
+				// wareHouseLocation: state.wareHouseLocation
+				locationCode:state.storageValue,
+				pcsNum:"PD20211220060584073-0-00000433"
 			}).then(res => {
 				if (res.code === 0) {
 					console.log(res.data)
-					uni.showToast({
-						title: '扫描PCS码成功！',
-						icon: 'none',
-						duration: 3000
+					const Find=state.inStorageArr.find((item)=>{
+						item.id=res.data.id
 					})
-					state.inStorageArr.push(
-						{
-							id: res.data.subpackageId || "",
-							productId: res.data.productId || "",
-							produceId: res.data.produceId || "",
-							subpackageId: res.data.subpackageId || "",
-							proNum: res.data.proNum || "",
-							colorCode: res.data.colorCode || "",
-							colorName: res.data.colorName || "",
-							sizeCode: res.data.sizeCode || "",
-							sizeName: res.data.sizeName || "",
-							packageNum: res.data.packageNum || "",
-							inputNumber: res.data.inputNumber || "",
-							arrowFlag: true
-						}
-					)
-					
-					// 数组去重
-					state.inStorageArr = arrayToHeavy(state.inStorageArr)
-					
-					state.inStorageArr = state.inStorageArr.reverse()
+					if(!Find){
+						uni.showToast({
+							title: '扫描PCS码成功！',
+							icon: 'none',
+							duration: 3000
+						})
+						state.inStorageArr.push(
+							{
+								id: res.data.subpackageId || "",
+								productId: res.data.productId || "",
+								produceId: res.data.produceId || "",
+								subpackageId: res.data.subpackageId || "",
+								proNum: res.data.proNum || "",
+								colorCode: res.data.colorCode || "",
+								colorName: res.data.colorName || "",
+								sizeCode: res.data.sizeCode || "",
+								sizeName: res.data.sizeName || "",
+								packageNum: res.data.packageNum || "",
+								inputNumber: res.data.inputNumber || "",
+								arrowFlag: true
+							}
+						)
+						
+						// 数组去重
+						state.inStorageArr = arrayToHeavy(state.inStorageArr)
+						
+						state.inStorageArr = state.inStorageArr.reverse()
+					}else{
+						state.showErrorMessage = '该PCS码已扫描！'
+						state.showErrorPop = true
+						let timer = setTimeout(() => {
+							clearTimeout(timer)
+							state.showErrorPop = false
+						}, 2000)
+					}
 				}else {
 					state.showErrorMessage = res.msg
 					state.showErrorPop = true

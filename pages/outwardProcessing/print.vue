@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<!-- <view class="c_header" @click="touch_all">
+		<view class="c_header" @click="touch_all">
 			<checkMine class="check-box" :checked="touch_all_list" /> 全选
 		</view>
 		<view class="c_main">
@@ -45,9 +45,9 @@
 			</view>
 		</view>
 		<view class="c_footer">
-			<button type="default" class="btn-c" @click="close_back">关闭</button> -->
+			<button type="default" class="btn-c" @click="close_back">关闭</button>
 			<button type="default" :class='is_b_link ? "btn-p" : "btn-p-p"' @click="toprint">打印</button>
-		<!-- </view> -->
+		</view>
 	</view>
 </template>
 
@@ -55,7 +55,7 @@
 	// import jpPrinter from "../../utils/ble/tsc.js";
 	// import { createRequire } from 'module';
 	// const require = createRequire(import.meta.url);
-	const tsc = require("../../utils/ble/tsc.js");
+	// const tsc = require("../../utils/ble/tsc.js");
 	// import jpPrinter from "../../utils/ble/tsc.js"
 	import {
 		mapState
@@ -80,7 +80,6 @@
 			}
 		},
 		computed: mapState(['is_b_link']),
-
 		// components: {
 		// 	checkMine
 		// },

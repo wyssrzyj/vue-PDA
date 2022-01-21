@@ -1,6 +1,13 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/login/mes_login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/outwardProcessing/print",
 			"style": {
 				"navigationBarTitleText": "打印",
@@ -8,51 +15,44 @@
 			}
 		},
 		{
-			"path": "pages/login/login",
+			"path": "pages/outwardProcessing/mes_outsourcingReceipt",
 			"style": {
-				"navigationBarTitleText": "登录",
+				"navigationBarTitleText": "外发加工入库",
 				"backgroundColor": "#FFFFFF"
 			}
 		},
 		{
-			"path": "pages/outwardProcessing/outsourcingDelivery",
-			"style": {
-				"navigationBarTitleText": "外发加工出库",
-				"backgroundColor": "#FFFFFF"
-			}
-		},
-		{
-			"path": "pages/cutWarehouse/cutWarehouse",
-			"style": {
-				"navigationBarTitleText": "裁片仓管理",
-				"backgroundColor": "#FFFFFF"
-			}
-		},
-		{
-			"path": "pages/cutWarehouse/cutInStorage",
-			"style": {
-				"navigationBarTitleText": "裁片入库",
-				"backgroundColor": "#FFFFFF"
-			}
-		},
-		{
-			"path": "pages/cutWarehouse/repealCutInStorage",
-			"style": {
-				"navigationBarTitleText": "撤销裁片入库",
-				"backgroundColor": "#FFFFFF"
-			}
-		},
-		{
-			"path": "pages/cutWarehouse/cutOutStorage",
+			"path": "pages/cutWarehouse/mes_cutOutStorage",
 			"style": {
 				"navigationBarTitleText": "裁片出库",
 				"backgroundColor": "#FFFFFF"
 			}
 		},
 		{
-			"path": "pages/outwardProcessing/outsourcingReceipt",
+			"path": "pages/cutWarehouse/mes_cutInStorage",
 			"style": {
-				"navigationBarTitleText": "外发加工入库",
+				"navigationBarTitleText": "裁片入库",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/outwardProcessing/mes_outsourcingDelivery",
+			"style": {
+				"navigationBarTitleText": "外发加工出库",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/cutWarehouse/mes_cutWarehouse",
+			"style": {
+				"navigationBarTitleText": "裁片仓管理",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/cutWarehouse/mes_repealCutInStorage",
+			"style": {
+				"navigationBarTitleText": "撤销裁片入库",
 				"backgroundColor": "#FFFFFF"
 			}
 		}
