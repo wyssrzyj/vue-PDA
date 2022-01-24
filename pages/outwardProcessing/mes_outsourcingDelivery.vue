@@ -284,6 +284,7 @@ export default{
 			item.isSelectScan=false
 			this.alreadyOutStorageArr.splice(index, 1)
 			this.alreadyCount-=item.packageNum
+			item.txtStyle=''
 		},
 		
 		handleScanPCS(pcsNum){ // 扫描PCS码
@@ -362,7 +363,7 @@ export default{
 		
 		
 		handleMore(){ // 更多
-			this.showModal = true
+			this.showModal = !this.showModal
 		},
 		
 		handleOutStorage(){ // 出库

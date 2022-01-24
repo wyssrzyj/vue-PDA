@@ -5,8 +5,8 @@ import { requestApi } from './request.js';
 // const API_ADDRESS = 'http://192.168.1.100:8081' // 蔡鹏志ip
 // const API_ADDRESS = 'http://192.168.213.49:8081' // 周志建ip
 // const API_ADDRESS = 'http://192.168.68.33:8081' // 周志建ip
-const API_ADDRESS = 'http://192.168.1.5/proxyApi' // 盛宝利线上地址
-// const API_ADDRESS = 'http://172.26.0.56:8081' // 盛宝利线上地址
+// const API_ADDRESS = 'http://192.168.1.5/proxyApi' // 盛宝利线上地址
+const API_ADDRESS = 'http://172.26.0.56:8081' // 蔡鹏志ip
 // const API_ADDRESS = 'http://192.168.1.100:8081'
 // const API_ADDRESS = '/proxyApi'
 
