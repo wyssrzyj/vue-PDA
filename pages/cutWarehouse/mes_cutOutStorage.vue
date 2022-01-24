@@ -195,9 +195,10 @@ export default{
 							icon: 'none',
 							duration: 3000
 						})
+						console.log(res.data)
 						//背景色变蓝
 						this.outStorageArr.forEach(item=>{
-							if(item.id===res.data.id){
+							if(item.subpackageId===res.data.subpackageId){
 								item.isSelectScan=true
 							}
 						})
