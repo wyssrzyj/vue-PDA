@@ -1,5 +1,5 @@
 <template>
-	<view class="mainContent">
+	<view class="mainContent" @click="closeModal">
 		<!-- <view class="commonBtn" @tap="handleScanTask" style="background-color: #fca147;">扫描缝制任务单号</view> -->
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
@@ -8,7 +8,7 @@
 		</view>
 		<view class="storageLocation">
 			<text class="storageTitle">缝制任务单号：</text>
-			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="sewingTaskRecord" confirm-type="search" placeholder="请输入缝制任务单号" disabled/>
+			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="sewingTaskRecord" confirm-type="search" placeholder="请扫描缝制任务单号" disabled/>
 		</view>
 		<view class="radioLocation">
 			<checkbox-group @change="checkboxChange">
@@ -53,7 +53,7 @@
 		<view class="bottomLocation">
 			<view class="scanNum">总行数/已扫描行数：{{ outStorageArr.length }}/{{ alreadyOutStorageArr.length }}</view>
 			<view class="btnLocation">
-				<view class="commonBtn moreBtn" @tap="handleMore">更多</view>
+				<view class="commonBtn moreBtn" id="moreBtn" @tap="handleMore">更多</view>
 				<view class="commonBtn inStorageBtn" @tap="handleOutStorage" v-if="outStorageArr.length > 0 && outStorageArr.length == alreadyOutStorageArr.length">出库</view>
 				<view class="commonBtn noInStorageBtn" v-else>出库</view>
 			</view>
@@ -64,11 +64,11 @@
 		</view>
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
-			<view style="margin-left: 20rpx;">{{ showSuccessMessage }}</view>
+			<view style="margin: 0 20rpx 0 90rpx;">{{ showSuccessMessage }}</view>
 		</view>
 		<view class="errorPopup remindPopup" v-if="showErrorPop">
 			<view class="errorImage"></view>
-			<view style="margin-left: 20rpx;">{{ showErrorMessage }}</view>
+			<view style="margin: 0 20rpx 0 80rpx;">{{ showErrorMessage }}</view>
 		</view>
 		<scan-code></scan-code>
 	</view>
@@ -249,7 +249,13 @@ export default{
 			},
 			
 		handleMore(){ // 更多
-			this.showModal = true
+			this.showModal = !this.showModal
+		},
+		
+		closeModal(e){//点击页面其他地方关闭清空按钮
+			if(e.target.id!="moreBtn" && this.showModal){
+				this.showModal=false 
+			}
 		},
 			
 		handleOutStorage(){ // 出库
@@ -451,15 +457,17 @@ export default{
 		font-size: 30rpx;
 		font-weight: bold;
 		border-radius: 10rpx;
-		width: 500rpx;
+		// width: 500rpx;
 		height: 80rpx;
 		text-align: center;
 		line-height: 80rpx;
 		position: absolute;
 		left: 50%;
 		top: 50%;
-		margin-left: -250rpx;
-		margin-top: -40rpx;
+		// margin-left: -250rpx;
+		// margin-top: -40rpx;
+		transform: translate(-50%,-50%);
+		white-space:nowrap;
 		z-index: 999;
 	}
 	.successPopup {
@@ -471,7 +479,7 @@ export default{
 			width: 50rpx;
 			height: 50rpx;
 			position: absolute;
-			left: 40rpx; 
+			left: 20rpx; 
 			top: 10rpx;
 		}
 	}
@@ -484,7 +492,7 @@ export default{
 			width: 40rpx;
 			height: 40rpx;
 			position: absolute;
-			left: 40rpx; 
+			left: 20rpx; 
 			top: 20rpx;
 		}
 	}

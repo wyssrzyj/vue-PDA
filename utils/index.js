@@ -56,7 +56,7 @@ export const touchEnd = (e, startX, inStorageArr) => {
 		let disX = startX - endX;
 		let delBtnWidth = 50;
 		//如果距离小于删除按钮的1/2，不显示删除按钮
-		let txtStyle = disX > delBtnWidth / 2 ? "left:-" + delBtnWidth + "px" : "left:0px";
+		let txtStyle = disX > delBtnWidth / 3 ? "left:-" + delBtnWidth + "px" : "left:0px";
 		//获取手指触摸的是哪一项
 		let index = e.currentTarget.dataset.index;
 		let list = inStorageArr;

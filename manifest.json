@@ -116,6 +116,7 @@
     "vueVersion" : "2",
     "h5" : {
         "devServer" : {
+            // #ifdef APP
             "proxy" : {
                 "/proxyApi" : {
                     "target" : "http://192.168.68.33",
@@ -127,6 +128,7 @@
                 }
             }
         },
+        // #endif
         "sdkConfigs" : {
             "maps" : {
                 "qqmap" : {

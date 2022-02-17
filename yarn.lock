@@ -2,3 +2,7 @@
 # yarn lockfile v1
 
 
+"uview-ui@^1.8.4":
+  "integrity" "sha512-Zr+D5dFdNy6CdHQLBEXeGq/w0LkjxzBtsgaaDwLl0P58g67H7fBBDvy6AzWK/k0c7dwPYMBiK7I4Tr9p92+0DA=="
+  "resolved" "https://registry.npmmirror.com/uview-ui/-/uview-ui-1.8.4.tgz"
+  "version" "1.8.4"

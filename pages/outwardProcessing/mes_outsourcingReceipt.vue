@@ -1,5 +1,5 @@
 <template>
-	<view class="mainContent">
+	<view class="mainContent" @click="closeModal">
 		<!-- <view class="commonBtn" @tap="handleScanStorage" style="background-color: #fca147;">扫描库位</view> -->
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
@@ -8,7 +8,7 @@
 		</view>
 		<view class="storageLocation">
 			<text class="storageTitle">当前库位：</text>
-			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请输入当前库位" disabled/>
+			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请扫描当前库位" disabled/>
 		</view>
 		<view class="pannelContent">
 			<view 
@@ -45,7 +45,7 @@
 					<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="item.arrowFlag"></image>
 					<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
 				</view>
-				<view class="touch-list list-delete" @click = "deleteMember(index)">
+				<view class="touch-list list-delete" @click = "deleteMember(index,item)">
 					删除
 				</view>
 			</view>
@@ -53,7 +53,7 @@
 		<view class="bottomLocation">
 			<view class="scanNum">已扫描行数：{{ inStorageArr.length }}</view>
 			<view class="btnLocation">
-				<view class="commonBtn moreBtn" @tap="handleMore">更多</view>
+				<view class="commonBtn moreBtn" id="moreBtn" @tap="handleMore">更多</view>
 				<view class="commonBtn inStorageBtn" @tap="handleInStorage" v-if="inStorageArr.length > 0">入库</view>
 				<view class="commonBtn noInStorageBtn" v-else>入库</view>
 			</view>
@@ -64,11 +64,11 @@
 		</view>
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
-			<view style="margin-left: 20rpx;">{{ showSuccessMessage }}</view>
+			<view style="margin: 0 20rpx 0 90rpx;">{{ showSuccessMessage }}</view>
 		</view>
 		<view class="errorPopup remindPopup" v-if="showErrorPop">
 			<view class="errorImage"></view>
-			<view style="margin-left: 20rpx;">{{ showErrorMessage }}</view>
+			<view style="margin: 0 20rpx 0 80rpx;">{{ showErrorMessage }}</view>
 		</view>
 		<scan-code></scan-code>
 	</view>
@@ -142,9 +142,10 @@ export default{
 		// 	});
 		// },
 		
-		handleScanStorage(locationCode){ // 扫描库位
+		handleScanStorage(locationCode,warehouseFileName=''){ // 扫描库位
 			Api.outReceiptScanLocation({
 				locationCode,// 'A-01'
+				warehouseFileName,//库位名
 			}).then(res => {
 				if (res.code === 0) {
 					uni.showToast({
@@ -209,7 +210,7 @@ export default{
 				}
 			})
 		},
-		
+		//右滑删除
 		handleTouchStart(e){
 			this.startX = touchStart(e)
 		},
@@ -222,13 +223,20 @@ export default{
 			this.inStorageArr = touchEnd(e, this.startX, this.inStorageArr)
 		},
 		
-		
-		deleteMember(index){ // 点击删除按钮事件
+		//删除按钮
+		deleteMember(index,item){ // 点击删除按钮事件
 			this.inStorageArr.splice(index, 1)
+			item.txtStyle=0
 		},
 		
 		handleMore(){ // 更多
-			this.showModal = true
+			this.showModal = !this.showModal
+		},
+		
+		closeModal(e){//点击页面其他地方关闭清空按钮
+			if(e.target.id!="moreBtn" && this.showModal){
+				this.showModal=false 
+			}
 		},
 		
 		handleInStorage(){ // 入库
@@ -252,7 +260,8 @@ export default{
 			// })
 		
 			Api.outReceipt({
-				outProcessList:this.copyInStorageArr
+				
+				outProcessList:this.copyInStorageArr,
 			}).then(res => {
 				if (res.code === 0) {
 					this.inStorageArr = []
@@ -443,15 +452,17 @@ export default{
 		font-size: 30rpx;
 		font-weight: bold;
 		border-radius: 10rpx;
-		width: 530rpx;
+		// width: 530rpx;
 		height: 80rpx;
 		text-align: center;
 		line-height: 80rpx;
 		position: absolute;
 		left: 50%;
 		top: 50%;
-		margin-left: -265rpx;   
-		margin-top: -40rpx;
+		// margin-left: -265rpx;   
+		// margin-top: -40rpx;
+		transform: translate(-50%,-50%);
+		white-space:nowrap;
 		z-index: 999;
 	}
 	.successPopup {
@@ -463,7 +474,7 @@ export default{
 			width: 50rpx;
 			height: 50rpx;
 			position: absolute;
-			left: 40rpx; 
+			left: 20rpx; 
 			top: 10rpx;
 		}
 	}
@@ -476,7 +487,7 @@ export default{
 			width: 40rpx;
 			height: 40rpx;
 			position: absolute;
-			left: 40rpx; 
+			left: 20rpx; 
 			top: 20rpx;
 		}
 	}

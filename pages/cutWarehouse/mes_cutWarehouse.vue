@@ -22,19 +22,30 @@
 			</view>
 			</view>
 		</view>
+		<view class="tabBoxItem">
+			<view class="text">
+				铺布数据采集
+			</view>
+			<view class="factoryAccess">
+				<view v-for="(item, index) in blanketDataList" :key="index" @tap="toList(item)" class="factoryAccessItem">
+					<image :src="item.src" class="image"></image>
+					<text class="titleItem">{{ item.title }}</text>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
-// import { defineComponent, reactive, toRefs } from 'vue';
-import { cutWarehouseList, outwardProcessingList } from '../../utils/common.js';
+import { cutWarehouseList, outwardProcessingList,blanketDataList } from '../../utils/common.js';
 
 export default{
 	// name: 'cutWarehouse',
 	data(){
 		return{
 			cutWarehouseList: cutWarehouseList,
-			outwardProcessingList: outwardProcessingList
+			outwardProcessingList: outwardProcessingList,
+			blanketDataList: blanketDataList
 		}
 	},
 	methods:{

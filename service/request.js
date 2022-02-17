@@ -17,6 +17,9 @@ export const requestApi = async (url, method, options = {}) => {
       },
       url: url,
       data: options,
+	  // #ifdef APP
+	  sslVerify:false,
+	  // #endif
       async success(res) {
         if (res.statusCode == 200) {
           if (res.data.code == 401) {
@@ -50,6 +53,7 @@ export const requestApi = async (url, method, options = {}) => {
         }
       },
       async fail(res) {
+		console.log(url)
 		console.log(res)
         await reject(res)
         uni.hideLoading()
