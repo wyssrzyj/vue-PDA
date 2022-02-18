@@ -8,11 +8,13 @@
 			<view class="storageLocation">
 				<text style="color: red;">*</text><text class="storageTitle">产品款号：</text>
 				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="productNum" confirm-type="search" placeholder="请扫描产品款号" disabled/>
+				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="productNum" confirm-type="search" placeholder="请输入产品款号" disabled/>
 				<view class="queryBtn" id="proBtn">查询</view>
 			</view>
 			<view class="storageLocation">
 				<text style="color: red;">*</text><text class="storageTitle">供应商简称：</text>
 				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search" placeholder="请扫描供应商简称" disabled/>
+				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search" placeholder="请输入供应商简称" disabled/>
 				<view class="queryBtn" id="supplierBtn">查询</view>
 			</view>
 		</view>
