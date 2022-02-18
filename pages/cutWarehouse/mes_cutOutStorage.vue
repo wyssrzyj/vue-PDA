@@ -249,7 +249,7 @@ export default{
 			},
 			
 		handleMore(){ // 更多
-			this.showModal = true
+			this.showModal = !this.showModal
 		},
 			
 		handleOutStorage(){ // 出库

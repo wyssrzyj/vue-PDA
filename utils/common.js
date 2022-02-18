@@ -27,3 +27,17 @@ export const outwardProcessingList = [
     link: '/pages/outwardProcessing/mes_outsourcingDelivery'
   }
 ]
+export const workReportList=[
+	{
+		title:"按包加工",
+		src: '../../static/workReport/workReport.png',
+		link: '/pages/workReport/mes_workReport'
+	},
+]
+export const blanketDataList = [
+	{
+		title: '铺布数据采集',
+		src: '../../static/blanket/blanket.png',
+		link: '/pages/blanket/blanketDataCollect'
+	}
+]

@@ -1,14 +1,14 @@
 
 import { requestApi } from './request.js';
 
-// const API_ADDRESS = 'http://192.168.68.10:8081' // 周扬ip
+// const API_ADDRESS = 'http://172.26.1.38:8081' // 周扬ip
 // const API_ADDRESS = 'http://192.168.1.100:8081' // 蔡鹏志ip
 // const API_ADDRESS = 'http://192.168.213.49:8081' // 周志建ip
-// const API_ADDRESS = 'http://192.168.68.33:8081' // 周志建ip
+// const API_ADDRESS = 'http://172.26.1.38:8081' // 周志建ip
 // const API_ADDRESS = 'http://192.168.1.5/proxyApi' // 盛宝利线上地址
-const API_ADDRESS = 'http://172.26.0.56:8081' // 蔡鹏志ip
-// const API_ADDRESS = 'http://192.168.1.100:8081'
-// const API_ADDRESS = '/proxyApi'
+// const API_ADDRESS = 'http://172.26.0.56:8081' // 盛宝利线上地址
+// const API_ADDRESS = 'http://192.168.99.140:8081'//杰克线上地址
+const API_ADDRESS = 'http://192.168.68.58:8081'//李国庆地址
 
 const Api = {
 	// 登录
@@ -79,7 +79,15 @@ const Api = {
 	//外发加工入库
 	outReceipt(reqData){
 		return requestApi(`${API_ADDRESS}/mes/mespiecesmarket/outwardProcessWarehousingOfStock`, 'POST', reqData)
-	}
+	},
+	//产量报工扫描PCS
+	productionReportingPCS(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesengineeringmanagement/inquire`, 'GET', reqData)
+	},
+	//产量报工
+	productionReporting(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesengineeringmanagement/saveEngineeringManagement`, 'POST', reqData)
+	},
 }
 
 export default Api

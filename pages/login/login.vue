@@ -58,6 +58,7 @@ export default defineComponent({
 						toasting('登录成功')
 						uni.removeStorageSync('token')
 						uni.setStorageSync('token', res.data.token)
+						uni.setStorageSync('username')
 						uni.navigateTo({
 							url: '/pages/cutWarehouse/cutWarehouse'
 						})

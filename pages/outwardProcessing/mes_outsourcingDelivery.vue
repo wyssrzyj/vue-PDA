@@ -1,21 +1,19 @@
 <template>
-	<view class="mainContent">
-		<!-- <view class="commonBtn" @tap="handleScanTask" style="background-color: #fca147;">扫描缝制任务单号</view> -->
-		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
+	<view class="mainContent" @tap="handleClick">
 		<view class="borderBottom">
 			<view class="location">
 				<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-				<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" />
+				<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" @tap="handleScanCodeBox"/>
 			</view>
 			<view class="storageLocation">
 				<text style="color: red;">*</text><text class="storageTitle">产品款号：</text>
 				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="productNum" confirm-type="search" placeholder="请输入产品款号" disabled/>
-				<view class="queryBtn" @tap="productQuery">查询</view>
+				<view class="queryBtn" id="proBtn">查询</view>
 			</view>
 			<view class="storageLocation">
 				<text style="color: red;">*</text><text class="storageTitle">供应商简称：</text>
 				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search" placeholder="请输入供应商简称" disabled/>
-				<view class="queryBtn" @tap="supplierQuery">查询</view>
+				<view class="queryBtn" id="supplierBtn">查询</view>
 			</view>
 		</view>
 		<!-- <view class="radioLocation">
@@ -63,8 +61,8 @@
 							</view>
 						</view>
 					</view>	
-					<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag&&item.isSelectScan"></image>
-					<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-if="item.arrowFlag&&item.isSelectScan"></image>
+					<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="item.arrowFlag&&item.isSelectScan"></image>
+					<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-if="!item.arrowFlag&&item.isSelectScan"></image>
 				</view>
 				<view class="touch-list list-delete" @click = "deleteMember(item)">
 					删除
@@ -74,12 +72,12 @@
 		<view class="bottomLocation">
 			<view class="scanNum"><view><text class="scannedNum">{{ alreadyOutStorageArr.length }}</text>/{{ outStorageArr.length }}</view><view><text>已扫描数量：</text><text class="scannedAllNum">{{alreadyCount}}</text></view></view>
 			<view class="btnLocation">
-				<view class="commonBtn moreBtn" @tap="handleMore">更多</view>
+				<view class="commonBtn moreBtn" @tap="handleMore" id="moreBtn">更多</view>
 				<view class="commonBtn inStorageBtn" @tap="handleOutStorage" v-if="alreadyCount > 0 ">出库并打印</view>
 				<view class="commonBtn noInStorageBtn" v-else>出库并打印</view>
 			</view>
 		</view>
-		<view class="btnModal" v-if="showModal">
+		<view class="btnModal" v-if="showModal" id="btnModal">
 			<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
 			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
 		</view>
@@ -91,24 +89,31 @@
 			<view class="errorImage"></view>
 			<view style="margin-left: 20rpx;">{{ showErrorMessage }}</view>
 		</view>
-		<view class="productNumModel" v-if="showProductNumModel">
+		<view class="productNumModel" v-if="showProductNumModel" id="productNumModel">
+			<view class="del">删除</view>
 			<view class="productNumSelect">
 				<input placeholder-style="font-size: 34rpx" v-model="productForm.proNum" confirm-type="search" placeholder="产品款号" class="productNumInput"/>
 				<input placeholder-style="font-size: 34rpx" v-model="productForm.clientNum" confirm-type="search" placeholder="客户款号" class="productNumInput"/>
 				<view class="queryBtn" @tap="queryProduct">查询</view>
 			</view>
 			<view class="productTable">
-				<view class="tableColumn" >
-					<view class="td" style="background-color: #bbdef5;max-width: 260rpx;">产品款号</view>
-					<view class="td" style="background-color: #bbdef5;max-width: 260rpx;">客户款号</view>
-				</view>
-				<view class="tableColumn" v-for="item in productData" @tap="getProductNum(item)" :key="item.id">
-					<view class="td" style="max-width: 260rpx;">{{item.proNum}}</view>
-					<view class="td" style="max-width: 260rpx;">{{item.clientNum}}</view>
+				<view class="miniHeight-table">
+					<view class="tableColumn" >
+						<view class="td" style="background-color: #bbdef5;max-width: 260rpx;">产品款号</view>
+						<view class="td" style="background-color: #bbdef5;max-width: 260rpx;">客户款号</view>
+					</view>
+					<view class="tableColumn" v-for="(item,index) in productData" @tap="getProductNum(item)" :key="index">
+						<view class="td" style="max-width: 260rpx;">{{item.proNum}}</view>
+						<view class="td" style="max-width: 260rpx;">{{item.clientNum}}</view>
+					</view>
 				</view>
 			</view>
 		</view>
-		<view class="productNumModel" v-if="showSupplierModel">
+		<view class="productNumModel" v-if="showSupplierModel" id="supplierModel">
+			<view class="del">
+				<view class="del-1"></view>
+				<view class="del-2"></view>
+			</view>
 			<view class="productNumSelect">
 				<input placeholder-style="font-size: 34rpx" v-model="supplierForm.supplierAbbreviation" confirm-type="search" placeholder="供应商简称" class="productNumInput"/>
 				<view class="queryBtn" @tap="querySupplier">查询</view>
@@ -118,7 +123,7 @@
 					<view class="td firstTd" style="background-color: #bbdef5;">供应商简称</view>
 					<view class="td" style="background-color: #bbdef5;">供应商全称</view>
 				</view>
-				<view class="tableColumn" v-for="item in supplierData" :key="item.id" @tap="getSupplier(item)">
+				<view class="tableColumn" v-for="(item,index) in supplierData" :key="index" @tap="getSupplier(item)">
 					<view class="td firstTd" style="display: flex;align-items: center;justify-content: center;">{{item.supplierAbbreviation}}</view>
 					<view class="td">{{item.supplierName}}</view>
 				</view>
@@ -186,11 +191,34 @@ export default{
 		}
 	},
 	methods:{
-		//产品查询
-		async productQuery(){
-			this.showProductNumModel=true
-			const res=await Api.productQuery()
-			this.productData=res.data
+		//事件委托全局按钮
+		async handleClick(e){
+			if(e.target.id!=="productNumModel"&&this.showProductNumModel){
+				this.showProductNumModel=false
+			}else if(e.target.id!=="supplierModel"&&this.showSupplierModel){
+				this.showSupplierModel=false
+			}else if(e.target.id==="proBtn" && !this.showProductNumModel){
+				//产品查询
+				this.showProductNumModel=true
+					const res=await Api.productQuery()
+					this.productData=res.data
+			}else if(e.target.id==="supplierBtn" && !this.showSupplierModel){
+				if(this.productNum!==""){
+					this.showSupplierModel=true
+					this.showProductNumModel=false
+					const res=await Api.supplierQuery({proNum:this.productNum})
+					this.supplierData=res.data
+				}else{
+					this.showErrorMessage = '请先选择产品款号！'
+					this.showErrorPop = true
+					let timer = setTimeout(() => {
+						clearTimeout(timer)
+						this.showErrorPop = false
+					}, 2000)
+				}
+			}else if(e.target.id!=="btnModal"&& e.target.id!=="moreBtn"&& this.showModal){
+				this.showModal=false
+			}
 		},
 		//搜索产品信息
 		async queryProduct(){
@@ -201,21 +229,6 @@ export default{
 		getProductNum(item){
 			this.productNum=item.proNum
 			this.showProductNumModel=false
-		},
-		//代理商查询
-		async supplierQuery(){
-			if(this.productNum!==""){
-				this.showSupplierModel=true
-				const res=await Api.supplierQuery({proNum:this.productNum})
-				this.supplierData=res.data
-			}else{
-				this.showErrorMessage = '请先选择产品款号！'
-				this.showErrorPop = true
-				let timer = setTimeout(() => {
-					clearTimeout(timer)
-					this.showErrorPop = false
-				}, 2000)
-			}
 		},
 		//搜索供应商
 		async querySupplier(){
@@ -231,37 +244,38 @@ export default{
 			this.showSupplierModel=false
 		},
 		//扫描PCS码
-		// handleScanCodeBox(){
-		// 	if(this.productNum===""||this.supplierName===""){
-		// 		this.showErrorMessage = '请先选择产品款号及供应商！'
-		// 		this.showErrorPop = true
-		// 		let timer = setTimeout(() => {
-		// 			clearTimeout(timer)
-		// 			this.showErrorPop = false
-		// 		}, 2000)
-		// 	}else{
-		// 		uni.scanCode({
-		// 			onlyFromCamera: true,
-		// 			success: res => {
-		// 				console.log(res.result)
-		// 				//这里即拿到了扫描出的数据
-		// 				// if(this.sewingTaskRecord) {
-		// 				// 	console.log("扫描扫描PCS码")
-		// 				// 扫描PCS码
-		// 					this.handleScanPCS(res.result)
-		// 				// }else {
-		// 				// 	console.log("扫描扫描缝制任务单号")
-		// 				// 	// 扫描缝制任务单号
-		// 				// 	handleScanTask(res.result)
-		// 				// }
-		// 			},
-		// 			fail: err => {
-		// 			    // 需要注意的是小程序扫码不需要申请相机权限
-		// 				console.log(err)
-		// 			}
-		// 		});
-		// 	}
-		// },
+		handleScanCodeBox(){
+			if(this.productNum===""||this.supplierName===""){
+				this.showErrorMessage = '请先选择产品款号及供应商！'
+				this.showErrorPop = true
+				let timer = setTimeout(() => {
+					clearTimeout(timer)
+					this.showErrorPop = false
+				}, 2000)
+			}else{
+				uni.scanCode({
+					onlyFromCamera: true,
+					success: res => {
+						console.log(res.result)
+						//这里即拿到了扫描出的数据
+						// if(this.sewingTaskRecord) {
+						// 	console.log("扫描扫描PCS码")
+						// 扫描PCS码
+							this.handleScanPCS(res.result)
+						// }else {
+						// 	console.log("扫描扫描缝制任务单号")
+						// 	// 扫描缝制任务单号
+						// 	handleScanTask(res.result)
+						// }
+					},
+					fail: err => {
+					    // 需要注意的是小程序扫码不需要申请相机权限
+						console.log(err)
+					}
+				});
+			}
+		},
+		//右滑删除
 		handleTouchStart(e,item){
 			if(item.isSelectScan){
 				this.startX = touchStart(e)
@@ -279,17 +293,17 @@ export default{
 				this.outStorageArr = touchEnd(e, this.startX, this.outStorageArr)
 			}
 		},
-		
+		//删除按钮
 		deleteMember(item,index){
 			item.isSelectScan=false
 			this.alreadyOutStorageArr.splice(index, 1)
-			this.alreadyCount-=item.packageNum
-			item.txtStyle=''
+			this.alreadyCount-=item.count
+			item.txtStyle=0
 		},
 		
 		handleScanPCS(pcsNum){ // 扫描PCS码
 			Api.outScanPCS({
-				pcsNum, // 'PD20211110090285439-0-00000116'
+				pcsNum:"PD20220209023395891-4-00000001",// 'PD20211110090285439-0-00000116'
 				proNum: this.productNum,
 				outProcessSupplier:this.supplierId
 			}).then(res => {
@@ -313,7 +327,6 @@ export default{
 											this.alreadyCount+=+item.count
 										}
 									})
-									// this.alreadyOutStorageArr=this.outStorageArr.filter(item=>item.packageCode==res.data.packageCode)
 									this.outStorageArr.forEach(item=>{
 										if(item.packageCode==res.data.packageCode){
 											this.alreadyOutStorageArr=this.alreadyOutStorageArr.concat(item)
@@ -323,15 +336,6 @@ export default{
 											})
 										}
 									})
-									// this.PCSData=res.data
-									
-									// 数组去重
-									// this.alreadyOutStorageArr = arrayToHeavy(this.alreadyOutStorageArr)
-									// if(this.isSelectCheckbox) {
-									// 	outStorageMethods(false)
-									// }else {
-									// 	outStorageMethods(true)
-									// }
 								}else{
 									this.showErrorMessage = '该PCS码已扫描！'
 									this.showErrorPop = true
@@ -342,7 +346,7 @@ export default{
 								}
 								
 							}else {
-								this.showErrorMessage = res.msg
+								this.showErrorMessage = "该PCS码不属于当前列表！"
 								this.showErrorPop = true
 								let timer = setTimeout(() => {
 									clearTimeout(timer)
@@ -350,7 +354,7 @@ export default{
 								}, 2000)
 						}
 					}else{
-						this.showErrorMessage = "该PCS码不属于当前列表！"
+						this.showErrorMessage = res.msg
 						this.showErrorPop = true
 						let timer = setTimeout(() => {
 							clearTimeout(timer)
@@ -378,6 +382,8 @@ export default{
 					})
 					this.alreadyOutStorageArr=[]
 					this.PCSData=[]
+					this.productNum = ''
+					this.supplierName=""
 					this.alreadyCount=0
 					this.showSuccessMessage = '出库并打印成功！'
 					this.showSuccessPop = true
@@ -406,6 +412,13 @@ export default{
 </script>
 
 <style lang="scss">
+	@mixin delSty {
+		position:absolute;
+		top:10rpx;
+		width: 26rpx;
+		height: 2px;
+		background-color: #afafaf;
+	}
 	.mainContent {
 	position: relative;
 	background-color: #F3F3F3;
@@ -653,7 +666,23 @@ export default{
 		padding: 40rpx 30rpx;
 		background-color: #f2f2f2;
 		border: 3px solid #afafaf;
-		
+		.del{
+			position: absolute;
+			top: 8rpx;
+			right: 8rpx;
+			width: 30rpx;
+			height: 30rpx;
+			border:2px solid #afafaf;
+			border-radius: 50%;
+			.del-1{
+				@include delSty;
+				transform: rotateZ(45deg);
+			}
+			.del-2{
+				@include delSty;
+				transform: rotateZ(130deg);
+			}
+		}
 		.productNumSelect{
 			display: flex;
 			margin:0rpx 0rpx 30rpx;
@@ -672,7 +701,10 @@ export default{
 			width:520rpx;
 			border-top: 1px solid black;
 			border-left: 1px solid black;
-			
+			.miniHeight-table{
+				max-height: 500rpx;
+				overflow: auto;
+			}
 			.tableColumn{
 				display: flex;
 				.td{
@@ -682,7 +714,6 @@ export default{
 					text-align: center;
 					line-height: 50rpx;
 					background-color: white;
-					// max-width: 260rpx;
 				}
 				.firstTd{
 					flex: 0.6;

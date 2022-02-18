@@ -45,7 +45,7 @@
 					<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="item.arrowFlag"></image>
 					<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
 				</view>
-				<view class="touch-list list-delete" @click = "deleteMember(index)">
+				<view class="touch-list list-delete" @click = "deleteMember(index,item)">
 					删除
 				</view>
 			</view>
@@ -209,7 +209,7 @@ export default{
 				}
 			})
 		},
-		
+		//右滑删除
 		handleTouchStart(e){
 			this.startX = touchStart(e)
 		},
@@ -222,9 +222,10 @@ export default{
 			this.inStorageArr = touchEnd(e, this.startX, this.inStorageArr)
 		},
 		
-		
-		deleteMember(index){ // 点击删除按钮事件
+		//删除按钮
+		deleteMember(index,item){ // 点击删除按钮事件
 			this.inStorageArr.splice(index, 1)
+			item.txtStyle=0
 		},
 		
 		handleMore(){ // 更多
