@@ -3,18 +3,16 @@
 		<view class="borderBottom">
 			<view class="location">
 				<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-				<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" @tap="handleScanCodeBox"/>
+				<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码"/>
 			</view>
 			<view class="storageLocation">
 				<text style="color: red;">*</text><text class="storageTitle">产品款号：</text>
 				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="productNum" confirm-type="search" placeholder="请扫描产品款号" disabled/>
-				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="productNum" confirm-type="search" placeholder="请输入产品款号" disabled/>
 				<view class="queryBtn" id="proBtn">查询</view>
 			</view>
 			<view class="storageLocation">
 				<text style="color: red;">*</text><text class="storageTitle">供应商简称：</text>
 				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search" placeholder="请扫描供应商简称" disabled/>
-				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search" placeholder="请输入供应商简称" disabled/>
 				<view class="queryBtn" id="supplierBtn">查询</view>
 			</view>
 		</view>
@@ -246,37 +244,37 @@ export default{
 			this.showSupplierModel=false
 		},
 		//扫描PCS码
-		handleScanCodeBox(){
-			if(this.productNum===""||this.supplierName===""){
-				this.showErrorMessage = '请先选择产品款号及供应商！'
-				this.showErrorPop = true
-				let timer = setTimeout(() => {
-					clearTimeout(timer)
-					this.showErrorPop = false
-				}, 2000)
-			}else{
-				uni.scanCode({
-					onlyFromCamera: true,
-					success: res => {
-						console.log(res.result)
-						//这里即拿到了扫描出的数据
-						// if(this.sewingTaskRecord) {
-						// 	console.log("扫描扫描PCS码")
-						// 扫描PCS码
-							this.handleScanPCS(res.result)
-						// }else {
-						// 	console.log("扫描扫描缝制任务单号")
-						// 	// 扫描缝制任务单号
-						// 	handleScanTask(res.result)
-						// }
-					},
-					fail: err => {
-					    // 需要注意的是小程序扫码不需要申请相机权限
-						console.log(err)
-					}
-				});
-			}
-		},
+		// handleScanCodeBox(){
+		// 	if(this.productNum===""||this.supplierName===""){
+		// 		this.showErrorMessage = '请先选择产品款号及供应商！'
+		// 		this.showErrorPop = true
+		// 		let timer = setTimeout(() => {
+		// 			clearTimeout(timer)
+		// 			this.showErrorPop = false
+		// 		}, 2000)
+		// 	}else{
+		// 		uni.scanCode({
+		// 			onlyFromCamera: true,
+		// 			success: res => {
+		// 				console.log(res.result)
+		// 				//这里即拿到了扫描出的数据
+		// 				// if(this.sewingTaskRecord) {
+		// 				// 	console.log("扫描扫描PCS码")
+		// 				// 扫描PCS码
+		// 					this.handleScanPCS(res.result)
+		// 				// }else {
+		// 				// 	console.log("扫描扫描缝制任务单号")
+		// 				// 	// 扫描缝制任务单号
+		// 				// 	handleScanTask(res.result)
+		// 				// }
+		// 			},
+		// 			fail: err => {
+		// 			    // 需要注意的是小程序扫码不需要申请相机权限
+		// 				console.log(err)
+		// 			}
+		// 		});
+		// 	}
+		// },
 		//右滑删除
 		handleTouchStart(e,item){
 			if(item.isSelectScan){

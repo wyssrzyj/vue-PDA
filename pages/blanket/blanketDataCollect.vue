@@ -241,11 +241,7 @@
 		</view>
 		<view class="bottomLocation">
 			<view class="btnLocation">
-<<<<<<< HEAD
 				<view class="commonBtn moreBtn" id="moreBtn" @tap="handleMore">更多</view>
-=======
-				<view class="commonBtn moreBtn" @tap="handleMore">更多</view>
->>>>>>> 899e46c53aa09495ff1f5a681d78e4c833375619
 				<view class="commonBtn submitBtn" @tap="onSubmit" v-if="isSubmit">提交</view>
 				<view class="commonBtn noSubmitBtn" v-else>提交</view>
 			</view>
