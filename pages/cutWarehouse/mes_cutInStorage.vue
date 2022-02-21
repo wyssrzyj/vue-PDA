@@ -69,7 +69,7 @@
 		<view class="errorPopup remindPopup" v-if="showErrorPop">
 			<view class="errorImage"></view>
 			<view style="margin: 0 20rpx 0 80rpx;">{{ showErrorMessage }}</view>
-		</view>
+		</view>	
 		<scan-code></scan-code> 
 	</view>
 </template>
@@ -302,6 +302,7 @@ export default{
 			border: 1px solid #767676;
 			background-color: #FFF;
 			padding: 0 10rpx;
+			text-align: center;
 			// margin-left: 70rpx;
 		}
 	}

@@ -4,11 +4,11 @@
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
 			<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="sewingTaskRecord? '请扫描PCS码': '请扫描缝制任务单号'" />
+			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="sewingTaskRecord? '请扫描PCS码': '请扫描缝制任务单号码'" />
 		</view>
 		<view class="storageLocation">
 			<text class="storageTitle">缝制任务单号：</text>
-			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="sewingTaskRecord" confirm-type="search" placeholder="请扫描缝制任务单号" disabled/>
+			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="sewingTaskRecord" confirm-type="search" placeholder="请扫描缝制任务单号码" disabled/>
 		</view>
 		<view class="radioLocation">
 			<checkbox-group @change="checkboxChange">
@@ -18,6 +18,7 @@
 				<view class="checkboxStyle">全部</view>
 			</checkbox-group>
 		</view>
+		
 		<view class="pannelContent">
 			<view 
 			 class="storageItem" 
@@ -31,7 +32,12 @@
 				 >
 					<text class="serialNumber">{{ index + 1 }}.</text>
 					<view>
-						<view class="storageCode">{{ item.proNum }}</view>
+						<view class="storageTop">
+							<view class="storageCode">{{ item.proNum }}</view>
+							<view v-if="item.packageState=='齐套可用'" class="storageUse">齐套可用</view>
+							<view v-else-if="item.packageState=='齐套不可用'" class="storageUnUse">齐套不可用</view>
+							<view v-else class="NoStorageUnUse">非齐套不可用</view>
+						</view>
 						<view>
 							<text>颜色尺码：</text>
 							<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeName }}</text>
@@ -45,11 +51,17 @@
 								<text>数量：</text>
 								<text>{{ item.inputNumber }}</text>
 							</view>
+							<view class="storageArea">
+								<text>库位：</text>
+								<text>{{ item.locationCode }}</text>
+							</view>
 						</view>
 					</view>	
 				</view>
 			</view>
 		</view>
+		
+
 		<view class="bottomLocation">
 			<view class="scanNum">总行数/已扫描行数：{{ outStorageArr.length }}/{{ alreadyOutStorageArr.length }}</view>
 			<view class="btnLocation">
@@ -163,6 +175,8 @@ export default{
 								sizeName: item.sizeName || "",
 								packageNum: item.packageNum || "",
 								inputNumber: item.inputNumber || "",
+								locationCode: item.locationCode || "",
+								packageState: item.packageState || "",
 								outputNumber: 0,
 								storageStatus: 0,
 								isShowScan: true,
@@ -318,6 +332,7 @@ export default{
 			border: 1px solid #767676;
 			background-color: #FFF;
 			padding: 0 10rpx;
+			text-align: center;
 			// margin-left: 70rpx;
 		}
 	}
@@ -347,7 +362,7 @@ export default{
 		}
 	}
 	.pannelContent {
-		height: calc(100vh - 350rpx);
+		height: calc(100vh - 460rpx);
 		overflow: auto;
 		.storageItem {
 			display: flex;
@@ -381,14 +396,28 @@ export default{
 					font-weight: bold;
 					font-size: 35rpx;
 				}
-				.storageCode {
+				.storageTop{
+					display: flex;
+					justify-content: space-between;
 					font-weight: bold;
+					// .storageCode {
+					// 	font-weight: bold;
+					// }
+					.storageUse{
+						color: #3c8a21;
+					}
+					.storageUnUse{
+						color: #ffd335;
+					}
+					.NoStorageUnUse{
+						color: #ff0303;
+					}
 				}
 				.storageContent {
 					display: flex;
 					flex-direction: row;
 					justify-content: space-between;
-					.storageNum {
+					.storageArea {
 						font-weight: bold;
 					}
 				}
@@ -403,6 +432,7 @@ export default{
 		left: 0;
 		bottom: 0;
 		padding: 15rpx 30rpx 30rpx;
+		z-index: 99;
 		.scanNum {
 			height: 75rpx;
 			line-height: 75rpx;

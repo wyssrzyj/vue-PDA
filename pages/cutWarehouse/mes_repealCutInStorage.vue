@@ -365,6 +365,7 @@ export default{
 			border: 1px solid #767676;
 			background-color: #FFF;
 			padding: 0 10rpx;
+			text-align: center;
 			// margin-left: 70rpx;
 		}
 	}
