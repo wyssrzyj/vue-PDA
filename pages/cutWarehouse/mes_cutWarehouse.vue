@@ -24,7 +24,17 @@
 		</view>
 		<view class="tabBoxItem">
 			<view class="text">
-				铺布数据采集
+				产量报工
+			</view>
+			<view class="factoryAccess outboundProcessing">
+			<view v-for="(item, index) in workReportList" :key="index" class="factoryAccessItem " @tap="toList(item)">
+				<image :src="item.src" class="image"></image>
+				<text class="boxItemTitle">{{ item.title }}</text>
+			</view>
+			</view>
+		</view>
+		<view class="tabBoxItem">
+			<view class="text">
 			</view>
 			<view class="factoryAccess">
 				<view v-for="(item, index) in blanketDataList" :key="index" @tap="toList(item)" class="factoryAccessItem">
@@ -37,15 +47,16 @@
 </template>
 
 <script>
-import { cutWarehouseList, outwardProcessingList,blanketDataList } from '../../utils/common.js';
+import { cutWarehouseList, outwardProcessingList,blanketDataList,workReportList } from '../../utils/common.js';
 
 export default{
 	// name: 'cutWarehouse',
 	data(){
 		return{
-			cutWarehouseList: cutWarehouseList,
-			outwardProcessingList: outwardProcessingList,
-			blanketDataList: blanketDataList
+			cutWarehouseList,
+			outwardProcessingList,
+			blanketDataList,
+			workReportList
 		}
 	},
 	methods:{

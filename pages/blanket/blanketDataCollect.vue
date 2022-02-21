@@ -460,13 +460,12 @@ export default {
 		handleMore() { // 更多
 			this.showModal = true
 		},
-		
+
 		closeModal(e){//点击页面其他地方关闭清空按钮
 			if(e.target.id!="moreBtn" && this.showModal){
 				this.showModal=false 
 			}
 		},
-		
 		onSubmit() { // 提交
 			Api.saveData({
 				dto: {

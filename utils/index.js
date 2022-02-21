@@ -66,19 +66,6 @@ export const touchEnd = (e, startX, inStorageArr) => {
 	}
 }
 
-// export const toasting = async (message, func = () => {}, time = 1000) => {
-// 	let timer = null
-// 	uni.showToast({
-// 		title: message,
-// 		icon: 'none'
-// 	})
-// 	timer = setTimeout(async() => {
-// 		uni.hideToast()
-// 		func ? await func() : console.log('toasting no func')
-// 	}, time)
-// }
-
-
 export const toasting = (message, func = () => {}, time = 1000) => {
 	uni.showToast({
 		title: message,
@@ -94,21 +81,24 @@ export const toasting = (message, func = () => {}, time = 1000) => {
 	})
 }
 
-// //节流
-// export const throttle = (func, delay)=> {     
-//     var timer = null;     
-//     var startTime = Date.now();     
-//     return ()=> {             
-//         var curTime = Date.now();             
-//         var remaining = delay - (curTime - startTime);             
-//         var context = this;             
-//         var args = arguments;             
-//         clearTimeout(timer);              
-//         if (remaining <= 0) {                    
-//             func.apply(context, args);                    
-//             startTime = Date.now();              
-//         } else {                    
-//             timer = setTimeout(func, remaining);              
-//         }      
-//     }
-// }
+//将当前时间戳转换成时间格式
+export const formateDate = ()=> {
+      let date = new Date();
+      let y = date.getFullYear();
+      let m = (date.getMonth() + 1);
+      let d = date.getDate();
+      let h = date.getHours();
+      let mi = date.getMinutes();
+      let s = date.getSeconds();
+      m = m > 9 ? m : "0" + m;
+      h = h > 9 ? h : "0" + h;
+      mi = mi > 9 ? mi : "0" + mi;
+      s = s > 9 ? s : "0" + s;
+      return y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + s;
+}
+
+//通过value寻找key
+
+export const findKey=(obj, value, compare = (a, b) => a === b)=> {
+  return Object.keys(obj).find(k => compare(obj[k], value))
+}

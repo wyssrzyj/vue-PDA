@@ -11,11 +11,11 @@
 			</view>
 			<view class="storageLocation">
 				<text class="storageTitle">报工工序：</text>
-				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search"/>
+				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search" @click="showMultiple"/>
 			</view>
 			<view class="storageLocation">
 				<text class="storageTitle">当前员工：</text>
-				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search" disabled/>
+				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="employeeName" confirm-type="search" disabled/>
 			</view>
 		</view>
 		<view class="pannelContent">
@@ -25,11 +25,11 @@
 			 :key="index"
 			>
 				<view 
-				 :class="[item.isSelectScan ? 'selectLine': '' , 'touch-list', 'list-touch']" 
+				 :class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']" 
 				 >
 					<text class="serialNumber">{{ index + 1 }}.</text>
 					<view>
-						<view class="storageCode">{{ item.proNum }}</view>
+						<view class="storageCode">{{ item.packageCode }}</view>
 						<view>
 							<text>颜色尺码：</text>
 							<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
@@ -39,9 +39,10 @@
 								<text>扎号：</text>
 								<text>{{ item.packageNum }}</text>
 							</view>
-							<view>
+							<view style="display: flex;">
 								<text>数量：</text>
-								<text>{{ item.count }}</text>
+								<!-- <text>{{ item.count }}</text> -->
+								<input class="itemCount" placeholder-style="font-size: 17rpx" v-model="item.count" confirm-type="search"/>
 							</view>
 						</view>
 					</view>	
@@ -49,10 +50,10 @@
 			</view>
 		</view>
 		<view class="bottomLocation">
-			<view class="scanNum"><view><text>已扫描数量：</text><text class="scannedAllNum">{{alreadyCount}}</text></view></view>
+			<view class="scanNum"><view><text>已扫描数量：</text><text class="scannedAllNum">{{outStorageArr.length}}</text></view></view>
 			<view class="btnLocation">
 				<view class="commonBtn moreBtn" @tap="handleMore" id="moreBtn">更多</view>
-				<view class="commonBtn inStorageBtn" @tap="handleOutStorage" v-if="alreadyCount > 0 ">报工</view>
+				<view class="commonBtn inStorageBtn" @tap="handleOutStorage" v-if="outStorageArr.length > 0 ">报工</view>
 				<view class="commonBtn noInStorageBtn" v-else>报工</view>
 			</view>
 		</view>
@@ -68,16 +69,23 @@
 			<view class="errorImage"></view>
 			<view style="margin-left: 20rpx;">{{ showErrorMessage }}</view>
 		</view>
+		<select-code-multiple :visible="showM" :checkedValue="checkedList" :optionList="coutryList"
+		@confirm="getCodeMu"></select-code-multiple>
 		<scan-code></scan-code>
 	</view>
 </template>
 
 <script>
-import { arrayToHeavy, toasting,touchStart, touchMove, touchEnd} from '../../utils/index.js'
+import {formateDate,findKey} from "@/utils/index.js"
 import Api from '../../service/api'
-import scanCode from "../../components/scan/scan.vue"
+import scanCode from "@/components/scan/scan.vue"
+import selectCodeMultiple from '@/components/mulSelection/mulSelection.vue'
 
 export default{
+	components: {
+		selectCodeMultiple,
+		scanCode
+	},
 	// name: 'cutOutStorage',
 	onLoad() {
 		// console.log('onLoad');
@@ -110,18 +118,54 @@ export default{
 			supplierName:'',
 			supplierId:'',
 			outStorageArr: [],
-			alreadyOutStorageArr: [],
-			alreadyCount:0,
 			PCSData:[],
 			selectIndex: 0,
-			title:'标题',
-			columns:[
-				['中国','美国','日本']
-			],
-			show:false
+			columns:[],
+			show:false,
+			employeeName:"",
+			showM: false,
+			coutryList: [],
+			//选中的值
+			checkedList: [],
+			workshopObj:{}
 		}
 	},
 	methods:{
+		//打开多选
+		showMultiple() {
+			this.showM = true
+		},
+		//获取多选的值
+		getCodeMu(event) {
+			this.checkedList=[]
+			console.log("勾选的是：", event)
+			event.forEach(item=>{
+				this.checkedList.push(item.value)
+			})
+			this.supplierName=this.checkedList.join(",")
+			this.showM = false
+		},
+		// handleScanCodeBox(){
+		// 	uni.scanCode({
+		// 		onlyFromCamera: true,
+		// 		success: res => {
+		// 			console.log(res.result)
+		// 			//这里即拿到了扫描出的数据
+		// 			// if(this.storageValue) {
+		// 				console.log("扫描扫描PCS码")
+		// 				// 扫描PCS码
+		// 				this.handleScanPCS(res.result)
+		// 			// }else {
+		// 				// console.log("扫描扫描库位")
+		// 				// 扫描库位
+		// 				// this.handleScanStorage(res.result)
+		// 			// }
+		// 		},
+		// 		fail: err => {
+		// 		    // 需要注意的是小程序扫码不需要申请相机权限
+		// 		}
+		// 	});
+		// },
 		//事件委托全局按钮
 		handleClick(e){
 			if(e.target.id!=="btnModal"&& e.target.id!=="moreBtn"&& this.showModal){
@@ -135,12 +179,32 @@ export default{
 		handleCancel(){		//报工工段取消
 			this.show=false
 		},
-		handleScanPCS(pcsNum){ // 扫描PCS码
+		//封装函数
+		scanPCSEncapsulation(res){
+			this.outStorageArr.push(res.data)
+			//报工工段
+			res.data.sectionAndSectionNames.forEach(item=>{
+				this.workshopObj=Object.assign(item,{})
+			})
+			this.columns=[Object.values(this.workshopObj)]
+			//报工工序
+			let process=res.data.sectionsAndProductNames[0]
+			let newArr=[]
+			for(let key in process){
+				newArr=newArr.concat(process[key])
+			}
+			this.coutryList=newArr.map(item=>{
+				return {value:item,name:item}
+			})
+			//当前员工
+			this.employeeName=res.data.realName;
+			// 数组去重
 			this.outStorageArr = this.outStorageArr.reverse()
-			Api.getInfoBySearch({
-				pcsNum, // 'PD20211118073139826-0-00153638'
-				type: this.typeMode,
-				wareHouseLocation: this.wareHouseLocation
+		},
+		handleScanPCS(pcs){ // 扫描PCS码
+			this.outStorageArr = this.outStorageArr.reverse()
+			Api.productionReportingPCS({
+				pcs, // 'PD20211118073139826-0-00153638'
 			}).then(res => {
 				if (res.code === 0) {
 					uni.showToast({
@@ -148,34 +212,29 @@ export default{
 						icon: 'none',
 						duration: 3000
 					})
-					this.outStorageArr.push(
-						{
-							id: res.data.subpackageId || "",
-							productId: res.data.productId || "",
-							produceId: res.data.produceId || "",
-							subpackageId: res.data.subpackageId || "",
-							proNum: res.data.proNum || "",
-							colorCode: res.data.colorCode || "",
-							colorName: res.data.colorName || "",
-							sizeCode: res.data.sizeCode || "",
-							sizeName: res.data.sizeName || "",
-							packageNum: res.data.packageNum || "",
-							inputNumber: res.data.inputNumber || "",
-							arrowFlag: true
+				if(this.outStorageArr.length===0){
+					this.scanPCSEncapsulation.call(this,res)
+				}else{
+					const Find=this.outStorageArr.find((item)=>item.produceOrderId===res.data.produceOrderId)
+					if(Find){ //同一生产单不能重复扫描
+						const find=this.outStorageArr.find(item=>item.snNum===res.data.snNum)
+						if(find){ //同一个PCS码不能重复扫描
+							uni.showToast({
+								title: 'PCS码已被扫描',
+								icon: 'error',
+								duration: 3000
+							})
+						}else{
+							this.scanPCSEncapsulation.call(this,res)
 						}
-					)
-					
-					// 数组去重
-					this.outStorageArr = arrayToHeavy(this.outStorageArr)
-					
-					this.outStorageArr = this.outStorageArr.reverse()
-				}else {
-					this.showErrorMessage = res.msg
-					this.showErrorPop = true
-					let timer = setTimeout(() => {
-						clearTimeout(timer)
-						this.showErrorPop = false
-					}, 2000)
+					}else{
+						uni.showToast({
+							title: 'PCS码不属于该生产单！',
+							icon: 'error',
+							duration: 3000
+						})
+					}
+				}
 				}
 			})
 		},
@@ -186,20 +245,19 @@ export default{
 		},
 		
 		handleOutStorage(){ // 出库
-			Api.outOutsourcingDelivery({
-				mesOrderSubpackageOutwardDTOList:this.PCSData
+			
+			let mesEngineeringManagementDTOS=this.outStorageArr.map(item=>{
+				return {...item,section:+findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
+			});
+			Api.productionReporting({
+				mesEngineeringManagementDTOS,
 			}).then(res => {
 				if (res.code === 0) {
-					this.outStorageArr=this.outStorageArr.filter(item=>{
-						this.alreadyOutStorageArr.forEach(val=>{
-							return item.packageNum!==val.packageNum
-						})
-					})
-					this.alreadyOutStorageArr=[]
-					this.PCSData=[]
+					this.outStorageArr=[]
 					this.productNum = ''
 					this.supplierName=""
-					this.alreadyCount=0
+					this.employeeName
+					this.coutryList=[]
 					this.showSuccessMessage = '出库并打印成功！'
 					this.showSuccessPop = true
 					let timer = setTimeout(() => {
@@ -212,17 +270,13 @@ export default{
 		
 		handleEmpty(){ // 清空
 			this.outStorageArr = []
-			this.PCSData=[]
+			this.coutryList=[]
+			this.employeeName=""
 			this.showModal = false
 			this.productNum = ''
 			this.supplierName=""
-			this.alreadyCount=0
-			this.alreadyOutStorageArr=[]
 		},
 	},
-	components: {
-		scanCode
-	}
 };
 </script>
 
@@ -340,6 +394,11 @@ export default{
 					justify-content: space-between;
 					.storageNum {
 						font-weight: bold;
+					}
+					.itemCount{
+						width: 70rpx;
+						border: 1px solid #000000;
+						background-color: #ffffcc;
 					}
 				}
 				.arrowImage {
