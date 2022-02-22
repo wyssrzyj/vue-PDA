@@ -342,11 +342,12 @@ export default{
 		justify-content: flex-start;
 		align-items: center;
 		.storageTitle {
-			font-size: 25rpx;
+			// font-size: 25rpx;
+			font-size: 33rpx;
 			font-weight: bold;
 		}
 		.storageInput {
-			width: 75%;
+			width: 65%;
 			height: 80rpx;
 			display: inline-block;
 			border: 1rpx solid #212121;
