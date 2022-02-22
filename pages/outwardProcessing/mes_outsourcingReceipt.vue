@@ -98,7 +98,8 @@ export default{
 			}else {
 				console.log("扫描库位")
 				// 扫描库位
-				this.handleScanStorage(data.code)
+				data=JSON.parse(data.code)
+				this.handleScanStorage(data.code,data.warehouseFileName)
 			}
 		})
 	},
@@ -124,7 +125,7 @@ export default{
 		// 	uni.scanCode({
 		// 		onlyFromCamera: true,
 		// 		success: res => {
-		// 			console.log(res.result)
+		// 			// console.log(res.result)
 		// 			//这里即拿到了扫描出的数据
 		// 			if(this.storageValue) {
 		// 				console.log("扫描扫描PCS码")
@@ -133,7 +134,8 @@ export default{
 		// 			}else {
 		// 				console.log("扫描扫描库位")
 		// 				// 扫描库位
-		// 				this.handleScanStorage(res.result)
+		// 				res=JSON.parse(res.result)
+		// 				this.handleScanStorage(res.code,res.warehouseFileName)
 		// 			}
 		// 		},
 		// 		fail: err => {
@@ -142,7 +144,7 @@ export default{
 		// 	});
 		// },
 		
-		handleScanStorage(locationCode,warehouseFileName=''){ // 扫描库位
+		handleScanStorage(locationCode,warehouseFileName){ // 扫描库位
 			Api.outReceiptScanLocation({
 				locationCode,// 'A-01'
 				warehouseFileName,//库位名

@@ -404,13 +404,13 @@ export default{
 					// 	font-weight: bold;
 					// }
 					.storageUse{
-						color: #3c8a21;
+						color: #008000;
 					}
 					.storageUnUse{
-						color: #ffd335;
+						color: #ffcc00;
 					}
 					.NoStorageUnUse{
-						color: #ff0303;
+						color: #ff0000;
 					}
 				}
 				.storageContent {

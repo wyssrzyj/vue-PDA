@@ -237,3 +237,13 @@ var jpPrinter = {　　　　
 };
 
 module.exports.jpPrinter = jpPrinter;
+
+//使用
+// let {jpPrinter} =require('./tsc.js')
+// let jpPrinter=jpPrinter.createNew()
+
+// jpPrinter.setSize(pageWidght, pageHeight)
+// //获取打印数据
+// jpPrinter.getData = function() {
+//   return command;
+// };　　

@@ -77,7 +77,7 @@
 <script>
 // import { defineComponent, ref, reactive, toRefs } from 'vue';
 import { touchStart, touchMove, touchEnd, arrayToHeavy, toasting } from '../../utils/index.js'
-import Api from '../../service/api'
+import  Api from '../../service/api'
 import scanCode from "../../components/scan/scan.vue"
 
 export default{
@@ -97,7 +97,8 @@ export default{
 			}else {
 				console.log("扫描库位")
 				// 扫描库位
-				this.handleScanStorage(data.code)
+				data=JSON.parse(data.code)
+				this.handleScanStorage(data.code,data.warehouseFileName)
 			}
 		})
 	},
@@ -138,9 +139,10 @@ export default{
 			// 	});
 			// },
 			
-			handleScanStorage(locationCode){ // 扫描库位
+			handleScanStorage(locationCode,warehouseFileName){ // 扫描库位
 				Api.getLocation({
-					locationCode: locationCode // 'A-01'
+					locationCode,	// 'A-01'
+					warehouseFileName
 				}).then(res => {
 					if (res.code === 0) {
 						uni.showToast({
