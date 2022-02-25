@@ -8,28 +8,28 @@
 		</view>
 		<view class="storageLocation">
 			<text class="storageTitle">当前库位：</text>
-			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请扫描当前库位" disabled/>
+			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请扫描库位码" disabled/>
 		</view>
 		<view class="pannelContent">
-			<view 
-			 class="storageItem" 
-			 v-for="(item, index) in inStorageArr" 
-			 :key="index"
+			<view
+							class="storageItem"
+							v-for="(item, index) in inStorageArr"
+							:key="index"
 			>
-				<view 
-				 :class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']" 
-				 @touchstart="handleTouchStart" 
-				 @touchmove="handleTouchMove" 
-				 @touchend="handleTouchEnd"
-				 :data-index="index"
-				 :style="item.txtStyle"
-				 >
+				<view
+								:class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
+								@touchstart="handleTouchStart"
+								@touchmove="handleTouchMove"
+								@touchend="handleTouchEnd"
+								:data-index="index"
+								:style="item.txtStyle"
+				>
 					<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
 					<view>
 						<view class="storageCode">{{ item.proNum }}</view>
 						<view>
 							<text>颜色尺码：</text>
-							<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
+							<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeName }}</text>
 						</view>
 						<view class="storageContent">
 							<view>
@@ -87,7 +87,7 @@ export default{
 	},
 	onShow() {
 		// console.log('onShow');
-		uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器  
+		uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
 		uni.$on('scancodedate', (data) => {
 			console.log(data)
 			if(this.storageValue) {
@@ -130,7 +130,9 @@ export default{
 			// 			}else {
 			// 				console.log("扫描扫描库位")
 			// 				// 扫描库位
-			// 				this.handleScanStorage(res.result)
+			// 				let data=JSON.parse(res.result)
+			// 				console.log(data.code,data.warehouseFileName)
+			// 				this.handleScanStorage(data.code,data.warehouseFileName)
 			// 			}
 			// 		},
 			// 		fail: err => {
@@ -327,7 +329,7 @@ export default{
 		}
 	}
 	.pannelContent {
-		height: calc(100vh - 420rpx);
+		height: calc(100vh - 350rpx);
 		overflow: auto;
 		.storageItem {
 			display: flex;
@@ -465,7 +467,7 @@ export default{
 		position: absolute;
 		left: 50%;
 		top: 50%;
-		// margin-left: -185rpx;   
+		// margin-left: -185rpx;
 		// margin-top: -40rpx;
 		transform: translate(-50%,-50%);
 		white-space:nowrap;
@@ -480,7 +482,7 @@ export default{
 			width: 50rpx;
 			height: 50rpx;
 			position: absolute;
-			left: 20rpx; 
+			left: 20rpx;
 			top: 10rpx;
 		}
 	}
@@ -493,7 +495,7 @@ export default{
 			width: 40rpx;
 			height: 40rpx;
 			position: absolute;
-			left: 20rpx; 
+			left: 20rpx;
 			top: 20rpx;
 		}
 	}
