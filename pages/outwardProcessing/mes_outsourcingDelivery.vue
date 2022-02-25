@@ -3,7 +3,7 @@
 		<view class="borderBottom">
 			<view class="location">
 				<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-				<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码"/>
+				<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" disabled/>
 			</view>
 			<view class="storageLocation">
 				<text style="color: red;">*</text><text class="storageTitle">产品款号：</text>
@@ -73,8 +73,10 @@
 			<view class="scanNum"><view><text class="scannedNum">{{ alreadyOutStorageArr.length }}</text>/{{ outStorageArr.length }}</view><view><text>已扫描数量：</text><text class="scannedAllNum">{{alreadyCount}}</text></view></view>
 			<view class="btnLocation">
 				<view class="commonBtn moreBtn" @tap="handleMore" id="moreBtn">更多</view>
-				<view class="commonBtn inStorageBtn" @tap="handleOutStorage" v-if="alreadyCount > 0 ">出库并打印</view>
-				<view class="commonBtn noInStorageBtn" v-else>出库并打印</view>
+<!-- 				<view class="commonBtn inStorageBtn" @tap="handleOutStorage" v-if="alreadyCount > 0 ">出库并打印</view>
+				<view class="commonBtn noInStorageBtn" @tap="handleOutStorage"  v-else>出库并打印</view> -->
+				<button type="default" class='commonBtn inStorageBtn' @click="handleOutStorage" v-if="alreadyCount > 0 ">出库并打印</button>
+				<button type="default" class='commonBtn noInStorageBtn '   @click="handleOutStorage" v-else>出库并打印</button>
 			</view>
 		</view>
 		<view class="btnModal" v-if="showModal" id="btnModal">
@@ -90,7 +92,10 @@
 			<view style="margin: 0 20rpx 0 80rpx;">{{ showErrorMessage }}</view>
 		</view>
 		<view class="productNumModel" v-if="showProductNumModel" id="productNumModel">
-			<view class="del">删除</view>
+			<view class="del" @click="closeProduct">
+				<view class="del-1"></view>
+				<view class="del-2"></view>
+			</view>
 			<view class="productNumSelect">
 				<input placeholder-style="font-size: 34rpx" v-model="productForm.proNum" confirm-type="search" placeholder="产品款号" class="productNumInput"/>
 				<input placeholder-style="font-size: 34rpx" v-model="productForm.clientNum" confirm-type="search" placeholder="客户款号" class="productNumInput"/>
@@ -110,7 +115,7 @@
 			</view>
 		</view>
 		<view class="productNumModel" v-if="showSupplierModel" id="supplierModel">
-			<view class="del">
+			<view class="del" @tap="closeSupplier">
 				<view class="del-1"></view>
 				<view class="del-2"></view>
 			</view>
@@ -134,15 +139,21 @@
 </template>
 
 <script>
+	const tsc=require('../../utils/ble/tsc.js')
 // import { defineComponent, ref, reactive, toRefs } from 'vue';
 import { arrayToHeavy, toasting,touchStart, touchMove, touchEnd} from '../../utils/index.js'
 import Api from '../../service/api'
 import scanCode from "../../components/scan/scan.vue"
+import {mapState} from 'vuex';
 
 export default{
 	// name: 'cutOutStorage',
 	onLoad() {
 		// console.log('onLoad');
+		this.OpenBluetoothAdapter()
+	},
+	onUnload() {
+		this.closeBLEConnection()
 	},
 	onShow() {
 		// console.log('onShow');
@@ -187,17 +198,21 @@ export default{
 			},
 			startX:'',
 			alreadyCount:0,
-			PCSData:[]
+			PCSData:[],
+			list: [],
+			services: [],
+			serviceId: 0,
+			code: '',
+			touch_all_list: false,
+			dataList: [], //包装后的列表
+			orderlist: [], //获得的列表
 		}
 	},
+	computed: mapState(['is_b_link']),
 	methods:{
 		//事件委托全局按钮
 		async handleClick(e){
-			if(e.target.id!=="productNumModel"&&this.showProductNumModel){
-				this.showProductNumModel=false
-			}else if(e.target.id!=="supplierModel"&&this.showSupplierModel){
-				this.showSupplierModel=false
-			}else if(e.target.id==="proBtn" && !this.showProductNumModel){
+			 if(e.target.id==="proBtn" && !this.showProductNumModel){
 				//产品查询
 				this.showProductNumModel=true
 					const res=await Api.productQuery()
@@ -225,10 +240,20 @@ export default{
 			const res=await Api.productQuery({proNum:this.productForm.proNum,clientNum:this.productForm.clientNum})
 			this.productData=res.data
 		},
+		closeProduct(){
+			this.showProductNumModel=false
+		},
 		// 获取产品款号
 		getProductNum(item){
+			if(item.proNum!==this.productNum&&this.productNum){
+				this.outStorageArr=[]
+				this.supplierName=""
+			}
 			this.productNum=item.proNum
 			this.showProductNumModel=false
+		},
+		closeSupplier(){
+			this.showSupplierModel=false
 		},
 		//搜索供应商
 		async querySupplier(){
@@ -303,7 +328,7 @@ export default{
 		
 		handleScanPCS(pcsNum){ // 扫描PCS码
 			Api.outScanPCS({
-				pcsNum:"PD20220209023395891-4-00000001",// 'PD20211110090285439-0-00000116'
+				pcsNum,// 'PD20211110090285439-0-00000116'
 				proNum: this.productNum,
 				outProcessSupplier:this.supplierId
 			}).then(res => {
@@ -374,7 +399,21 @@ export default{
 			Api.outOutsourcingDelivery({
 				mesOrderSubpackageOutwardDTOList:this.PCSData
 			}).then(res => {
+				
 				if (res.code === 0) {
+					if (!this.is_b_link) {
+						uni.showToast({
+							title: '打印机未连接',
+							icon: 'error'
+						})
+					} else {
+						this.outStorageArr.forEach((item, index) => {
+							setTimeout(() => {
+								console.log(item)
+								this.senBleLabel(item.locationCode)
+							}, index * 2000)
+						})
+					}
 					this.outStorageArr=this.outStorageArr.filter(item=>{
 						this.alreadyOutStorageArr.forEach(val=>{
 							return item.packageNum!==val.packageNum
@@ -382,8 +421,10 @@ export default{
 					})
 					this.alreadyOutStorageArr=[]
 					this.PCSData=[]
-					this.productNum = ''
-					this.supplierName=""
+					if(this.outStorageArr.length===0){
+						this.productNum = ""
+						this.supplierName = ""
+					}
 					this.alreadyCount=0
 					this.showSuccessMessage = '出库并打印成功！'
 					this.showSuccessPop = true
@@ -404,6 +445,389 @@ export default{
 			this.alreadyCount=0
 			this.alreadyOutStorageArr=[]
 		},
+		
+		close_back() {
+				uni.navigateBack({
+					delta: 1
+				})
+			},
+			OpenBluetoothAdapter() {
+				uni.openBluetoothAdapter({
+					success: (res) => {
+						// 初始化完毕开始搜索
+						this.StartBluetoothDeviceDiscovery()
+					},
+					fail: (res) => {
+						if (res.errCode == 10001) {
+							uni.showToast({
+								title: '蓝牙未打开',
+								duration: 2000,
+							})
+						} else {
+							uni.showToast({
+								title: res.errMsg,
+								duration: 2000,
+							})
+						}
+					}
+				});
+			},
+		
+			StartBluetoothDeviceDiscovery() {
+				uni.startBluetoothDevicesDiscovery({
+					success: res => {
+						this.OnBluetoothDeviceFound();
+					},
+					fail: res => {
+						uni.showToast({
+							icon: "none",
+							title: "查找设备失败！",
+							duration: 3000
+						})
+					}
+				});
+			},
+		
+			OnBluetoothDeviceFound() {
+				uni.onBluetoothDeviceFound(res => {
+					res.devices.forEach(device => { //这一步就是去筛选找到的蓝牙中,有没有你匹配的名称  
+						if (device.name == 'Printer_1078_BLE') { //匹配蓝牙名称
+							uni.setStorageSync("DeviceID", device.deviceId) //把已经连接的蓝牙设备信息放入缓存
+							this.DeviceID = device.deviceId
+							let DeviceID = device.deviceId //这里是拿到的uuid 
+							this.StopBluetoothDevicesDiscovery() //当找到匹配的蓝牙后就关掉蓝牙搜寻,因为蓝牙搜寻很耗性能 
+							this.CreateBLEConnection(DeviceID) //创建蓝牙连接,连接低功耗蓝牙设备  
+		
+						}
+					})
+				});
+			},
+		
+			StopBluetoothDevicesDiscovery() {
+				uni.stopBluetoothDevicesDiscovery({
+					success: res => {
+						console.log(res)
+					},
+					fail: res => {
+						console.log(res.errCode);
+					}
+				});
+			},
+		
+			CreateBLEConnection(DeviceID, index) {
+				let doc = this
+				uni.createBLEConnection({ //创建蓝牙连接,连接低功耗蓝牙设备  
+					deviceId: DeviceID, //传入刚刚获取的uuid  
+					success(res) {
+						console.log("创建蓝牙连接成功")
+						doc.GetBLEDeviceServices(DeviceID) //获取蓝牙设备所有服务(service)。
+		
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+			},
+		
+			GetBLEDeviceServices(DeviceID, index) {
+				let doc = this
+				setTimeout(function() {
+					uni.getBLEDeviceServices({ //获取蓝牙设备所有服务  
+						deviceId: DeviceID,
+						success(res) {
+							console.log(res)
+							const {
+								uuid
+							} = res.services[2]
+							uni.setStorageSync("ServiceUUID", uuid)
+							uni.setStorageSync("ServiceUUIDNew", uuid)
+							let ServiceUUIDNew = uuid
+							this.ServiceUUID = uuid
+							doc.GetBLEDeviceCharacteristics(DeviceID)
+						},
+						fail(res) {
+							const {
+								errCode
+							} = res
+							doc.errorCodeTip(errCode)
+						}
+					})
+				}, 2000)
+			},
+		
+			// 第七步 获取蓝牙特征值
+			GetBLEDeviceCharacteristics(DeviceID) {
+				const that = this
+				setTimeout(() => {
+					uni.getBLEDeviceCharacteristics({ //获取蓝牙设备某个服务中所有特征值  
+						deviceId: DeviceID,
+						serviceId: uni.getStorageSync('ServiceUUIDNew'),
+						success(res) {
+							uni.showToast({
+								title: '开启蓝牙连接',
+								duration: 1000
+							});
+							const {
+								uuid
+							} = res.characteristics[1]
+							uni.setStorageSync("CharacteristicId", uuid) //把某个服务中所有特征值信息放入缓存
+							that.characteristicId = uuid
+							that.$store.commit('set_is_b_link', true)
+						},
+						fail(res) {
+							console.log("获取蓝牙设备某个服务中所有特征值失败:", JSON.stringify(res))
+						}
+					})
+				}, 2000)
+			},
+			// 第八步 发送二进制数据
+			senBlData(deviceId, serviceId, characteristicId, uint8Array) {
+				var uint8Buf = Array.from(uint8Array);
+		
+				function split_array(datas, size) {
+					var result = {};
+					var j = 0
+					for (var i = 0; i < datas.length; i += size) {
+						result[j] = datas.slice(i, i + size)
+						j++
+					}
+					return result
+				}
+				var sendloop = split_array(uint8Buf, 20);
+		
+				function realWriteData(sendloop, i) {
+					var data = sendloop[i]
+					if (typeof(data) == "undefined") {
+						return
+					}
+					var buffer = new ArrayBuffer(data.length)
+					var dataView = new DataView(buffer)
+					for (var j = 0; j < data.length; j++) {
+						dataView.setUint8(j, data[j]);
+					}
+					uni.writeBLECharacteristicValue({
+						deviceId,
+						serviceId,
+						characteristicId,
+						value: buffer,
+						success(res) {
+							realWriteData(sendloop, i + 1);
+						}
+					})
+				}
+				var i = 0;
+				realWriteData(sendloop, i);
+			},
+			senBleLabel(content) {
+				console.log(content)
+				let deviceId = uni.getStorageSync('DeviceID');
+				let serviceId = uni.getStorageSync('ServiceUUIDNew');
+				let characteristicId = uni.getStorageSync('CharacteristicId')
+				var command = tsc.jpPrinter.createNew()
+				command.setSize(40, 100)
+				command.setGap(2)
+				command.setCls()
+				command.setBarCode(130, 300, "EAN8", 120, 2, 4, 3, `${content}`)
+				command.setText(130, 425, "TSS24.BF2", 1, 1, `${content}`)
+				command.setPagePrint()
+				this.senBlData(deviceId, serviceId, characteristicId, command.getData())
+			},
+			//错误码提示
+			errorCodeTip(code) {
+				let doc = this
+				if (code == 0) {
+					//正常
+				} else if (code == 10000) {
+					uni.showToast({
+						title: '未初始化蓝牙适配器',
+						icon: 'none'
+					})
+				} else if (code == 10001) {
+					uni.showToast({
+						title: '当前蓝牙适配器不可用',
+						icon: 'none'
+					})
+				} else if (code == 10002) {
+					uni.showToast({
+						title: '没有找到指定设备',
+						icon: 'none'
+					})
+				} else if (code == 10003) {
+					uni.showToast({
+						title: '连接失败',
+						icon: 'none'
+					})
+				} else if (code == 10004) {
+					uni.showToast({
+						title: '没有找到指定服务',
+						icon: 'none'
+					})
+				} else if (code == 10005) {
+					uni.showToast({
+						title: '没有找到指定特征值',
+						icon: 'none'
+					})
+				} else if (code == 10006) {
+					uni.showToast({
+						title: '当前连接已断开',
+						icon: 'none'
+					})
+				} else if (code == 10007) {
+					uni.showToast({
+						title: '当前特征值不支持此操作',
+						icon: 'none'
+					})
+				} else if (code == 10008) {
+					uni.showToast({
+						title: '其余所有系统上报的异常',
+						icon: 'none'
+					})
+				} else if (code == 10009) {
+					uni.showToast({
+						title: 'Android 系统特有，系统版本低于 4.3 不支持 BLE',
+						icon: 'none'
+					})
+				}
+				if (code != 0) {
+					//正常
+					//在页面加载时候初始化蓝牙适配器
+					doc.OpenBluetoothAdapter()
+				}
+			},
+			getBluetoothDevices() {
+				uni.getBluetoothDevices({
+					success: res => {
+						this.bluetooth = res.devices;
+						this.bluetooth.forEach((item) => {
+							this.isLink.push(0)
+						})
+					}
+				});
+			},
+			//断开蓝牙连接
+		
+			closeBLEConnection(deviceId, index) {
+				uni.closeBLEConnection({
+					deviceId: deviceId,
+					success: res => {
+						this.isLink.splice(index, 1, 4)
+						console.log(res)
+					}
+				})
+			},
+		
+			touch_all() {
+				const list = this.dataList
+				const ls = list.map(item => {
+					item.checked = !this.touch_all_list
+					item.arr.map(Item => {
+						Item.checked = !this.touch_all_list
+					}).reduce((prev, curr) => (prev.concat(curr)), [])
+					return item
+				})
+				this.dataList = ls
+				this.touch_all_list = !this.touch_all_list
+			},
+		
+			async check_all_list() {
+				const list = this.dataList
+				let types = []
+				list.forEach(item => {
+					types.push(item.checked)
+					item.arr.forEach(Item => {
+						types.push(Item.checked)
+					})
+				})
+				this.touch_all_list = !types.includes(false)
+			},
+		
+			async touch_rq(i) {
+				const {
+					containerName
+				} = i
+				const list = this.dataList
+				const ls = list.map(item => {
+					if (item.containerName === containerName) {
+						item.checked = !item.checked
+						if (!item.checked) {
+							this.touch_all_list = false
+						}
+						item.arr.map(Item => {
+							Item.checked = item.checked
+						})
+					}
+					return item
+				}).reduce((prev, curr) => (prev.concat(curr)), [])
+				this.dataList = ls
+				await this.check_all_list()
+			},
+		
+			async touch_rq_item(im) {
+				const {
+					containerCode: containerName,
+					code,
+					checked
+				} = im
+				const list = this.dataList
+				const ls = list.map(item => {
+					if (item.containerName === containerName) {
+						item.arr.map(Item => {
+							if (Item.code === code) {
+								Item.checked = !checked
+							}
+							if (!Item.checked) {
+								item.checked = false
+							} else {
+								item.checked = true
+							}
+						})
+					}
+					return item
+				}).reduce((prev, curr) => (prev.concat(curr)), [])
+				this.dataList = ls
+				await this.check_all_list()
+			},
+		
+			// toprint() {
+			// 	if (!this.is_b_link) {
+			// 		uni.showToast({
+			// 			title: '打印机未连接',
+			// 			icon: 'error'
+			// 		})
+			// 	} else {
+			// 		const that = this
+			// 		const list = this.dataList.map(item => {
+			// 			return item.arr.map(Item => {
+			// 				if (Item.checked) {
+			// 					return Item.code
+			// 				}
+			// 			})
+			// 		}).reduce((prev, curr) => (prev.concat(curr)), []).filter(item => item != null || undefined)
+			// 		if (list.length === 0) {
+			// 			uni.showToast({
+			// 				title: '请勾选单据',
+			// 				icon: 'error'
+			// 			})
+			// 		} else {
+			// 			list.forEach((item, index) => {
+			// 				setTimeout(() => {
+			// 					console.log(item)
+			// 					that.senBleLabel(item)
+			// 				}, index * 2000)
+			// 			})
+			// 		}
+			// 	}
+			// },
+			close_rq(id) {
+				const dis = this.dataList[id].isDisplay
+				const list = this.dataList
+				this.dataList = list.map((item, index) => {
+					if (index == id) {
+						item.isDisplay = !dis
+					}
+					return item
+				})
+			}
 	},
 	components: {
 		scanCode
@@ -670,12 +1094,10 @@ export default{
 		border: 3px solid #afafaf;
 		.del{
 			position: absolute;
-			top: 8rpx;
-			right: 8rpx;
+			top: 10rpx;
+			right: 10rpx;
 			width: 30rpx;
 			height: 30rpx;
-			border:2px solid #afafaf;
-			border-radius: 50%;
 			.del-1{
 				@include delSty;
 				transform: rotateZ(45deg);

@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<!-- <view class="container">
 		<view class="c_header" @click="touch_all">
 			<checkMine class="check-box" :checked="touch_all_list" /> 全选
 		</view>
@@ -45,9 +45,9 @@
 			</view>
 		</view>
 		<view class="c_footer">
-			<button type="default" class="btn-c" @click="close_back">关闭</button>
+			<button type="default" class="btn-c" @click="close_back">关闭</button> -->
 			<button type="default" :class='is_b_link ? "btn-p" : "btn-p-p"' @click="toprint">打印</button>
-		</view>
+		<!-- </view> -->
 	</view>
 </template>
 
@@ -61,9 +61,9 @@
 		mapState
 	} from 'vuex';
 	// import checkMine from '../../components/checkMine.vue'
-	import {
-		requestApi
-	} from '../../service/request.js'
+	// import {
+	// 	requestApi
+	// } from '../../service/request.js'
 	import {
 		toasting
 	} from '../../utils/index.js'
@@ -383,7 +383,6 @@
 						arr: res[key]
 					}
 					this.dataList.push(obj)
-					console.log(this.dataList)
 				}
 			},
 

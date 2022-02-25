@@ -2,19 +2,19 @@
 	<view class="mainContent" @tap="handleClick">
 		<view class="borderBottom">
 			<view class="location">
-				<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码"/>
+				<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" disabled/>
 			</view>
 			<view class="storageLocation">
-				<text class="storageTitle">报工工段：</text>
-				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="productNum" confirm-type="search" @click="show = true"/>
+				<text style="color: red;">*</text><text class="storageTitle">报工工段：</text>
+				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="productNum" confirm-type="search" @click="show = true" disabled/>
 				<u-picker :show="show" :columns="columns" @confirm="handleConfirm" @cancel="handleCancel"></u-picker>
 			</view>
 			<view class="storageLocation">
-				<text class="storageTitle">报工工序：</text>
-				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search" @click="showMultiple"/>
+				<text style="color: red;">*</text><text class="storageTitle">报工工序：</text>
+				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search" @click="showMultiple" disabled/>
 			</view>
 			<view class="storageLocation">
-				<text class="storageTitle">当前员工：</text>
+				<text class="storageTitle" style="margin-left: 10rpx;">当前员工：</text>
 				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="employeeName" confirm-type="search" disabled/>
 			</view>
 		</view>
@@ -50,7 +50,7 @@
 			</view>
 		</view>
 		<view class="bottomLocation">
-			<view class="scanNum"><view><text>已扫描数量：</text><text class="scannedAllNum">{{outStorageArr.length}}</text></view></view>
+			<view class="scanNum"><view><text>已扫描行数：</text><text class="scannedAllNum">{{outStorageArr.length}}</text></view></view>
 			<view class="btnLocation">
 				<view class="commonBtn moreBtn" @tap="handleMore" id="moreBtn">更多</view>
 				<view class="commonBtn inStorageBtn" @tap="handleOutStorage" v-if="outStorageArr.length > 0 ">报工</view>
@@ -70,7 +70,7 @@
 			<view style="margin-left: 20rpx;">{{ showErrorMessage }}</view>
 		</view>
 		<select-code-multiple :visible="showM" :checkedValue="checkedList" :optionList="coutryList"
-		@confirm="getCodeMu"></select-code-multiple>
+		@confirm="getCodeMu" ></select-code-multiple>
 		<scan-code></scan-code>
 	</view>
 </template>
@@ -88,7 +88,10 @@ export default{
 	},
 	// name: 'cutOutStorage',
 	onLoad() {
-		// console.log('onLoad');
+		console.log('onLoad');
+		Api.productionGetAdmin().then((res)=>{
+			this.employeeName=res.data.realName;
+		})
 	},
 	onShow() {
 		// console.log('onShow');
@@ -139,10 +142,10 @@ export default{
 		getCodeMu(event) {
 			this.checkedList=[]
 			console.log("勾选的是：", event)
-			event.forEach(item=>{
-				this.checkedList.push(item.value)
-			})
-			this.supplierName=this.checkedList.join(",")
+			this.checkedList=this.checkedList.concat(event.map(item=>{return {...item,"label":item.value}}))
+			this.supplierName=this.checkedList.map(item=>{
+				return item.name
+			}).join(',')
 			this.showM = false
 		},
 		// handleScanCodeBox(){
@@ -184,7 +187,7 @@ export default{
 			this.outStorageArr.push(res.data)
 			//报工工段
 			res.data.sectionAndSectionNames.forEach(item=>{
-				this.workshopObj=Object.assign(item,{})
+				this.workshopObj=Object.assign(item,this.workshopObj)
 			})
 			this.columns=[Object.values(this.workshopObj)]
 			//报工工序
@@ -194,10 +197,10 @@ export default{
 				newArr=newArr.concat(process[key])
 			}
 			this.coutryList=newArr.map(item=>{
-				return {value:item,name:item}
+				return {value:item,name:item,checked:false}
 			})
 			//当前员工
-			this.employeeName=res.data.realName;
+			// this.employeeName=res.data.realName;
 			// 数组去重
 			this.outStorageArr = this.outStorageArr.reverse()
 		},
@@ -206,36 +209,46 @@ export default{
 			Api.productionReportingPCS({
 				pcs, // 'PD20211118073139826-0-00153638'
 			}).then(res => {
-				if (res.code === 0) {
-					uni.showToast({
-						title: '扫描PCS码成功！',
-						icon: 'none',
-						duration: 3000
-					})
-				if(this.outStorageArr.length===0){
-					this.scanPCSEncapsulation.call(this,res)
-				}else{
-					const Find=this.outStorageArr.find((item)=>item.produceOrderId===res.data.produceOrderId)
-					if(Find){ //同一生产单不能重复扫描
-						const find=this.outStorageArr.find(item=>item.snNum===res.data.snNum)
-						if(find){ //同一个PCS码不能重复扫描
+				if(res.code!==500){
+					if (res.code === 0) {
+						uni.showToast({
+							title: '扫描PCS码成功！',
+							icon: 'none',
+							duration: 3000
+						})
+					if(this.outStorageArr.length===0){
+						this.scanPCSEncapsulation.call(this,res)
+					}else{
+						const Find=this.outStorageArr.find((item)=>item.produceOrderId===res.data.produceOrderId)
+						if(Find){ //同一生产单不能重复扫描
+							const find=this.outStorageArr.find(item=>item.packageCode===res.data.packageCode)
+							if(find){ //同一个PCS码不能重复扫描
+								uni.showToast({
+									title: '该扎包已扫描！',
+									icon: 'error',
+									duration: 3000
+								})
+							}else{
+								this.scanPCSEncapsulation.call(this,res)
+							}
+						}else{
 							uni.showToast({
-								title: 'PCS码已被扫描',
+								title: 'PCS码不属于该生产单！',
 								icon: 'error',
 								duration: 3000
 							})
-						}else{
-							this.scanPCSEncapsulation.call(this,res)
 						}
-					}else{
-						uni.showToast({
-							title: 'PCS码不属于该生产单！',
-							icon: 'error',
-							duration: 3000
-						})
 					}
+					}
+				}else{
+					this.showErrorMessage = res.msg
+					this.showErrorPop = true
+					let timer = setTimeout(() => {
+						clearTimeout(timer)
+						this.showErrorPop = false
+					}, 2000)
 				}
-				}
+				
 			})
 		},
 		
@@ -245,33 +258,48 @@ export default{
 		},
 		
 		handleOutStorage(){ // 出库
-			
-			let mesEngineeringManagementDTOS=this.outStorageArr.map(item=>{
-				return {...item,section:+findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
-			});
-			Api.productionReporting({
-				mesEngineeringManagementDTOS,
-			}).then(res => {
-				if (res.code === 0) {
-					this.outStorageArr=[]
-					this.productNum = ''
-					this.supplierName=""
-					this.employeeName
-					this.coutryList=[]
-					this.showSuccessMessage = '出库并打印成功！'
-					this.showSuccessPop = true
-					let timer = setTimeout(() => {
-						clearTimeout(timer)
-						this.showSuccessPop = false
-					}, 2000)
-				}
-			})
+		   if(this.productNum!=""&&this.supplierName!=""){
+			   this.outStorageArr.forEach(item=>{
+			   	if(item.count==""){
+			   		item.count=0
+			   	}
+			   })
+			   let mesEngineeringManagementDTOS=this.outStorageArr.map(item=>{
+			   	return {...item,section:+findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
+			   });
+			   Api.productionReporting({
+			   	mesEngineeringManagementDTOS,
+			   }).then(res => {
+			   	if (res.code === 0) {
+			   		this.outStorageArr=[]
+			   		this.productNum = ''
+			   		this.supplierName=""
+			   		// this.employeeName
+					this.columns=[]
+			   		this.coutryList=[]
+			   		this.showSuccessMessage = '报工成功！'
+			   		this.showSuccessPop = true
+			   		let timer = setTimeout(() => {
+			   			clearTimeout(timer)
+			   			this.showSuccessPop = false
+			   		}, 2000)
+			   	}
+			   })
+		   }else{
+			   this.showErrorMessage = '报工工段或报工工序不能为空！'
+			   this.showErrorPop = true
+			   let timer = setTimeout(() => {
+			   	clearTimeout(timer)
+			   	this.showErrorPop = false
+			   }, 2000)
+		   }
 		},
 		
 		handleEmpty(){ // 清空
 			this.outStorageArr = []
 			this.coutryList=[]
-			this.employeeName=""
+			this.columns=[]
+			// this.employeeName=""
 			this.showModal = false
 			this.productNum = ''
 			this.supplierName=""
@@ -440,13 +468,14 @@ export default{
 			font-size: 30rpx;
 			font-weight: bold;
 			display: flex;
+			color: $theme-color;
 			justify-content: flex-end;
-			.scannedNum{
-				color: #fca147;
-			}
-			.scannedAllNum{
-				color: $theme-color;
-			}
+			// .scannedNum{
+			// 	color: #fca147;
+			// }
+			// .scannedAllNum{
+			// 	color: $theme-color;
+			// }
 		}
 		.btnLocation {
 			display: flex;

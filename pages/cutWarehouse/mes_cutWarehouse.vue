@@ -33,7 +33,7 @@
 			</view>
 			</view>
 		</view>
-		<view class="tabBoxItem">
+		<!-- <view class="tabBoxItem">
 			<view class="text">
 			</view>
 			<view class="factoryAccess">
@@ -42,7 +42,7 @@
 					<text class="titleItem">{{ item.title }}</text>
 				</view>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 

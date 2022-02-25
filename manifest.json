@@ -1,6 +1,6 @@
 {
     "name" : "裁片仓",
-    "appid" : "__UNI__F1059B6",
+    "appid" : "__UNI__FA383F0",
     "description" : "mes的pda",
     "versionName" : "1.0.3",
     "versionCode" : 3,
@@ -17,7 +17,9 @@
             "delay" : 0
         },
         /* 模块配置 */
-        "modules" : {},
+        "modules" : {
+            "Bluetooth" : {}
+        },
         /* 应用发布信息 */
         "distribute" : {
             /* android打包配置 */

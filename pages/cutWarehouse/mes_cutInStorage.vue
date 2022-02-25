@@ -29,7 +29,7 @@
 						<view class="storageCode">{{ item.proNum }}</view>
 						<view>
 							<text>颜色尺码：</text>
-							<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeName }}</text>
+							<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
 						</view>
 						<view class="storageContent">
 							<view>
@@ -327,7 +327,7 @@ export default{
 		}
 	}
 	.pannelContent {
-		height: calc(100vh - 350rpx);
+		height: calc(100vh - 420rpx);
 		overflow: auto;
 		.storageItem {
 			display: flex;

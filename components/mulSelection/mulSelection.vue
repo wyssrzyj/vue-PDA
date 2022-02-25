@@ -59,7 +59,7 @@
 				if (val) {
 					this.isShow = val
 					this.$nextTick(() => {
-						//再次打开时显示之前选中的值
+						// 再次打开时显示之前选中的值
 						let items = this.optionList;
 						for (let i = 0, lenI = items.length; i < lenI; ++i) {
 							const itemI = items[i]
@@ -67,9 +67,12 @@
 								let itemJ = this.checkedValue[j]
 								if (itemI[this.label] == itemJ[this.label] && itemI[this.value] == itemJ[this
 										.value]) {
-									this.$set(itemI, 'checked', true)
+									console.log(itemI)
+									// this.$set(itemI, 'checked', true)
+									item.checked=true
 								} else {
-									this.$set(itemI, 'checked', false)
+									// this.$set(itemI, 'checked', false)
+									item.checked=false
 								}
 							}
 						}

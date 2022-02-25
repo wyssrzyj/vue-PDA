@@ -4,7 +4,7 @@
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
 			<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'"/>
+			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled/>
 		</view>
 		<view class="storageLocation">
 			<text class="storageTitle">当前库位：</text>

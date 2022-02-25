@@ -10,7 +10,7 @@
 		{
 			"path": "pages/workReport/mes_workReport",
 			"style": {
-				"navigationBarTitleText": "产量报工",
+				"navigationBarTitleText": "产量报工(按包报工)",
 				"backgroundColor": "#FFFFFF"
 			}
 		},

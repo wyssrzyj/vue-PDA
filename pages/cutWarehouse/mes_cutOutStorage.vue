@@ -4,7 +4,7 @@
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
 			<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="sewingTaskRecord? '请扫描PCS码': '请扫描缝制任务单号码'" />
+			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="sewingTaskRecord? '请扫描PCS码': '请扫描缝制任务单号码'" disabled/>
 		</view>
 		<view class="storageLocation">
 			<text class="storageTitle">缝制任务单号：</text>
@@ -40,7 +40,7 @@
 						</view>
 						<view>
 							<text>颜色尺码：</text>
-							<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeName }}</text>
+							<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
 						</view>
 						<view class="storageContent">
 							<view>

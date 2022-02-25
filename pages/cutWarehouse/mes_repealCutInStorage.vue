@@ -4,7 +4,7 @@
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
 			<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx"  confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" />
+			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx"  confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled/>
 		</view>
 		<view class="storageLocation">
 			<text class="storageTitle">当前库位：</text>
@@ -123,7 +123,7 @@ export default{
 			}else {
 				console.log("扫描库位")
 				// 扫描库位
-				this.handleScanStorage(data.code)
+				this.handleScanStorage(JSON.parse(data.code).code,JSON.parse(data.code).warehouseFileName)
 			}
 		})
 	},
@@ -169,10 +169,12 @@ export default{
 		// 	});
 		// },
 		
-		handleScanStorage(locationCode){ // 扫描库位
+		handleScanStorage(locationCode,warehouseFileName){ // 扫描库位
 			Api.getLocation({
-				locationCode: locationCode // 'A-02'
+				locationCode: locationCode ,// 'A-02'
+				warehouseFileName
 			}).then(res => {
+				console.log(res)
 				if (res.code === 0) {
 					uni.showToast({
 						title: '扫描库位成功！',
