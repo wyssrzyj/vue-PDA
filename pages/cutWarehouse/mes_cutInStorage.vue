@@ -4,7 +4,7 @@
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
 			<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx"  confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" />
+			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled/>
 		</view>
 		<view class="storageLocation">
 			<text class="storageTitle">当前库位：</text>
@@ -54,8 +54,8 @@
 			<view class="scanNum">已扫描行数：{{ inStorageArr.length }}</view>
 			<view class="btnLocation">
 				<view class="commonBtn moreBtn" id="moreBtn" @tap="handleMore">更多</view>
-				<view class="commonBtn inStorageBtn" @tap="handleRepealInStorage" v-if="inStorageArr.length > 0">撤销入库</view>
-				<view class="commonBtn noInStorageBtn" v-else>撤销入库</view>
+				<view class="commonBtn inStorageBtn" @tap="handleInStorage" v-if="inStorageArr.length > 0">入库</view>
+				<view class="commonBtn noInStorageBtn" v-else>入库</view>
 			</view>
 		</view>
 		<view class="btnModal" v-show="showModal">
@@ -70,44 +70,18 @@
 			<view class="errorImage"></view>
 			<view style="margin: 0 20rpx 0 80rpx;">{{ showErrorMessage }}</view>
 		</view>
-		<view class="reasonMask" v-if="showReasonMask">
-			<view class="reasonDialog">
-				<view class="reasonContent">
-					<view class="reasonTitle">原因记录</view>
-					<view class="reasonInside">
-						<view class="reasonText">
-							<text style="color: red;">*</text>撤销入库原因：
-						</view>
-						<view class="reasonSelect">
-							<picker @change="bindPickerChange" :value="selectIndex" :range="selectArr" range-key="selectIndex">
-								<view class="uni-input">
-									<text>{{selectArr[selectIndex]}}</text>
-								</view>
-							</picker>
-							<image src="../../static/cutWarehouse/selectDownArrow@2x.png" mode="aspectFit" class="selectDownArrow"></image>
-						</view>
-					</view>
-					<view>操作人：{{ username }}</view>
-					<view>操作时间：{{ date }}</view>
-				</view>
-				<view class="btnLocation" style="margin-left: 40rpx;">
-					<view class="cancelBtn" @tap="handleCancel">取消</view>
-					<view class="confirmBtn" @tap="handleConfirm">确定</view>
-				</view>
-			</view>
-		</view>
 		<scan-code></scan-code>
 	</view>
 </template>
 
 <script>
-	// import { defineComponent, ref, reactive, toRefs, onMounted } from 'vue';
+	// import { defineComponent, ref, reactive, toRefs } from 'vue';
 	import { touchStart, touchMove, touchEnd, arrayToHeavy, toasting } from '../../utils/index.js'
-	import Api from '../../service/api'
+	import  Api from '../../service/api'
 	import scanCode from "../../components/scan/scan.vue"
 
 	export default{
-		// name: 'repealCutInStorage',
+		// name: 'cutInStorage',
 		onLoad() {
 			// console.log('onLoad');
 		},
@@ -123,7 +97,8 @@
 				}else {
 					console.log("扫描库位")
 					// 扫描库位
-					this.handleScanStorage(data.code)
+					data=JSON.parse(data.code)
+					this.handleScanStorage(data.code,data.warehouseFileName)
 				}
 			})
 		},
@@ -132,18 +107,13 @@
 				showModal: false,
 				showSuccessPop: false,
 				showErrorPop: false,
-				showReasonMask: false,
 				showSuccessMessage: '',
 				showErrorMessage: '',
 				storageValue: '',
 				wareHouseLocation: '',
-				typeMode: '2',
+				typeMode: '1',
 				inStorageArr: [],
-				startX: '',
-				selectIndex: 0,
-				selectArr: [],
-				username: '',
-				date: ''
+				startX: ''
 			}
 		},
 		methods:{
@@ -160,7 +130,9 @@
 			// 			}else {
 			// 				console.log("扫描扫描库位")
 			// 				// 扫描库位
-			// 				this.handleScanStorage(res.result)
+			// 				let data=JSON.parse(res.result)
+			// 				console.log(data.code,data.warehouseFileName)
+			// 				this.handleScanStorage(data.code,data.warehouseFileName)
 			// 			}
 			// 		},
 			// 		fail: err => {
@@ -169,9 +141,10 @@
 			// 	});
 			// },
 
-			handleScanStorage(locationCode){ // 扫描库位
+			handleScanStorage(locationCode,warehouseFileName){ // 扫描库位
 				Api.getLocation({
-					locationCode: locationCode // 'A-02'
+					locationCode,	// 'A-01'
+					warehouseFileName
 				}).then(res => {
 					if (res.code === 0) {
 						uni.showToast({
@@ -196,7 +169,7 @@
 				this.inStorageArr = this.inStorageArr.reverse()
 
 				Api.getInfoBySearch({
-					pcsNum: pcsNum, // 'PD20211118073139826-0-00153638'
+					pcsNum: pcsNum, // 'PD20211110090285439-0-00000116'
 					type: this.typeMode,
 					wareHouseLocation: this.wareHouseLocation
 				}).then(res => {
@@ -249,7 +222,6 @@
 			handleTouchEnd(e){
 				this.inStorageArr = touchEnd(e, this.startX, this.inStorageArr)
 			},
-
 			deleteMember(index){ // 点击删除按钮事件
 				this.inStorageArr.splice(index, 1)
 			},
@@ -264,27 +236,7 @@
 				}
 			},
 
-			handleRepealInStorage(){ // 撤销入库
-				// 显示下拉弹框
-				this.showReasonMask = true
-			},
-
-			handleEmpty(){ // 清空
-				this.inStorageArr = []
-				this.showModal = false
-				this.storageValue = ''
-			},
-
-			bindPickerChange(e){
-				this.selectIndex = e.detail.value
-			},
-
-			handleCancel(){
-				// 隐藏下拉弹框
-				this.showReasonMask = false
-			},
-
-			handleConfirm(){
+			handleInStorage(){ // 入库
 				let listArr = this.inStorageArr.map((item, index) => {
 					return {
 						index: this.inStorageArr.length - index,
@@ -299,21 +251,18 @@
 						packageNum: item.packageNum || "",
 						inputNumber: item.inputNumber || "",
 						outputNumber: 0,
-						storageStatus: 2,
+						storageStatus: 0,
 						warehouseLocationId: this.wareHouseLocation
 					}
 				})
 
 				Api.addPiecesMarket({
-					rollReason: String(this.selectIndex+1),
 					list: listArr
 				}).then(res => {
 					if (res.code === 0) {
 						this.inStorageArr = []
 						this.storageValue=""
-						// 隐藏下拉弹框
-						this.showReasonMask = false
-						this.showSuccessMessage = '撤销入库成功！'
+						this.showSuccessMessage = '入库成功！'
 						this.showSuccessPop = true
 						let timer = setTimeout(() => {
 							clearTimeout(timer)
@@ -321,34 +270,26 @@
 						}, 2000)
 					}
 				})
-			}
-		},
-		mounted(){
-			Api.getReason({
+			},
 
-			}).then(res => {
-				if (res.code === 0) {
-					// 下拉选择
-					this.selectArr = res.data.dictList.map(item => {
-						return item.dictLabel
-					})
-					// 操作人
-					this.username = res.data.username
-					// 操作时间
-					this.date = res.data.date
-				}
-			})
+			handleEmpty(){ // 清空
+				this.inStorageArr = []
+				this.showModal = false
+				this.storageValue = ''
+			},
 		},
 		components: {
 			scanCode
-		}
-	};
+		},
+	}
 </script>
 
 <style lang="less" scoped>
 	.mainContent {
 		position: relative;
 		background-color: #F3F3F3;
+		height: 100%;
+		width: 100%;
 		.location {
 			position: relative;
 			margin: 20rpx;
@@ -379,7 +320,7 @@
 				font-weight: bold;
 			}
 			.storageInput {
-				width: 75%;
+				width: 76%;
 				height: 80rpx;
 				display: inline-block;
 				border: 1rpx solid #212121;
@@ -514,40 +455,19 @@
 			left: 65rpx;
 			top: 35rpx
 		}
-		.cancelBtn {
-			display: inline-block;
-			text-align: center;
-			padding: 20rpx 55rpx;
-			background-color: #fff;
-			border: 1rpx solid #000;
-			color: #000;
-			border-radius: 10rpx;
-			margin: 20rpx 30rpx;
-			cursor: pointer;
-		}
-		.confirmBtn {
-			display: inline-block;
-			text-align: center;
-			padding: 20rpx 55rpx;
-			background-color: #4a70f5;
-			color: #fff;
-			border-radius: 10rpx;
-			margin: 20rpx 30rpx;
-			cursor: pointer;
-		}
 		.remindPopup {
 			color: #666;
 			font-size: 30rpx;
 			font-weight: bold;
 			border-radius: 10rpx;
-			// width: 500rpx;
+			// width: 450rpx;
 			height: 80rpx;
 			text-align: center;
 			line-height: 80rpx;
 			position: absolute;
 			left: 50%;
 			top: 50%;
-			// margin-left: -250rpx;
+			// margin-left: -185rpx;
 			// margin-top: -40rpx;
 			transform: translate(-50%,-50%);
 			white-space:nowrap;
@@ -559,11 +479,11 @@
 			.successImage {
 				display: inline-block;
 				background: url('../../static/cutWarehouse/success.png') no-repeat;
-				width: 40rpx;
-				height: 40rpx;
+				width: 50rpx;
+				height: 50rpx;
 				position: absolute;
 				left: 20rpx;
-				top: 20rpx;
+				top: 10rpx;
 			}
 		}
 		.errorPopup {
@@ -577,64 +497,6 @@
 				position: absolute;
 				left: 20rpx;
 				top: 20rpx;
-			}
-		}
-		.reasonMask {
-			width: 100%;
-			height: 100vh;
-			background-color: rgba(0,0,0, 0.5);
-			position: absolute;
-			left: 0;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			z-index: 5;
-			.reasonDialog {
-				width: 700rpx;
-				height: 440rpx;
-				position: absolute;
-				left: 50%;
-				top: 50%;
-				margin-left: -350rpx;
-				margin-top: -220rpx;
-				background-color: #fff;
-				padding: 30rpx 40rpx;
-				border-radius: 20rpx;
-				text-align: left;
-				color: #666;
-				font-size: 34rpx;
-				.reasonContent {
-					.reasonTitle {
-						font-size: 45rpx;
-						font-weight: bold;
-						text-align: center;
-					}
-					.reasonInside {
-						margin: 20rpx 0;
-						.reasonText {
-							display: inline-block;
-							font-size: 40rpx;
-							font-weight: bold;
-						}
-						.reasonSelect {
-							position: relative;
-							display: inline-block;
-							background-color: #fff;
-							width: 300rpx;
-							height: 50rpx;
-							line-height: 50rpx;
-							text-align: center;
-							border: 1px solid #000;
-							.selectDownArrow {
-								position: absolute;
-								right: 5rpx;
-								top: 10rpx;
-								width: 40rpx;
-								height: 30rpx;
-							}
-						}
-					}
-				}
 			}
 		}
 	}
