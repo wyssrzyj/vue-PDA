@@ -1,72 +1,70 @@
 <template>
 	<view class="mainContent" @click="closeModal">
-		<!-- <view class="commonBtn" @tap="handleScanTask" style="background-color: #fca147;">扫描缝制任务单号</view> -->
-		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
-			<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="sewingTaskRecord? '请扫描PCS码': '请扫描缝制任务单号码'"/>
+			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search"
+				:placeholder="sewingTaskRecord? '请扫描PCS码': '请扫描缝制任务单号码'"  disabled />
 		</view>
 		<view class="storageLocation">
 			<text class="storageTitle">缝制任务单号：</text>
-			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="sewingTaskRecord" confirm-type="search" placeholder="请扫描缝制任务单号码" disabled/>
+			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="sewingTaskRecord"
+				confirm-type="search" placeholder="请扫描缝制任务单号码" disabled />
 		</view>
 		<view class="radioLocation">
 			<checkbox-group @change="checkboxChange">
 				<view class="checkboxStyle">
-					<checkbox value="" :checked="!isSelectCheckbox" style="transform: scale(0.8)"/>
+					<checkbox value="" :checked="!isSelectCheckbox" style="transform: scale(0.8)" />
 				</view>
 				<view class="checkboxStyle">全部</view>
 			</checkbox-group>
 		</view>
-
 		<view class="pannelContent">
-			<view
-							class="storageItem"
-							v-for="(item, index) in outStorageArr"
-							:key="index"
-			>
-				<view
-								v-show="item.isShowScan"
-								class="touch-list list-touch" :class="{'selectLine':item.isSelectScan}"
-								:style="item.txtStyle"
-				>
-					<text class="serialNumber">{{ index + 1 }}.</text>
-					<view>
+			<scroll-view  scroll-y="true" class="scroll-Y">
+				<uni-swipe-action>
+				<uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" :name="item.id"
+					 class="storageItem" v-for="(item, index) in outStorageArr" :key="item.id" v-if="item.isShowScan">
+					<view :class="[item.isSelectScan ? 'selectLine': '' , 'touch-list', 'list-touch']"
+						class="swipe-action u-border-top u-border-bottom">
+						<view class="swipe-action__content">
+							<text class="serialNumber">{{ index + 1 }}.</text>
+				 		<view>
 						<view class="storageTop">
 							<view class="storageCode">{{ item.proNum }}</view>
 							<view v-if="item.packageState=='齐套可用'" class="storageUse">齐套可用</view>
 							<view v-else-if="item.packageState=='齐套不可用'" class="storageUnUse">齐套不可用</view>
 							<view v-else class="NoStorageUnUse">非齐套不可用</view>
 						</view>
-						<view>
-							<text>颜色尺码：</text>
-							<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeName }}</text>
-						</view>
-						<view class="storageContent">
-							<view>
-								<text>扎号：</text>
-								<text>{{ item.packageNum }}</text>
-							</view>
-							<view class="storageNum">
-								<text>数量：</text>
-								<text>{{ item.inputNumber }}</text>
-							</view>
-							<view class="storageArea">
-								<text>库位：</text>
-								<text>{{ item.locationCode }}</text>
+								<view>
+									<text>颜色尺码：</text>
+									<text decode="true"
+										space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
+								</view>
+								<view class="storageContent">
+									<view>
+										<text>扎号：</text>
+										<text>{{ item.packageNum }}</text>
+									</view>
+									<view class="storageNum">
+				  				<text>数量：</text>
+										<text>{{ item.inputNumber }}</text>
+									</view>
+									<view class="storageArea">
+										<text>库位：</text>
+				  				<text>{{ item.locationCode }}</text>
+									</view>
+								</view>
 							</view>
 						</view>
 					</view>
-				</view>
-			</view>
+				</uni-swipe-action-item>
+				</uni-swipe-action>
+			</scroll-view>
 		</view>
-
-
 		<view class="bottomLocation">
 			<view class="scanNum">总行数/已扫描行数：{{ outStorageArr.length }}/{{ alreadyOutStorageArr.length }}</view>
 			<view class="btnLocation">
 				<view class="commonBtn moreBtn" id="moreBtn" @tap="handleMore">更多</view>
-				<view class="commonBtn inStorageBtn" @tap="handleOutStorage" v-if="outStorageArr.length > 0 && outStorageArr.length == alreadyOutStorageArr.length">出库</view>
+				<view class="commonBtn inStorageBtn" @tap="handleOutStorage"
+					v-if="outStorageArr.length > 0 && outStorageArr.length == alreadyOutStorageArr.length">出库</view>
 				<view class="commonBtn noInStorageBtn" v-else>出库</view>
 			</view>
 		</view>
@@ -83,37 +81,55 @@
 			<view style="margin: 0 20rpx 0 80rpx;">{{ showErrorMessage }}</view>
 		</view>
 		<scan-code></scan-code>
+		<u-modal :show="show"  :title="title" :showCancelButton="true" confirmColor="#476bf9" confirmText="确定" @confirm="handleConfirm" @cancel="handleCancel">
+					<view class="slot-content">
+						<rich-text :nodes="content"></rich-text>
+					</view>
+		</u-modal>
 	</view>
 </template>
 
 <script>
 	// import { defineComponent, ref, reactive, toRefs } from 'vue';
-	import { arrayToHeavy, toasting } from '../../utils/index.js'
+	import {
+		arrayToHeavy,
+		toasting,
+		useDebounce
+	} from '../../utils/index.js'
 	import Api from '../../service/api'
 	import scanCode from "../../components/scan/scan.vue"
 
-	export default{
+	export default {
 		// name: 'cutOutStorage',
 		onLoad() {
 			// console.log('onLoad');
 		},
 		onShow() {
 			// console.log('onShow');
-			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
+			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器  
 			uni.$on('scancodedate', (data) => {
 				console.log(data)
-				if(this.sewingTaskRecord) {
+				if (this.sewingTaskRecord) {
 					console.log("扫描PCS码")
 					// 扫描PCS码
 					this.handleScanPCS(data.code)
-				}else {
+				} else {
 					console.log("扫描缝制任务单号")
 					// 扫描缝制任务单号
 					this.handleScanTask(data.code)
 				}
 			})
 		},
-		data(){
+		watch: {
+			'outStorageArr.length': {
+				handler(newVal) {
+					if (newVal === 0) {
+						this.sewingTaskRecord = ""
+					}
+				}
+			}
+		},
+		data() {
 			return {
 				isSelectCheckbox: true,
 				showModal: false,
@@ -124,33 +140,45 @@
 				sewingTaskRecord: '',
 				outStorageArr: [],
 				alreadyOutStorageArr: [],
-				startX: ''
+				startX: '',
+				options1: [{
+					text: '删除',
+					style: {
+						backgroundColor: '#cc3300',
+					}
+				}],
+				scrollTop:0,
+				show:false,
+				title:'提示',
+				content:`存在齐套不可用或非齐套不<br>可用数据，是否继续出库？`,
 			}
 		},
-		methods:{
-			// handleScanCodeBox(){
-			// 		uni.scanCode({
-			// 			onlyFromCamera: true,
-			// 			success: res => {
-			// 				console.log(res.result)
-			// 				//这里即拿到了扫描出的数据
-			// 				if(this.sewingTaskRecord) {
-			// 					console.log("扫描扫描PCS码")
-			// 					// 扫描PCS码
-			// 					this.handleScanPCS(res.result)
-			// 				}else {
-			// 					console.log("扫描扫描缝制任务单号")
-			// 					// 扫描缝制任务单号
-			// 					this.handleScanTask(res.result)
-			// 				}
-			// 			},
-			// 			fail: err => {
-			// 			    // 需要注意的是小程序扫码不需要申请相机权限
+		methods: {
+			// handleScanCodeBox() {
+			// 	uni.scanCode({
+			// 		onlyFromCamera: true,
+			// 		success: res => {
+			// 			console.log(res.result)
+			// 			//这里即拿到了扫描出的数据
+			// 			if (this.sewingTaskRecord) {
+			// 				console.log("扫描扫描PCS码")
+			// 				// 扫描PCS码
+			// 				this.handleScanPCS(res.result)
+			// 			} else {
+			// 				console.log("扫描扫描缝制任务单号")
+			// 				// 扫描缝制任务单号
+			// 				this.handleScanTask(res.result)
 			// 			}
-			// 		});
-			// 	},
-
-			handleScanTask(sewingExecutionNum){ // 扫描缝制任务单号
+			// 		},
+			// 		fail: err => {
+			// 			// 需要注意的是小程序扫码不需要申请相机权限
+			// 		}
+			// 	});
+			// },
+			handleCancel(){   //关闭提示弹窗
+				this.show=false
+			},
+			handleScanTask(sewingExecutionNum) { // 扫描缝制任务单号
 				Api.getSewingExecution({
 					sewingExecutionNum: sewingExecutionNum // 'FZ20211116014098380'
 				}).then(res => {
@@ -181,14 +209,13 @@
 								storageStatus: 0,
 								isShowScan: true,
 								isSelectScan: false,
-								produceSkuId:item.produceSkuId||"",
-								sewingExecutionId:item.sewingExecutionId||"",
-								sewingExecutionSkuId:item.sewingExecutionSkuId||"",
-								warehouseLocationId:item.warehouseLocationId||""
+								produceSkuId: item.produceSkuId || "",
+								sewingExecutionId: item.sewingExecutionId || "",
+								sewingExecutionSkuId: item.sewingExecutionSkuId || "",
+								warehouseLocationId: item.warehouseLocationId || ""
 							}
 						})
-						console.log(this.outStorageArr.subpackageId)
-					}else {
+					} else {
 						this.showErrorMessage = res.msg
 						this.showErrorPop = true
 						let timer = setTimeout(() => {
@@ -210,39 +237,42 @@
 							icon: 'none',
 							duration: 3000
 						})
-						console.log(res.data)
 						//背景色变蓝
-						this.outStorageArr.forEach(item=>{
-							if(item.subpackageId==res.data.subpackageId){
-								item.isSelectScan=true
+						this.outStorageArr.forEach(item => {
+							if (item.subpackageId === res.data.subpackageId) {
+								item.isSelectScan = true
+								item.isShowScan=false
+								this.alreadyOutStorageArr.push(item)
 							}
 						})
-
-						this.alreadyOutStorageArr.push(
-										{
-											id: res.data.id || "",
-											productId: res.data.productId || "",
-											produceId: res.data.produceId || "",
-											subpackageId: res.data.subpackageId || "",
-											proNum: res.data.proNum || "",
-											colorCode: res.data.colorCode || "",
-											colorName: res.data.colorName || "",
-											sizeCode: res.data.sizeCode || "",
-											sizeName: res.data.sizeName || "",
-											packageNum: res.data.packageNum || "",
-											inputNumber: res.data.inputNumber || "",
-											arrowFlag: true
-										}
-						)
+						// console.log(res.data)
+						// this.alreadyOutStorageArr.push({
+						// 	id: res.data.id || "",
+						// 	productId: res.data.productId || "",
+						// 	produceId: res.data.produceId || "",
+						// 	subpackageId: res.data.subpackageId || "",
+						// 	proNum: res.data.proNum || "",
+						// 	colorCode: res.data.colorCode || "",
+						// 	colorName: res.data.colorName || "",
+						// 	sizeCode: res.data.sizeCode || "",
+						// 	sizeName: res.data.sizeName || "",
+						// 	packageNum: res.data.packageNum || "",
+						// 	inputNumber: res.data.inputNumber || "",
+						// 	arrowFlag: true,
+						// 	packageState:res.data.packageState||""
+						// })
+						// this.outStorageArr.forEach(item=>{
+						// 	if(item.id)
+						// })
 
 						// 数组去重
 						this.alreadyOutStorageArr = arrayToHeavy(this.alreadyOutStorageArr)
-						if(this.isSelectCheckbox) {
+						if (this.isSelectCheckbox) {
 							outStorageMethods(false)
-						}else {
+						} else {
 							outStorageMethods(true)
 						}
-					}else {
+					} else {
 						this.showErrorMessage = res.msg
 						this.showErrorPop = true
 						let timer = setTimeout(() => {
@@ -252,12 +282,16 @@
 					}
 				})
 			},
-
-			checkboxChange(e){ // 全部
-				if(this.isSelectCheckbox) {
+			deleteMember(e,i) { // 点击删除按钮事件
+				if(e.content.text==='删除'){
+					this.outStorageArr = this.outStorageArr.filter(item => item.id !== i.id)
+				}
+			},
+			checkboxChange(e) { // 全部
+				if (this.isSelectCheckbox) {
 					this.isSelectCheckbox = false
 					this.outStorageMethods(true)
-				}else {
+				} else {
 					this.isSelectCheckbox = true
 					this.outStorageMethods(false)
 				}
@@ -273,13 +307,28 @@
 				}
 			},
 
-			handleOutStorage(){ // 出库
+
+			handleOutStorage() { // 出库
+				const Find=this.alreadyOutStorageArr.find(item=>{
+					if(item.packageState==='齐套不可用'||item.packageState==='非齐套不可用'){
+						return true
+					}
+				})
+				if(Find){
+					this.show=true
+				}else{
+					this.handleConfirm()
+				}
+			},
+			handleConfirm(){   //确认出库
 				Api.outOfStock({
 					list: this.outStorageArr
 				}).then(res => {
 					if (res.code === 0) {
-						this.outStorageArr = [],
-										this.sewingTaskRecord=""
+						this.show=false
+						this.outStorageArr = []
+						this.alreadyOutStorageArr=[]
+						this.sewingTaskRecord = ""
 						this.showSuccessMessage = '出库成功！'
 						this.showSuccessPop = true
 						let timer = setTimeout(() => {
@@ -289,17 +338,17 @@
 					}
 				})
 			},
-
-			handleEmpty(){ // 清空
+			handleEmpty() { // 清空
 				this.outStorageArr = []
 				this.showModal = false
 				this.sewingTaskRecord = ''
 			},
 
-			outStorageMethods(bool){
-				for(let i = 0; i < this.outStorageArr.length; i++) {
-					for(let j = 0; j < this.alreadyOutStorageArr.length; j++) {
-						if(this.outStorageArr[i].id == this.alreadyOutStorageArr[j].id) {
+
+			outStorageMethods(bool) {   //全选工具类函数
+				for (let i = 0; i < this.outStorageArr.length; i++) {
+					for (let j = 0; j < this.alreadyOutStorageArr.length; j++) {
+						if (this.outStorageArr[i].subpackageId == this.alreadyOutStorageArr[j].subpackageId) {
 							this.outStorageArr[i].isShowScan = bool
 							this.outStorageArr[i].isSelectScan = bool
 						}
@@ -309,7 +358,10 @@
 		},
 		components: {
 			scanCode
-		}
+		},
+		created(){
+			this.handleOutStorage = useDebounce(this.handleOutStorage);
+		},
 	};
 </script>
 
@@ -320,14 +372,30 @@
 		.location {
 			position: relative;
 			margin: 20rpx;
-			// .scanCodeBox {
-			// 	position: absolute;
-			// 	left: 2rpx;
-			// 	top: 2rpx;
-			// 	width: 60rpx;
-			// 	height: 60rpx;
-			// }
-			.scanInput {
+
+		.u-swipe-action-item__right__button__wrapper {
+			background-color: #cc3300 !important;
+		}
+
+		.u-page {
+			padding: 0;
+		}
+
+		.u-demo-block__title {
+			padding: 10px 0 2px 15px;
+		}
+
+		.swipe-action {
+			&__content {
+				padding: 25rpx 0;
+
+				&__text {
+					font-size: 15px;
+					padding-left: 30rpx;
+				}
+			}
+		}
+		.scanInput {
 				// width: 88%;
 				height: 80rpx;
 				border: 1px solid #767676;
@@ -359,13 +427,14 @@
 		.radioLocation {
 			text-align: right;
 			margin-right: 20rpx;
+
 			.checkboxStyle {
 				display: inline-block;
 			}
 		}
 		.pannelContent {
 			height: calc(100vh - 460rpx);
-			overflow: auto;
+			overflow-y: auto;
 			.storageItem {
 				display: flex;
 				border: 1rpx solid #e4e4e4;
@@ -384,10 +453,11 @@
 					border-radius: 20rpx;
 					overflow: hidden;
 				}
-				.list-touch{
+
+				.list-touch {
 					position: relative;
-					width: 100%;
-					z-index: 5;
+					width: 740rpx;
+					// z-index: 2;
 					transition: left 0.2s ease-in-out;
 					white-space: nowrap;
 					text-overflow: ellipsis;
@@ -423,6 +493,21 @@
 							font-weight: bold;
 						}
 					}
+				}
+
+				.list-delete {
+					right: 0;
+					float: left;
+					width: 100rpx;
+					height: 155rpx;
+					line-height: 155rpx;
+					padding: 5rpx 16rpx;
+					background-color: #EA5863;
+					border-radius: 0 20rpx 20rpx 0;
+					color: #fff;
+					font-size: 35rpx;
+					font-weight: lighter;
+					text-align: center;
 				}
 			}
 		}
@@ -461,16 +546,19 @@
 				}
 			}
 		}
+
 		.btnModal {
 			position: absolute;
 			left: 30rpx;
 			bottom: 20rpx;
 			z-index: 10;
+			
 			.modalImage {
 				width: 300rpx;
 				height: 166rpx;
 			}
 		}
+
 		.commonBtn {
 			display: inline-block;
 			text-align: center;
@@ -484,6 +572,7 @@
 			left: 65rpx;
 			top: 35rpx
 		}
+
 		.remindPopup {
 			color: #666;
 			font-size: 30rpx;
@@ -496,12 +585,11 @@
 			position: absolute;
 			left: 50%;
 			top: 50%;
-			// margin-left: -250rpx;
-			// margin-top: -40rpx;
-			transform: translate(-50%,-50%);
-			white-space:nowrap;
-			z-index: 999;
+			transform: translate(-50%, -50%);
+			white-space: nowrap;
+			z-index: 100;
 		}
+
 		.successPopup {
 			background-color: #F6FFEE;
 			border: 1px solid #B9EA93;
@@ -515,6 +603,7 @@
 				top: 10rpx;
 			}
 		}
+
 		.errorPopup {
 			background-color: #FFF2F1;
 			border: 1px solid #FDA4A0;

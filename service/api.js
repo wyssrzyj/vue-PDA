@@ -4,10 +4,11 @@ import { requestApi } from './request.js';
 // const API_ADDRESS = 'http://172.26.1.38:8081' // 周扬ip
 // const API_ADDRESS = 'http://192.168.1.100:8081' // 蔡鹏志ip
 // const API_ADDRESS = 'http://192.168.213.49:8081' // 周志建ip
-const API_ADDRESS = 'http://172.26.1.38:8081' // 周志建ip
-// const API_ADDRESS = 'http://192.168.1.5/proxyApi' // 盛宝利线上地址
+// const API_ADDRESS = 'http://172.26.1.38:8081' // 周志建ip
+// const API_ADDRESS = 'http://172.26.0.56:8081' // 盛宝利线上地址
 // const API_ADDRESS = 'http://192.168.68.58:8081' // 盛宝利线上地址
-// const API_ADDRESS = 'http://192.168.99.140:8081'//杰克线上地址
+const API_ADDRESS = 'http://192.168.99.140:8081'//杰克线上地址
+// const API_ADDRESS = 'http://192.168.1.5/proxyApi'//杰克线上地址
 
 const Api = {
 	// 登录
@@ -90,6 +91,18 @@ const Api = {
 	//报工管理获取当前员工
 	productionGetAdmin(reqData){
 		return requestApi(`${API_ADDRESS}/mes/mesengineeringmanagement/user`, 'GET', reqData)
+	},
+	// 根据布条码获取收货数据
+	getReceiveData(reqData) {
+	  return requestApi(`${API_ADDRESS}/mes/messpreadcloth/getReceiveData`, 'GET', reqData)
+	},
+	// 根据布条码获取铺布数据
+	getSpreadClothData(reqData) {
+	  return requestApi(`${API_ADDRESS}/mes/messpreadcloth/getSpreadClothData`, 'GET', reqData)
+	},
+	// 提交铺布数据
+	saveData(reqData) {
+	  return requestApi(`${API_ADDRESS}/mes/messpreadcloth/saveData`, 'POST', reqData)
 	},
 }
 

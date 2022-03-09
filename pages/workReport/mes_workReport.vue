@@ -2,16 +2,16 @@
 	<view class="mainContent" @tap="handleClick">
 		<view class="borderBottom">
 			<view class="location">
-				<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码"/>
+				<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" disabled/>
 			</view>
 			<view class="storageLocation">
 				<text class="storageTitle">报工工段：</text>
-				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="productNum" confirm-type="search" @click="show = true"/>
+				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="productNum" confirm-type="search" @click="show = true" disabled/>
 				<u-picker :show="show" :columns="columns" @confirm="handleConfirm" @cancel="handleCancel"></u-picker>
 			</view>
 			<view class="storageLocation">
 				<text class="storageTitle">报工工序：</text>
-				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search" @click="showMultiple"/>
+				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search" @click="showMultiple" disabled/>
 			</view>
 			<view class="storageLocation">
 				<text class="storageTitle">当前员工：</text>
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-	import {formateDate,findKey} from "@/utils/index.js"
+	import {formateDate,findKey,useDebounce} from "@/utils/index.js"
 	import Api from '../../service/api'
 	import scanCode from "@/components/scan/scan.vue"
 	import selectCodeMultiple from '@/components/mulSelection/mulSelection.vue'
@@ -106,6 +106,7 @@
 				// }
 			})
 		},
+		
 		data(){
 			return{
 				isSelectCheckbox: true,
@@ -258,7 +259,7 @@
 						this.supplierName=""
 						this.employeeName
 						this.coutryList=[]
-						this.showSuccessMessage = '出库并打印成功！'
+						this.showSuccessMessage = '报工成功！'
 						this.showSuccessPop = true
 						let timer = setTimeout(() => {
 							clearTimeout(timer)
@@ -276,6 +277,9 @@
 				this.productNum = ''
 				this.supplierName=""
 			},
+		},
+		created(){    //防抖
+			this.handleOutStorage = useDebounce(this.handleOutStorage);
 		},
 	};
 </script>

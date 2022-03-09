@@ -6,11 +6,11 @@
 		<form @submit="formSubmit" class="form-box">
 			<view class="cu-form-group input-ba">
 				<image src="../../static/login/username@3x.png" class="icon-login" />
-				<input class="input-box" placeholder="请输入账号" name="username" value="admin"/>
+				<input class="input-box" placeholder="请输入账号" name="username" value=""/>
 			</view>
 			<view class="cu-form-group margin-lr-xl input-ba">
 				<image src="../../static/login/password.png" class="icon-login" />
-				<input class="input-box" type="password" placeholder="请输入密码" name="password" value="admin" />
+				<input class="input-box" type="password" placeholder="请输入密码" name="password" value="" />
 			</view>
 			<view class="padding flex flex-direction margin-top-xl">
 				<button class="cu-btn bg-blue lg btn-login" form-type="submit">登录</button>
@@ -64,6 +64,8 @@ export default {
 							// uni.switchTab({
 							// 	url:'/pages/cutWarehouse/cutWarehouse'
 							// })
+						}else{
+							toasting('账号或密码错误')
 						}
 					})
 				} catch (error) {

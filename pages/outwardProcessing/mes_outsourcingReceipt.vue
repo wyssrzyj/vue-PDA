@@ -3,52 +3,40 @@
 		<!-- <view class="commonBtn" @tap="handleScanStorage" style="background-color: #fca147;">扫描库位</view> -->
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
-			<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'"/>
+			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled/>
 		</view>
 		<view class="storageLocation">
 			<text class="storageTitle">当前库位：</text>
 			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请扫描库位码" disabled/>
 		</view>
 		<view class="pannelContent">
-			<view
-							class="storageItem"
-							v-for="(item, index) in inStorageArr"
-							:key="index"
-			>
-				<view
-								:class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
-								@touchstart="handleTouchStart"
-								@touchmove="handleTouchMove"
-								@touchend="handleTouchEnd"
-								:data-index="index"
-								:style="item.txtStyle"
-				>
-					<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
-					<view>
-						<view class="storageCode">{{ item.proNum }}</view>
-						<view>
-							<text>颜色尺码：</text>
-							<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
-						</view>
-						<view class="storageContent">
-							<view>
-								<text>扎号：</text>
-								<text>{{ item.packageNum }}</text>
-							</view>
-							<view class="storageNum">
-								<text>数量：</text>
-								<text>{{ item.outputNumber }}</text>
-							</view>
-						</view>
-					</view>
-					<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="item.arrowFlag"></image>
-					<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
-				</view>
-				<view class="touch-list list-delete" @click = "deleteMember(index,item)">
-					删除
-				</view>
-			</view>
+			<uni-swipe-action>
+							 <uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
+							 	<view :class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
+							 		class="swipe-action u-border-top u-border-bottom">
+							 		<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
+							 		<view>
+							 			<view class="storageCode">{{ item.proNum }}</view>
+							 			<view>
+							 				<text>颜色尺码：</text>
+							 				<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
+							 			</view>
+							 			<view class="storageContent">
+							 				<view>
+							 					<text>扎号：</text>
+							 					<text>{{ item.packageNum }}</text>
+							 				</view>
+							 				<view class="storageNum">
+							 					<text>数量：</text>
+							 					<text>{{ item.outputNumber }}</text>
+							 				</view>
+							 			</view>
+							 		</view>
+							 		<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag"></image>
+							 		<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
+							 	</view>
+							 </uni-swipe-action-item>
+			</uni-swipe-action>
 		</view>
 		<view class="bottomLocation">
 			<view class="scanNum">已扫描行数：{{ inStorageArr.length }}</view>
@@ -76,7 +64,7 @@
 
 <script>
 	// import { defineComponent, ref, reactive, toRefs } from 'vue';
-	import { touchStart, touchMove, touchEnd, arrayToHeavy, toasting } from '../../utils/index.js'
+	import { arrayToHeavy, toasting,useDebounce } from '../../utils/index.js'
 	import Api from '../../service/api'
 	import scanCode from "../../components/scan/scan.vue"
 	import throttle from "../../utils/index"
@@ -117,7 +105,13 @@
 				startX: '',
 				copyInStorageArr:[],
 				nowTime:0,
-				beforeTime:0
+				beforeTime:0,
+				options1: [{
+				     text: '删除',
+					 style: {
+					 	backgroundColor: '#cc3300',
+					 }
+				}]
 			}
 		},
 		methods:{
@@ -143,7 +137,7 @@
 			// 		}
 			// 	});
 			// },
-
+			
 			handleScanStorage(locationCode,warehouseFileName){ // 扫描库位
 				Api.outReceiptScanLocation({
 					locationCode,// 'A-01'
@@ -188,7 +182,7 @@
 								icon: 'none',
 								duration: 3000
 							})
-							this.inStorageArr=this.inStorageArr.concat(res.data.mesPiecesMarketDTOList)
+							this.inStorageArr=this.inStorageArr.concat(res.data.mesPiecesMarketDTOList.map(item=>{return {...item,arrowFlag:false}}))
 							this.copyInStorageArr=this.copyInStorageArr.concat(res.data)
 							// 数组去重
 							this.inStorageArr = arrayToHeavy(this.inStorageArr)
@@ -212,23 +206,20 @@
 					}
 				})
 			},
-			//右滑删除
-			handleTouchStart(e){
-				this.startX = touchStart(e)
-			},
-
-			handleTouchMove(e){
-				this.inStorageArr = touchMove(e, this.startX, this.inStorageArr)
-			},
-
-			handleTouchEnd(e){
-				this.inStorageArr = touchEnd(e, this.startX, this.inStorageArr)
-			},
-
+			//滑动箭头变化
+			swipeChange(e,index){
+						if(e=='right'){
+							this.inStorageArr[index].arrowFlag=true
+						}else{
+							this.inStorageArr[index].arrowFlag=false
+						}
+					},
 			//删除按钮
-			deleteMember(index,item){ // 点击删除按钮事件
-				this.inStorageArr.splice(index, 1)
-				item.txtStyle=0
+			deleteMember(e,i) { // 点击删除按钮事件
+				if(e.content.text==='删除'){
+					this.inStorageArr = this.inStorageArr.filter(item =>item.id !== i.id)
+					this.copyInStorageArr=this.copyInStorageArr.filter(item=>item.mesPiecesMarketDTOList[0].id!==i.id)
+				}
 			},
 
 			handleMore(){ // 更多
@@ -262,7 +253,6 @@
 				// })
 
 				Api.outReceipt({
-
 					outProcessList:this.copyInStorageArr,
 				}).then(res => {
 					if (res.code === 0) {
@@ -285,11 +275,33 @@
 		},
 		components: {
 			scanCode
-		}
+		},
+		created(){
+			this.handleInStorage = useDebounce(this.handleInStorage);
+		},
 	};
 </script>
 
 <style lang="less" scoped>
+	.u-page {
+	        padding: 0;
+	    }
+	
+	    .u-demo-block__title {
+	        padding: 10px 0 2px 15px;
+	    }
+	
+	    .swipe-action {
+	        &__content {
+	             padding: 25rpx 0;
+	    
+	            &__text {
+	                 font-size: 15px;
+	                 color: black;
+	                 padding-left: 30rpx;
+	             }
+	        }
+	    }
 	.mainContent {
 		position: relative;
 		background-color: #F3F3F3;
@@ -345,7 +357,7 @@
 				}
 				.list-touch{
 					position: relative;
-					width: 100%;
+					width: 740rpx;
 					z-index: 5;
 					transition: left 0.2s ease-in-out;
 					white-space: nowrap;

@@ -34,7 +34,7 @@ export const requestApi = async (url, method, options = {}) => {
             // 503: "服务不可用",
             // 504: "网关超时",
             // 505: "HTTP版本不受支持"
-            toasting('登陆过期，请重新登录')
+            toasting('登录过期，请重新登录')
             if (!hasToken()) {
               uni.navigateTo({
                 url: '/pages/login/mes_login',

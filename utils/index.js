@@ -27,7 +27,7 @@ export const touchMove = (e, startX, inStorageArr) => {
 		let moveX = e.touches[0].clientX;
 		//手指起始点位置与移动期间的差值
 		let disX = startX - moveX;
-		let delBtnWidth = 50;
+		let delBtnWidth = 40;
 		let txtStyle = "";
 		let list = inStorageArr;
 		if (disX == 0 || disX < 0) {//如果移动距离小于等于0，说明向右滑动，文本层位置不变
@@ -54,7 +54,7 @@ export const touchEnd = (e, startX, inStorageArr) => {
 		let endX = e.changedTouches[0].clientX;
 		//触摸开始与结束，手指移动的距离
 		let disX = startX - endX;
-		let delBtnWidth = 50;
+		let delBtnWidth = 40;
 		//如果距离小于删除按钮的1/2，不显示删除按钮
 		let txtStyle = disX > delBtnWidth / 3 ? "left:-" + delBtnWidth + "px" : "left:0px";
 		//获取手指触摸的是哪一项
@@ -101,4 +101,33 @@ export const formateDate = ()=> {
 
 export const findKey=(obj, value, compare = (a, b) => a === b)=> {
   return Object.keys(obj).find(k => compare(obj[k], value))
+}
+
+
+/**
+ * 节流函数 `created() {this.dataFormSubmitHandle = useDebounce(this.dataFormSubmitHandle);}`
+ * @param fn
+ * @param wait
+ * @returns
+ */
+export const useDebounce=(func, wait=0)=> {    
+　　　if (typeof func !== 'function') {
+　　　　throw new TypeError('need a function arguments')
+　　　}
+　　　let timeid = null;
+     let result;
+ 
+　　　return function() {
+　　　　let context = this;
+　　　　let args = arguments;
+
+　　　　if (timeid) {
+　　　　　　clearTimeout(timeid);
+　　　　}
+　　　　timeid = setTimeout(function() {
+　　　　　　result = func.apply(context, args);
+　　　　}, wait);
+ 
+　　　　return result;
+　　 }
 }

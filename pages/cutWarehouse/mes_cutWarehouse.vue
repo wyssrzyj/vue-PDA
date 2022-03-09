@@ -33,8 +33,9 @@
 			</view>
 			</view>
 		</view>
-		<!-- <view class="tabBoxItem">
+		<view class="tabBoxItem">
 			<view class="text">
+				铺布数据采集
 			</view>
 			<view class="factoryAccess">
 				<view v-for="(item, index) in blanketDataList" :key="index" @tap="toList(item)" class="factoryAccessItem">
@@ -42,7 +43,7 @@
 					<text class="titleItem">{{ item.title }}</text>
 				</view>
 			</view>
-		</view> -->
+		</view>
 	</view>
 </template>
 

@@ -29,7 +29,7 @@ export const outwardProcessingList = [
 ]
 export const workReportList=[
 	{
-		title:"按包加工",
+		title:"按包报工",
 		src: '../../static/workReport/workReport.png',
 		link: '/pages/workReport/mes_workReport'
 	},

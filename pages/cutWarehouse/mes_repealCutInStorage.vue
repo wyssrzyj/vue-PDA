@@ -4,51 +4,40 @@
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
 			<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx"  confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" />
+			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx"  confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled/>
 		</view>
 		<view class="storageLocation">
 			<text class="storageTitle">当前库位：</text>
 			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请扫描库位码" disabled/>
 		</view>
 		<view class="pannelContent">
-			<view
-							class="storageItem"
-							v-for="(item, index) in inStorageArr"
-							:key="index"
-			>
-				<view
-								:class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
-								@touchstart="handleTouchStart"
-								@touchmove="handleTouchMove"
-								@touchend="handleTouchEnd"
-								:data-index="index"
-								:style="item.txtStyle"
-				>
-					<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
-					<view>
-						<view class="storageCode">{{ item.proNum }}</view>
-						<view>
-							<text>颜色尺码：</text>
-							<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeName }}</text>
-						</view>
-						<view class="storageContent">
-							<view>
-								<text>扎号：</text>
-								<text>{{ item.packageNum }}</text>
-							</view>
-							<view class="storageNum">
-								<text>数量：</text>
-								<text>{{ item.inputNumber }}</text>
-							</view>
-						</view>
-					</view>
-					<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="item.arrowFlag"></image>
-					<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
-				</view>
-				<view class="touch-list list-delete" @click = "deleteMember(index)">
-					删除
-				</view>
-			</view>
+			<uni-swipe-action>
+							 <uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
+							 	<view :class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
+							 		class="swipe-action u-border-top u-border-bottom">
+							 		<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
+							 		<view>
+							 			<view class="storageCode">{{ item.proNum }}</view>
+							 			<view>
+							 				<text>颜色尺码：</text>
+							 				<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeName }}</text>
+							 			</view>
+							 			<view class="storageContent">
+							 				<view>
+							 					<text>扎号：</text>
+							 					<text>{{ item.packageNum }}</text>
+							 				</view>
+							 				<view class="storageNum">
+							 					<text>数量：</text>
+							 					<text>{{ item.inputNumber }}</text>
+							 				</view>
+							 			</view>
+							 		</view>
+							 		<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag"></image>
+							 		<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
+							 	</view>
+							 </uni-swipe-action-item>
+			</uni-swipe-action>
 		</view>
 		<view class="bottomLocation">
 			<view class="scanNum">已扫描行数：{{ inStorageArr.length }}</view>
@@ -102,7 +91,7 @@
 
 <script>
 	// import { defineComponent, ref, reactive, toRefs, onMounted } from 'vue';
-	import { touchStart, touchMove, touchEnd, arrayToHeavy, toasting } from '../../utils/index.js'
+	import { arrayToHeavy, toasting,useDebounce } from '../../utils/index.js'
 	import Api from '../../service/api'
 	import scanCode from "../../components/scan/scan.vue"
 
@@ -123,7 +112,8 @@
 				}else {
 					console.log("扫描库位")
 					// 扫描库位
-					this.handleScanStorage(data.code)
+					data=JSON.parse(data.code)
+					this.handleScanStorage(data.code,data.warehouseFileName)
 				}
 			})
 		},
@@ -143,7 +133,13 @@
 				selectIndex: 0,
 				selectArr: [],
 				username: '',
-				date: ''
+				date: '',
+				options1: [{
+				     text: '删除',
+					 style: {
+					 	backgroundColor: '#cc3300',
+					 }
+				}]
 			}
 		},
 		methods:{
@@ -168,10 +164,18 @@
 			// 		}
 			// 	});
 			// },
-
-			handleScanStorage(locationCode){ // 扫描库位
+			//滑动箭头变化
+			swipeChange(e,index){
+					if(e=='right'){
+						this.inStorageArr[index].arrowFlag=true
+					}else{
+						this.inStorageArr[index].arrowFlag=false
+					}
+			},
+			handleScanStorage(locationCode,warehouseFileName){ // 扫描库位
 				Api.getLocation({
-					locationCode: locationCode // 'A-02'
+					locationCode,// 'A-02'
+					warehouseFileName
 				}).then(res => {
 					if (res.code === 0) {
 						uni.showToast({
@@ -201,32 +205,42 @@
 					wareHouseLocation: this.wareHouseLocation
 				}).then(res => {
 					if (res.code === 0) {
-						uni.showToast({
-							title: '扫描PCS码成功！',
-							icon: 'none',
-							duration: 3000
-						})
-						this.inStorageArr.push(
-										{
-											id: res.data.subpackageId || "",
-											productId: res.data.productId || "",
-											produceId: res.data.produceId || "",
-											subpackageId: res.data.subpackageId || "",
-											proNum: res.data.proNum || "",
-											colorCode: res.data.colorCode || "",
-											colorName: res.data.colorName || "",
-											sizeCode: res.data.sizeCode || "",
-											sizeName: res.data.sizeName || "",
-											packageNum: res.data.packageNum || "",
-											inputNumber: res.data.inputNumber || "",
-											arrowFlag: true
-										}
-						)
-
-						// 数组去重
-						this.inStorageArr = arrayToHeavy(this.inStorageArr)
-
-						this.inStorageArr = this.inStorageArr.reverse()
+						const Find=this.inStorageArr.find(item=>item.id===res.data.subpackageId)
+						if(!Find){
+							uni.showToast({
+								title: '扫描PCS码成功！',
+								icon: 'none',
+								duration: 3000
+							})
+							this.inStorageArr.push(
+											{
+												id: res.data.subpackageId || "",
+												productId: res.data.productId || "",
+												produceId: res.data.produceId || "",
+												subpackageId: res.data.subpackageId || "",
+												proNum: res.data.proNum || "",
+												colorCode: res.data.colorCode || "",
+												colorName: res.data.colorName || "",
+												sizeCode: res.data.sizeCode || "",
+												sizeName: res.data.sizeName || "",
+												packageNum: res.data.packageNum || "",
+												inputNumber: res.data.inputNumber || "",
+												arrowFlag: false
+											}
+							)
+							
+							// 数组去重
+							this.inStorageArr = arrayToHeavy(this.inStorageArr)
+							
+							this.inStorageArr = this.inStorageArr.reverse()
+						}else{
+							this.showErrorMessage = 'PCS码无效！'
+							this.showErrorPop = true
+							let timer = setTimeout(() => {
+								clearTimeout(timer)
+								this.showErrorPop = false
+							}, 2000)
+						}
 					}else {
 						this.showErrorMessage = res.msg
 						this.showErrorPop = true
@@ -237,23 +251,11 @@
 					}
 				})
 			},
-
-			handleTouchStart(e){
-				this.startX = touchStart(e)
+			deleteMember(e,i) { // 点击删除按钮事件
+				if(e.content.text==='删除'){
+					this.inStorageArr = this.inStorageArr.filter(item =>item.id !== i.id)
+				}
 			},
-
-			handleTouchMove(e){
-				this.inStorageArr = touchMove(e, this.startX, this.inStorageArr)
-			},
-
-			handleTouchEnd(e){
-				this.inStorageArr = touchEnd(e, this.startX, this.inStorageArr)
-			},
-
-			deleteMember(index){ // 点击删除按钮事件
-				this.inStorageArr.splice(index, 1)
-			},
-
 			handleMore(){ // 更多
 				this.showModal = !this.showModal
 			},
@@ -275,7 +277,7 @@
 				this.storageValue = ''
 			},
 
-			bindPickerChange(e){
+			bindPickerChange(e){   //下拉框选择
 				this.selectIndex = e.detail.value
 			},
 
@@ -284,7 +286,7 @@
 				this.showReasonMask = false
 			},
 
-			handleConfirm(){
+			handleConfirm(){  //确认撤销出库
 				let listArr = this.inStorageArr.map((item, index) => {
 					return {
 						index: this.inStorageArr.length - index,
@@ -341,7 +343,10 @@
 		},
 		components: {
 			scanCode
-		}
+		},
+		created(){
+			this.handleRepealInStorage = useDebounce(this.handleRepealInStorage);
+		},
 	};
 </script>
 
@@ -410,7 +415,7 @@
 				}
 				.list-touch{
 					position: relative;
-					width: 100%;
+					width: 740rpx;
 					z-index: 5;
 					transition: left 0.2s ease-in-out;
 					white-space: nowrap;
