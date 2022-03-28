@@ -53,8 +53,6 @@ export const requestApi = async (url, method, options = {}) => {
         }
       },
       async fail(res) {
-		console.log(url)
-		console.log(res)
         await reject(res)
         uni.hideLoading()
       }

@@ -110,7 +110,7 @@ export const findKey=(obj, value, compare = (a, b) => a === b)=> {
  * @param wait
  * @returns
  */
-export const useDebounce=(func, wait=0)=> {    
+export const useDebounce=(func, wait=1000)=> {    
 　　　if (typeof func !== 'function') {
 　　　　throw new TypeError('need a function arguments')
 　　　}

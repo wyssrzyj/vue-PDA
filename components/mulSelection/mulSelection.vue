@@ -55,28 +55,45 @@
 			}
 		},
 		watch: {
-			visible(val) {
-				if (val) {
-					this.isShow = val
+			visible(oldVal,newValue) {
+				if (oldVal) {
+					this.isShow = oldVal
 					this.$nextTick(() => {
-						// 再次打开时显示之前选中的值
-						let items = this.optionList;
-						for (let i = 0, lenI = items.length; i < lenI; ++i) {
-							const itemI = items[i]
-							for (let j = 0, lenJ = this.checkedValue.length; j < lenJ; j++) {
-								let itemJ = this.checkedValue[j]
-								if (itemI[this.label] == itemJ[this.label] && itemI[this.value] == itemJ[this
-										.value]) {
-									console.log(itemI)
-									// this.$set(itemI, 'checked', true)
-									item.checked=true
-								} else {
-									// this.$set(itemI, 'checked', false)
-									item.checked=false
-								}
+						this.optionList.forEach(item=>{
+							if(!item.checked){
+								item.checked=false
 							}
-						}
-						this.options = items
+						})
+						this.checkedValue.forEach(item=>{
+							this.optionList.forEach(j=>{
+								if(item.name==j.name&&item.value==j.value){
+									j.checked=true
+								}
+							})
+						})
+						// 再次打开时显示之前选中的值
+						// let items = this.optionList.map(item=>{
+						// 	if(!item.checked){
+						// 		return {...item,checked:false}
+						// 	}else{
+						// 		return item
+						// 	}
+						// })
+						// let items=this.checkedValue
+						// for (let i = 0, lenI = items.length; i < lenI; ++i) {
+						// 	const itemI = items[i]
+						// 	for (let j = 0, lenJ = this.optionList.length; j < lenJ; j++) {
+						// 		let itemJ = this.optionList[j]
+						// 		if (itemI.name == itemJ.name) {
+						// 			// this.$set(itemI, 'checked', false)
+						// 			itemJ.checked=false
+						// 		} else {
+						// 			// this.$set(itemI, 'checked', true)
+						// 			itemJ.checked=true
+						// 		}
+						// 	}
+						// }
+						this.options = this.optionList
 					})
 				}
 			},

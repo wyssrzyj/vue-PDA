@@ -86,8 +86,19 @@
 				}else {
 					console.log("扫描库位")
 					// 扫描库位
-					data=JSON.parse(data.code)
-					this.handleScanStorage(data.code,data.warehouseFileName)
+					try{
+						data=JSON.parse(data.code)
+						this.handleScanStorage(data.code,data.warehouseFileName)
+					}catch(error){
+						this.showErrorMessage = '请扫描正确的库位码！'
+						this.showErrorPop = true
+						let timer = setTimeout(() => {
+							clearTimeout(timer)
+							this.showErrorPop = false
+						}, 2000)
+					}finally{
+						console.log("解决JSON.parse报错")
+					}
 				}
 			})
 		},

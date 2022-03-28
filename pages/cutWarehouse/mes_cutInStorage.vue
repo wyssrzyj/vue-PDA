@@ -85,10 +85,21 @@
 					// 扫描PCS码
 					this.handleScanPCS(data.code)
 				}else {
-					console.log("扫描库位")
 					// 扫描库位
-					data=JSON.parse(data.code)
-					this.handleScanStorage(data.code,data.warehouseFileName)
+					console.log('扫描库位码')
+					try{
+						data=JSON.parse(data.code)
+						this.handleScanStorage(data.code,data.warehouseFileName)
+					}catch(error){
+						this.showErrorMessage = '请扫描正确的库位码！'
+						this.showErrorPop = true
+						let timer = setTimeout(() => {
+							clearTimeout(timer)
+							this.showErrorPop = false
+						}, 2000)
+					}finally{
+						console.log("解决JSON.parse报错")
+					}
 				}
 			})
 		},
@@ -181,6 +192,7 @@
 					type: this.typeMode,
 					wareHouseLocation: this.wareHouseLocation
 				}).then(res => {
+					console.log(res)
 					if (res.code === 0) {
 						const Find=this.inStorageArr.find(item=>item.id===res.data.subpackageId)
 						if(!Find){
@@ -199,10 +211,10 @@
 													colorCode: res.data.colorCode || "",
 													colorName: res.data.colorName || "",
 													sizeCode: res.data.sizeCode || "",
-													sizeName: res.data.sizeName || "",
+													sizeName: res.data.sizeCode || "",
 													packageNum: res.data.packageNum || "",
 													inputNumber: res.data.inputNumber || "",
-													arrowFlag: false
+													arrowFlag: false,
 												}
 								)
 							

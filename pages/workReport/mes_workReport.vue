@@ -20,12 +20,12 @@
 		</view>
 		<view class="pannelContent">
 			<view
-							class="storageItem"
-							v-for="(item,index) in outStorageArr"
-							:key="index"
+				class="storageItem"
+				v-for="(item,index) in outStorageArr"
+				:key="index"
 			>
 				<view
-								:class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
+					:class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
 				>
 					<text class="serialNumber">{{ index + 1 }}.</text>
 					<view>
@@ -50,7 +50,7 @@
 			</view>
 		</view>
 		<view class="bottomLocation">
-			<view class="scanNum"><view><text>已扫描数量：</text><text class="scannedAllNum">{{outStorageArr.length}}</text></view></view>
+			<view class="scanNum"><view><text>已扫描行数：</text><text class="scannedAllNum">{{outStorageArr.length}}</text></view></view>
 			<view class="btnLocation">
 				<view class="commonBtn moreBtn" @tap="handleMore" id="moreBtn">更多</view>
 				<view class="commonBtn inStorageBtn" @tap="handleOutStorage" v-if="outStorageArr.length > 0 ">报工</view>
@@ -70,7 +70,7 @@
 			<view style="margin-left: 20rpx;">{{ showErrorMessage }}</view>
 		</view>
 		<select-code-multiple :visible="showM" :checkedValue="checkedList" :optionList="coutryList"
-							  @confirm="getCodeMu"></select-code-multiple>
+			@confirm="getCodeMu"></select-code-multiple>
 		<scan-code></scan-code>
 	</view>
 </template>
@@ -97,7 +97,7 @@
 				console.log(data)
 				// if(this.sewingTaskRecord) {
 				// 	console.log("扫描PCS码")
-				// 	// 扫描PCS码
+				// 扫描PCS码
 				this.handleScanPCS(data.code)
 				// }else {
 				// 	console.log("扫描缝制任务单号")
@@ -106,7 +106,13 @@
 				// }
 			})
 		},
-		
+		mounted(){
+			Api.productionGetAdmin().then(res=>{
+				if(res.code=="0"){
+					this.employeeName=res.data.realName
+				}
+			})
+		},
 		data(){
 			return{
 				isSelectCheckbox: true,
@@ -139,11 +145,10 @@
 			//获取多选的值
 			getCodeMu(event) {
 				this.checkedList=[]
-				console.log("勾选的是：", event)
 				event.forEach(item=>{
-					this.checkedList.push(item.value)
+					this.checkedList.push({name:item.value,value:item.value})
 				})
-				this.supplierName=this.checkedList.join(",")
+				this.supplierName=this.checkedList.map(item=>item.name).join(",")
 				this.showM = false
 			},
 			// handleScanCodeBox(){
@@ -182,10 +187,17 @@
 			},
 			//封装函数
 			scanPCSEncapsulation(res){
+				console.log(res)
+				uni.showToast({
+					title: '扫描PCS码成功！',
+					icon: 'none',
+					duration: 3000
+				})
 				this.outStorageArr.push(res.data)
 				//报工工段
+				this.workshopObj={}
 				res.data.sectionAndSectionNames.forEach(item=>{
-					this.workshopObj=Object.assign(item,{})
+					this.workshopObj=Object.assign(item,this.workshopObj)
 				})
 				this.columns=[Object.values(this.workshopObj)]
 				//报工工序
@@ -198,7 +210,7 @@
 					return {value:item,name:item}
 				})
 				//当前员工
-				this.employeeName=res.data.realName;
+				// this.employeeName=res.data.realName;
 				// 数组去重
 				this.outStorageArr = this.outStorageArr.reverse()
 			},
@@ -208,32 +220,39 @@
 					pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
 					if (res.code === 0) {
-						uni.showToast({
-							title: '扫描PCS码成功！',
-							icon: 'none',
-							duration: 3000
-						})
 						if(this.outStorageArr.length===0){
 							this.scanPCSEncapsulation.call(this,res)
 						}else{
 							const Find=this.outStorageArr.find((item)=>item.produceOrderId===res.data.produceOrderId)
 							if(Find){ //同一生产单不能重复扫描
-								const find=this.outStorageArr.find(item=>item.snNum===res.data.snNum)
-								if(find){ //同一个PCS码不能重复扫描
-									uni.showToast({
-										title: 'PCS码已被扫描',
-										icon: 'error',
-										duration: 3000
-									})
+								const newFind=this.outStorageArr.find((item)=>item.packageCode===res.data.packageCode)
+								if(!newFind){
+									const find=this.outStorageArr.find(item=>item.snNum===res.data.snNum)
+									if(find){ //同一个PCS码不能重复扫描
+										this.showErrorMessage = 'PCS码已被扫描'
+										this.showErrorPop = true
+										let timer = setTimeout(() => {
+											clearTimeout(timer)
+											this.showErrorPop = false
+										}, 2000)
+									}else{
+										this.scanPCSEncapsulation.call(this,res)
+									}
 								}else{
-									this.scanPCSEncapsulation.call(this,res)
+									this.showErrorMessage = '同一扎单不能重复扫描！'
+									this.showErrorPop = true
+									let timer = setTimeout(() => {
+										clearTimeout(timer)
+										this.showErrorPop = false
+									}, 2000)
 								}
 							}else{
-								uni.showToast({
-									title: 'PCS码不属于该生产单！',
-									icon: 'error',
-									duration: 3000
-								})
+								this.showErrorMessage = 'PCS码不属于该生产单！'
+								this.showErrorPop = true
+								let timer = setTimeout(() => {
+									clearTimeout(timer)
+									this.showErrorPop = false
+								}, 2000)
 							}
 						}
 					}
@@ -253,11 +272,14 @@
 				Api.productionReporting({
 					mesEngineeringManagementDTOS,
 				}).then(res => {
+					console.log(res)
 					if (res.code === 0) {
 						this.outStorageArr=[]
 						this.productNum = ''
 						this.supplierName=""
-						this.employeeName
+						this.coutryList=[]
+						this.columns=[]
+						this.checkedList=[]
 						this.coutryList=[]
 						this.showSuccessMessage = '报工成功！'
 						this.showSuccessPop = true
@@ -272,7 +294,6 @@
 			handleEmpty(){ // 清空
 				this.outStorageArr = []
 				this.coutryList=[]
-				this.employeeName=""
 				this.showModal = false
 				this.productNum = ''
 				this.supplierName=""
@@ -294,6 +315,9 @@
 	}
 	.u-popup{
 		flex: 0 !important;
+	}
+	.u-picker__view{
+		height: 600rpx !important;
 	}
 	.mainContent {
 		position: relative;

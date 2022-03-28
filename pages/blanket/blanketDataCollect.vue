@@ -336,6 +336,7 @@ export default {
 			Api.getReceiveData({
 				clothBarCode: clothBarCode 
 			}).then(res => {
+				console.log(res)
 				if (res.code == 0) {
 					this.isSearch = true
 					this.isSubmit = true
@@ -357,6 +358,7 @@ export default {
 			Api.getSpreadClothData({
 				clothBarCode: clothBarCode 
 			}).then(res => {
+				console.log(res)
 				if (res.code == 0) {
 					this.modelData.mesSpreadClothId = res.data.id || ''
 					this.modelData.spreadClothNumberPlies = res.data.spreadClothNumberPlies || ''

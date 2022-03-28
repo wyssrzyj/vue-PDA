@@ -86,6 +86,11 @@
 						<rich-text :nodes="content"></rich-text>
 					</view>
 		</u-modal>
+		<u-modal :show="showM"  :title="title" confirmColor="#476bf9" confirmText="确定" @confirm="handleConfirmM">
+				<view class="slot-content">
+					<rich-text :nodes="contentM"></rich-text>
+				</view>
+		</u-modal>
 	</view>
 </template>
 
@@ -108,7 +113,6 @@
 			// console.log('onShow');
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器  
 			uni.$on('scancodedate', (data) => {
-				console.log(data)
 				if (this.sewingTaskRecord) {
 					console.log("扫描PCS码")
 					// 扫描PCS码
@@ -151,6 +155,8 @@
 				show:false,
 				title:'提示',
 				content:`存在齐套不可用或非齐套不<br>可用数据，是否继续出库？`,
+				showM:false,
+				contentM:`该任务单已完成拣货，请出<br>库！`,
 			}
 		},
 		methods: {
@@ -158,14 +164,11 @@
 			// 	uni.scanCode({
 			// 		onlyFromCamera: true,
 			// 		success: res => {
-			// 			console.log(res.result)
 			// 			//这里即拿到了扫描出的数据
 			// 			if (this.sewingTaskRecord) {
-			// 				console.log("扫描扫描PCS码")
 			// 				// 扫描PCS码
 			// 				this.handleScanPCS(res.result)
 			// 			} else {
-			// 				console.log("扫描扫描缝制任务单号")
 			// 				// 扫描缝制任务单号
 			// 				this.handleScanTask(res.result)
 			// 			}
@@ -175,6 +178,9 @@
 			// 		}
 			// 	});
 			// },
+			handleConfirmM(){
+				this.showM=false
+			},
 			handleCancel(){   //关闭提示弹窗
 				this.show=false
 			},
@@ -245,26 +251,9 @@
 								this.alreadyOutStorageArr.push(item)
 							}
 						})
-						// console.log(res.data)
-						// this.alreadyOutStorageArr.push({
-						// 	id: res.data.id || "",
-						// 	productId: res.data.productId || "",
-						// 	produceId: res.data.produceId || "",
-						// 	subpackageId: res.data.subpackageId || "",
-						// 	proNum: res.data.proNum || "",
-						// 	colorCode: res.data.colorCode || "",
-						// 	colorName: res.data.colorName || "",
-						// 	sizeCode: res.data.sizeCode || "",
-						// 	sizeName: res.data.sizeName || "",
-						// 	packageNum: res.data.packageNum || "",
-						// 	inputNumber: res.data.inputNumber || "",
-						// 	arrowFlag: true,
-						// 	packageState:res.data.packageState||""
-						// })
-						// this.outStorageArr.forEach(item=>{
-						// 	if(item.id)
-						// })
-
+						if(this.outStorageArr.length===this.alreadyOutStorageArr.length){
+							this.showM=true
+						}
 						// 数组去重
 						this.alreadyOutStorageArr = arrayToHeavy(this.alreadyOutStorageArr)
 						if (this.isSelectCheckbox) {
@@ -288,6 +277,9 @@
 				}
 			},
 			checkboxChange(e) { // 全部
+				if(this.alreadyOutStorageArr.length===this.outStorageArr.length){
+					this.showM=true
+				}
 				if (this.isSelectCheckbox) {
 					this.isSelectCheckbox = false
 					this.outStorageMethods(true)
@@ -324,7 +316,7 @@
 				Api.outOfStock({
 					list: this.outStorageArr
 				}).then(res => {
-					if (res.code === 0) {
+					if (res.code == 0) {
 						this.show=false
 						this.outStorageArr = []
 						this.alreadyOutStorageArr=[]
@@ -360,7 +352,7 @@
 			scanCode
 		},
 		created(){
-			this.handleOutStorage = useDebounce(this.handleOutStorage);
+			this.handleConfirm = useDebounce(this.handleConfirm);
 		},
 	};
 </script>
