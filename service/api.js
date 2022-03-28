@@ -84,6 +84,10 @@ const Api = {
 	productionReportingPCS(reqData){
 		return requestApi(`${API_ADDRESS}/mes/mesengineeringmanagement/inquire`, 'GET', reqData)
 	},
+	//报工管理选中工序获取工段信息
+	productionReportingGetProcess(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesengineeringmanagement/getProductNames`, 'GET', reqData)
+	},
 	//报工管理报工
 	productionReporting(reqData){
 		return requestApi(`${API_ADDRESS}/mes/mesengineeringmanagement/saveEngineeringManagement`, 'POST', reqData)

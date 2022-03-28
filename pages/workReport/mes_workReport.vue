@@ -80,7 +80,7 @@
 	import Api from '../../service/api'
 	import scanCode from "@/components/scan/scan.vue"
 	import selectCodeMultiple from '@/components/mulSelection/mulSelection.vue'
-
+	
 	export default{
 		components: {
 			selectCodeMultiple,
@@ -134,7 +134,7 @@
 				coutryList: [],
 				//选中的值
 				checkedList: [],
-				workshopObj:{}
+				workshopObj:{},
 			}
 		},
 		methods:{
@@ -178,8 +178,18 @@
 					this.showModal=false
 				}
 			},
-			handleConfirm(e){	//报工工段确认
+			async handleConfirm(e){	//报工工段确认
+				if(this.productNum!==e.value[0]){
+					this.supplierName=""
+				}
 				this.productNum=e.value[0]
+				const res=await Api.productionReportingGetProcess({
+					productId:this.productId,
+					section:findKey(this.workshopObj,this.productNum)
+				})
+				this.coutryList=res.data.map(item=>{
+					return {value:item.productName,name:item.productName}
+				})
 				this.show=false
 			},
 			handleCancel(){		//报工工段取消
@@ -194,6 +204,8 @@
 					duration: 3000
 				})
 				this.outStorageArr.push(res.data)
+				//生产单号
+				this.productId=res.data.produceOrderId
 				//报工工段
 				this.workshopObj={}
 				res.data.sectionAndSectionNames.forEach(item=>{
@@ -201,14 +213,14 @@
 				})
 				this.columns=[Object.values(this.workshopObj)]
 				//报工工序
-				let process=res.data.sectionsAndProductNames[0]
-				let newArr=[]
-				for(let key in process){
-					newArr=newArr.concat(process[key])
-				}
-				this.coutryList=newArr.map(item=>{
-					return {value:item,name:item}
-				})
+				// let process=res.data.sectionsAndProductNames[0]
+				// let newArr=[]
+				// for(let key in process){
+				// 	newArr=newArr.concat(process[key])
+				// }
+				// this.coutryList=newArr.map(item=>{
+				// 	return {value:item,name:item}
+				// })
 				//当前员工
 				// this.employeeName=res.data.realName;
 				// 数组去重

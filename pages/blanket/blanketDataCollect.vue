@@ -426,11 +426,12 @@ export default {
 					type: 'error',
 					message: "请输入整数或两位小数！",
 					duration: '2000',
-				},
+				})
 				this.errorFlag=false,
 				this.errorMsg="请输入整数或两位小数！"
-				)
-				return
+				console.log(11111)
+			}else{
+				this.errorFlag=true
 			}
 			
 			if(!this.isInteger(e)) {
@@ -575,7 +576,7 @@ export default {
 		}else{
 			this.$refs.uToast.show({
 				type: 'error',
-				message: this.errorMsg,
+				message: this.errorMsg==''?'请填写正确的信息！':this.errorMsg,
 				duration: '2000',
 			})
 		}
