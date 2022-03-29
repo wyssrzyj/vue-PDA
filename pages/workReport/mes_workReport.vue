@@ -88,13 +88,10 @@
 		},
 		// name: 'cutOutStorage',
 		onLoad() {
-			// console.log('onLoad');
 		},
 		onShow() {
-			// console.log('onShow');
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
 			uni.$on('scancodedate', (data) => {
-				console.log(data)
 				// if(this.sewingTaskRecord) {
 				// 	console.log("扫描PCS码")
 				// 扫描PCS码
@@ -197,7 +194,6 @@
 			},
 			//封装函数
 			scanPCSEncapsulation(res){
-				console.log(res)
 				uni.showToast({
 					title: '扫描PCS码成功！',
 					icon: 'none',
@@ -284,7 +280,6 @@
 				Api.productionReporting({
 					mesEngineeringManagementDTOS,
 				}).then(res => {
-					console.log(res)
 					if (res.code === 0) {
 						this.outStorageArr=[]
 						this.productNum = ''

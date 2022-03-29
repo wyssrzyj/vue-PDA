@@ -266,10 +266,8 @@ export default {
 		scanCode
 	},
 	onShow() {
-		// console.log('onShow');
 		uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器  
 		uni.$on('scancodedate', (data) => {
-			console.log(data)
 				// 扫描PCS码
 			this.clothCodeValue = data.code
 			this.handleScanReceiveCode(data.code)
@@ -321,7 +319,6 @@ export default {
 		// 	uni.scanCode({
 		// 		onlyFromCamera: true,
 		// 		success: res => {
-		// 			console.log(res.result)
 		// 			this.clothCodeValue = res.result
 		// 			this.handleScanReceiveCode(res.result)
 		// 			this.handleScanClothCode(res.result)
@@ -336,7 +333,6 @@ export default {
 			Api.getReceiveData({
 				clothBarCode: clothBarCode 
 			}).then(res => {
-				console.log(res)
 				if (res.code == 0) {
 					this.isSearch = true
 					this.isSubmit = true
@@ -358,7 +354,6 @@ export default {
 			Api.getSpreadClothData({
 				clothBarCode: clothBarCode 
 			}).then(res => {
-				console.log(res)
 				if (res.code == 0) {
 					this.modelData.mesSpreadClothId = res.data.id || ''
 					this.modelData.spreadClothNumberPlies = res.data.spreadClothNumberPlies || ''
@@ -429,7 +424,6 @@ export default {
 				})
 				this.errorFlag=false,
 				this.errorMsg="请输入整数或两位小数！"
-				console.log(11111)
 			}else{
 				this.errorFlag=true
 			}
@@ -519,8 +513,6 @@ export default {
 				this.errorFlag=false,
 				this.errorMsg="层号不能为空或者为0！"
 			}
-			
-			
 		},
 		onDefectQuantity(e) {
 			if(e!=="" && e!=0){
@@ -562,7 +554,6 @@ export default {
 					spreadClothLackQuantity: this.modelData.spreadClothLackQuantity,
 					mesSpreadClothDefectDTO: this.gridList
 			}).then(res => {
-				console.log(res)
 				if (res.code === 0) {
 					// 数据提交成功
 					this.$refs.uToast.show({
