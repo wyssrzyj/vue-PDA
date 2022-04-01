@@ -299,7 +299,7 @@ export default {
 				spreadClothLeftQuantity: '', // 剩余数量
 				spreadClothLackQuantity: '' // 缺料数量
 			},
-			errorFlag:false,
+			errorFlag:true,
 			errorMsg:""
 		}
 	},
@@ -396,7 +396,10 @@ export default {
 					message: "请输入整数！",
 					duration: '2000',
 				})
-				return
+				this.errorFlag=false
+				this.errorMsg='请输入整数！'
+			}else{
+				this.errorFlag=true
 			}
 			
 			if(this.modelData.fragmentExtent) {
@@ -567,7 +570,7 @@ export default {
 		}else{
 			this.$refs.uToast.show({
 				type: 'error',
-				message: this.errorMsg==''?'请填写正确的信息！':this.errorMsg,
+				message: this.errorMsg,
 				duration: '2000',
 			})
 		}
