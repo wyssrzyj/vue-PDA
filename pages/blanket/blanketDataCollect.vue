@@ -605,6 +605,9 @@ export default {
 <style lang="scss" scoped>
 	
 .mainContent {
+	/deep/.u-form-item{
+		background-color: #fff;
+	}
 	background-color: #F3F3F3;
 	
 	.search {
@@ -637,10 +640,6 @@ export default {
 			.unit {
 				font-size: 24rpx;
 			}
-		}
-		.calendarStyle {
-			color: #999;
-			font-size: 56rpx;
 		}
 		.gridContent {
 			background-color: #fff;

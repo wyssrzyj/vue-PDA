@@ -452,6 +452,7 @@ export default{
 				})
 			},
 			OpenBluetoothAdapter() {
+				console.log(1111)
 				uni.openBluetoothAdapter({
 					success: (res) => {
 						// 初始化完毕开始搜索
@@ -474,6 +475,7 @@ export default{
 			},
 		
 			StartBluetoothDeviceDiscovery() {
+				console.log(2222)
 				uni.startBluetoothDevicesDiscovery({
 					success: res => {
 						this.OnBluetoothDeviceFound();
@@ -489,21 +491,22 @@ export default{
 			},
 		
 			OnBluetoothDeviceFound() {
+				console.log(3333)
 				uni.onBluetoothDeviceFound(res => {
 					res.devices.forEach(device => { //这一步就是去筛选找到的蓝牙中,有没有你匹配的名称  
 						if (device.name == 'Printer_1078_BLE') { //匹配蓝牙名称
 							uni.setStorageSync("DeviceID", device.deviceId) //把已经连接的蓝牙设备信息放入缓存
 							this.DeviceID = device.deviceId
-							let DeviceID = device.deviceId //这里是拿到的uuid 
+							let DeviceID = device.deviceId //这里是拿到的uuid
 							this.StopBluetoothDevicesDiscovery() //当找到匹配的蓝牙后就关掉蓝牙搜寻,因为蓝牙搜寻很耗性能 
 							this.CreateBLEConnection(DeviceID) //创建蓝牙连接,连接低功耗蓝牙设备  
-		
 						}
 					})
 				});
 			},
 		
 			StopBluetoothDevicesDiscovery() {
+				console.log(4444)
 				uni.stopBluetoothDevicesDiscovery({
 					success: res => {
 						console.log(res)
@@ -515,6 +518,7 @@ export default{
 			},
 		
 			CreateBLEConnection(DeviceID, index) {
+				console.log(5555)
 				let doc = this
 				uni.createBLEConnection({ //创建蓝牙连接,连接低功耗蓝牙设备  
 					deviceId: DeviceID, //传入刚刚获取的uuid  
@@ -530,6 +534,7 @@ export default{
 			},
 		
 			GetBLEDeviceServices(DeviceID, index) {
+				console.log(6666)
 				let doc = this
 				setTimeout(function() {
 					uni.getBLEDeviceServices({ //获取蓝牙设备所有服务  
@@ -557,6 +562,7 @@ export default{
 		
 			// 第七步 获取蓝牙特征值
 			GetBLEDeviceCharacteristics(DeviceID) {
+				console.log(7777)
 				const that = this
 				setTimeout(() => {
 					uni.getBLEDeviceCharacteristics({ //获取蓝牙设备某个服务中所有特征值  
@@ -582,6 +588,7 @@ export default{
 			},
 			// 第八步 发送二进制数据
 			senBlData(deviceId, serviceId, characteristicId, uint8Array) {
+				console.log(8888)
 				var uint8Buf = Array.from(uint8Array);
 		
 				function split_array(datas, size) {
