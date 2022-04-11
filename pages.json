@@ -4,17 +4,22 @@
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/login/select-api",
-			"style": {
-				"navigationBarTitleText": "选择环境",
-				"backgroundColor": "#FFFFFF"
-			}
-		},
-		{
 			"path": "pages/login/mes_login",
 			"style": {
 				"navigationBarTitleText": "登录",
-				"backgroundColor": "#FFFFFF"
+				"backgroundColor": "#FFFFFF",
+				"app-plus":{
+					"titleNView":{
+						"buttons":[//按钮
+							{
+								"type":"favorite",
+								"fontSize":"30",
+								"float": "right",
+								"background":"rgba(0,0,0,0)"
+							}
+						]
+					}
+				}
 			}
 		},
 		{

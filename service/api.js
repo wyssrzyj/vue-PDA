@@ -10,8 +10,11 @@ import { requestApi } from './request.js';
 // const API_ADDRESS = 'http://192.168.99.140:8081'//测试
 // const API_ADDRESS = 'http://192.168.1.5/proxyApi'//盛宝丽
 
-let API_ADDRESS = `http://${uni.getStorageSync('API_ADDRESS').api}`
-console.log(API_ADDRESS)
+let API_ADDRESS = ""
+export const changeApi=(api)=>{
+	API_ADDRESS = `http://${api}`
+	console.log("当前环境:"+API_ADDRESS)
+}
 
 const Api = {
 	// 登录

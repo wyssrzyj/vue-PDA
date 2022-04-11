@@ -1,24 +1,29 @@
 <template>
-	<view> 
-		<view class="uni-list">
-			<radio-group @change="radioChange">
-				<label class="uni-list-cell uni-list-cell-pd" v-for="(item, index) in items" :key="item.value">
-					<view class="radio">
-						<radio :value="item.value" :checked="index === current" />
-					</view>
-					<view class="name">{{item.name}}</view>
-				</label>
-			</radio-group>
+	<view class="main" v-if="showSelect">
+		<view class="mask" @touchmove.stop.prevent="()=>{}" @click="maskClick"></view>
+		<view class="select">
+			<view class="uni-list">
+				<radio-group @change="radioChange">
+					<label class="uni-list-cell uni-list-cell-pd" v-for="(item, index) in items" :key="item.value">
+						<view class="radio">
+							<radio :value="item.value" :checked="index === current" />
+						</view>
+						<view class="name">{{item.name}}</view>
+					</label>
+				</radio-group>
+			</view>
+			<input type="text" v-model="api" class="input" placeholder="请选择或输入环境地址">
+			<button @click="query" class="btn">确定</button>
 		</view>
-		<input type="text" v-model="api" class="input" placeholder="请选择或输入环境地址">
-		<button @click="toLogin" class="btn">去登录</button>
 	</view>
 </template>
 
 <script>
+import {changeApi} from '../../service/api'
 export default{
 	data() {
 		return {
+			showSelect:false,
 			items: [
 				{value: '192.168.99.140:8081',name: '测试地址'},
 				{value: '192.168.1.5/proxyApi',name: '盛宝丽',},
@@ -27,15 +32,12 @@ export default{
 				{value: '10.18.56.96:8081',name: '周志键'},
 				{value: '192.168.68.58:8081',name: '李国庆'},
 			],
-			current: null,
-			api:''
+			current: 0,
+			api:'http://192.168.99.140:8081'
 		}
 	},
 	mounted() {
-		if(uni.getStorageSync('API_ADDRESS')){
-			this.current=uni.getStorageSync('API_ADDRESS').current
-			this.api=uni.getStorageSync('API_ADDRESS').api
-		}
+		changeApi(this.api)
 	},
 	methods:{
 		radioChange(e) {
@@ -47,7 +49,10 @@ export default{
 		    }
 			this.api=e.detail.value
 		},
-		toLogin(){
+		maskClick(){
+			this.showSelect = false
+		},
+		query(){
 			if(this.api.trim()=='') {
 				uni.showToast({
 					title:'请选择环境变量！',
@@ -55,9 +60,11 @@ export default{
 				})
 				return;
 			}
-			uni.setStorageSync('API_ADDRESS',{api:this.api,current:this.current})
-			uni.redirectTo({
-				url:'/pages/login/mes_login'
+			changeApi(this.api)
+			this.showSelect = false
+			uni.showToast({
+				title:'修改成功！',
+				icon:'success'
 			})
 		}
 	}
@@ -65,10 +72,27 @@ export default{
 </script>
 
 <style lang="less">
-	page{
-		background-color: #FFFFFF;
-		height: 100%;
-	}
+.select{
+	z-index: 2;
+	background-color: #FFFFFF;
+	width: 500rpx;
+	height: 1000rpx;
+	border-radius: 20rpx;
+	position: fixed;
+	left:0;
+	right: 0;
+	bottom: 50rpx;
+	margin: 0 auto;
+}
+.mask {
+	z-index: 1;
+	position: fixed;
+	top: 0;
+	left:0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0,0,0, 0.6);
+}
 .uni-list-cell{
 	margin-top: 20rpx;
 	display: flex;

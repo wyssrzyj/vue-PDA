@@ -19,6 +19,9 @@
 				<view class="text-blue lg text-center" @tap="register">注册</view>
 			</view> -->
 		</form>
+		
+		<!-- 选择环境弹窗 -->
+		<select-api ref="select"></select-api>
 	</view>
 </template>
 
@@ -26,8 +29,12 @@
 // import { defineComponent, ref, reactive, toRefs, onMounted } from 'vue';
 import { toasting } from '../../utils/index.js'
 import Api from '../../service/api'
+import selectApi from './select-api.vue'
 
 export default {
+	components:{
+		'select-api':selectApi
+	},
 	// name: 'login',
 	onLoad() {
 		// console.log('onLoad');
@@ -37,6 +44,9 @@ export default {
 		// 	title: '登录'
 		// })
 		uni.removeStorageSync("token")
+	},
+	onNavigationBarButtonTap(){
+		this.$refs.select.showSelect = !this.$refs.select.showSelect
 	},
 	methods:{
 		formSubmit(e){
