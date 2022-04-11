@@ -6,9 +6,12 @@ import { requestApi } from './request.js';
 // const API_ADDRESS = 'http://192.168.213.49:8081' // 周志建ip
 // const API_ADDRESS = 'http://172.26.1.38:8081' // 周志建ip
 // const API_ADDRESS = 'http://172.26.0.56:8081' // 盛宝利线上地址
-// const API_ADDRESS = 'http://192.168.68.58:8081' // 盛宝利线上地址
-const API_ADDRESS = 'http://192.168.99.140:8081'//杰克线上地址
-// const API_ADDRESS = 'http://192.168.1.5/proxyApi'//杰克线上地址
+// const API_ADDRESS = 'http://192.168.68.58:8081' // 国庆
+// const API_ADDRESS = 'http://192.168.99.140:8081'//测试
+// const API_ADDRESS = 'http://192.168.1.5/proxyApi'//盛宝丽
+
+let API_ADDRESS = `http://${uni.getStorageSync('API_ADDRESS').api}`
+console.log(API_ADDRESS)
 
 const Api = {
 	// 登录

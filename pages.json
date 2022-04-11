@@ -4,6 +4,13 @@
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/login/select-api",
+			"style": {
+				"navigationBarTitleText": "选择环境",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/login/mes_login",
 			"style": {
 				"navigationBarTitleText": "登录",
