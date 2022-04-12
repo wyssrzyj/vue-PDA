@@ -33,11 +33,21 @@ export default{
 				{value: '192.168.68.58:8081',name: '李国庆'},
 			],
 			current: 0,
-			api:'http://192.168.99.140:8081'
+			api:'http://192.168.99.140:8081',
+			queryCurrent:0,
+			queryApi:'http://192.168.99.140:8081'
 		}
 	},
 	mounted() {
 		changeApi(this.api)
+	},
+	watch:{
+		showSelect:function(newValue){
+			if(newValue){
+				this.current = this.queryCurrent
+				this.api = this.queryApi
+			}
+		}
 	},
 	methods:{
 		radioChange(e) {
@@ -62,6 +72,8 @@ export default{
 			}
 			changeApi(this.api)
 			this.showSelect = false
+			this.queryCurrent = this.current
+			this.queryApi = this.api
 			uni.showToast({
 				title:'修改成功！',
 				icon:'success'
