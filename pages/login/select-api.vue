@@ -33,9 +33,9 @@ export default{
 				{value: '192.168.68.58:8081',name: '李国庆'},
 			],
 			current: 0,
-			api:'http://192.168.99.140:8081',
+			api:'192.168.99.140:8081',
 			queryCurrent:0,
-			queryApi:'http://192.168.99.140:8081'
+			queryApi:'192.168.99.140:8081'
 		}
 	},
 	mounted() {
