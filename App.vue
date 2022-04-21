@@ -17,6 +17,8 @@
 @import "uview-ui/index.scss";
 /*每个页面公共css */
 @import "colorui/main.css";
+/*全局字体图标*/
+@import url("./assets/iconfont/iconfont.css");
 // #ifdef H5
 checkbox .uni-checkbox-input {
 	border-radius: 50%;

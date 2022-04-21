@@ -1,0 +1,58 @@
+{
+  "id": "3347862",
+  "name": "MES-PDA",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "29187001",
+      "name": "箭头_页面_向左_蓝色",
+      "font_class": "jiantou_yemian_xiangzuo_lanse",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "29187002",
+      "name": "箭头_页面_向左_o",
+      "font_class": "jiantou_yemian_xiangzuo_o",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "29187003",
+      "name": "更多",
+      "font_class": "gengduo",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "29187004",
+      "name": "勾选",
+      "font_class": "gouxuan",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "29187005",
+      "name": "编组 4",
+      "font_class": "a-bianzu4",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "29187006",
+      "name": "展示全部",
+      "font_class": "zhanshiquanbu",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "29187007",
+      "name": "右箭头",
+      "font_class": "youjiantou",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    }
+  ]
+}
