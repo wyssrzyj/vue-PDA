@@ -3,39 +3,41 @@
 		<!-- <view class="commonBtn" @tap="handleScanStorage" style="background-color: #fca147;">扫描库位</view> -->
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
-			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled/>
+			<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled/> -->
+			<view class="placeholderInput">{{storageValue? '请扫描PCS码！': '请扫描库位码！'}}</view>
 		</view>
 		<view class="storageLocation">
-			<text class="storageTitle">当前库位：</text>
-			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请扫描库位码" disabled/>
+			<text>库位：</text>
+			<!-- <input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请扫描库位码" disabled/> -->
+			<text class="locationText">{{storageValue}}</text>
 		</view>
 		<view class="pannelContent">
 			<uni-swipe-action>
-							 <uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
-							 	<view :class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
-							 		class="swipe-action u-border-top u-border-bottom">
-							 		<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
-							 		<view>
-							 			<view class="storageCode">{{ item.proNum }}</view>
-							 			<view>
-							 				<text>颜色尺码：</text>
-							 				<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
-							 			</view>
-							 			<view class="storageContent">
-							 				<view>
-							 					<text>扎号：</text>
-							 					<text>{{ item.packageNum }}</text>
-							 				</view>
-							 				<view class="storageNum">
-							 					<text>数量：</text>
-							 					<text>{{ item.outputNumber }}</text>
-							 				</view>
-							 			</view>
-							 		</view>
-							 		<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag"></image>
-							 		<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
-							 	</view>
-							 </uni-swipe-action-item>
+				<uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
+					<view :class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
+						class="swipe-action u-border-top u-border-bottom">
+						<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
+						<view>
+							<view class="storageCode">{{ item.proNum }}</view>
+							<view>
+								<text>颜色尺码：</text>
+								<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
+							</view>
+							<view class="storageContent">
+								<view>
+									<text>扎号：</text>
+									<text>{{ item.packageNum }}</text>
+								</view>
+								<view class="storageNum">
+									<text>数量：</text>
+									<text>{{ item.outputNumber }}</text>
+								</view>
+							</view>
+						</view>
+						<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag"></image>
+						<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
+					</view>
+				 </uni-swipe-action-item>
 			</uni-swipe-action>
 		</view>
 		<view class="bottomLocation">
@@ -318,31 +320,29 @@
 		background-color: #F3F3F3;
 		.location {
 			position: relative;
-			margin: 20rpx;
-			.scanInput {
-				height: 80rpx;
-				border: 1px solid #767676;
-				background-color: #FFF;
-				padding: 0 10rpx;
-				text-align: center;
+			.placeholderInput{
+				height: 88rpx;
+				padding: 26rpx 474rpx 26rpx 28rpx;
+				color: rgba(12,153,242,1);
+				font-family: PingFang-SC-Bold;
+				font-size: 36rpx;
+				line-height: 36rpx;
+				background-color: rgba(228,244,255,1);
+				font-weight: bold;
 			}
 		}
 		.storageLocation {
-			margin: 20rpx;
-			display: flex;
-			justify-content: flex-start;
-			align-items: center;
-			.storageTitle {
-				font-size: 33rpx;
-				font-weight: bold;
-			}
-			.storageInput {
-				width: 76%;
-				height: 80rpx;
-				display: inline-block;
-				border: 1rpx solid #212121;
-				background-color: #F2F2F2;
-				padding: 0 10rpx;
+			padding:26rpx  482rpx 24rpx 30rpx;
+			color: rgba(51,51,51,1);
+			font-family: PingFang-SC-Bold;
+			font-size: 36rpx;
+			line-height: 50rpx;
+			font-weight: 500;
+			background-color: rgba(255,255,255,1);
+			.locationText{
+				font-size: 36rpx;
+				font-family: Helvetica-Bold;
+				color: rgba(42,42,42,1);
 			}
 		}
 		.pannelContent {

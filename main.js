@@ -2,6 +2,8 @@ import App from './App'
 import store from "./store/store.js"
 import uView from "uview-ui";
 import Vue from 'vue'
+// import "./assets/iconfont/iconfont.css"
+// import "./assets/iconfont/iconfont.js"
 Vue.use(uView)
 Vue.prototype.$store=store
 // 如此配置即可

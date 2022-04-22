@@ -252,6 +252,7 @@
 				Api.productionReportingPCS({
 					pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
+					console.log(res)
 					if (res.code === 0) {
 						if(this.outStorageArr.length===0){
 							this.scanPCSEncapsulation.call(this,res)
