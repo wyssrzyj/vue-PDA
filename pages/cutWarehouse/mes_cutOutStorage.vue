@@ -1,77 +1,89 @@
 <template>
 	<view class="mainContent" @click="closeModal">
 		<view class="location">
-			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search"
-				:placeholder="sewingTaskRecord? '请扫描PCS码': '请扫描缝制任务单号码'"  disabled />
+			<view class="tip_text"><text>{{sewingTaskRecord ? '请扫描PCS码!': '请扫描缝制任务单号码'}}</text></view>
+			<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search"
+				:placeholder="sewingTaskRecord? '请扫描PCS码': '请扫描缝制任务单号码'"  disabled /> -->
 		</view>
-		<view class="storageLocation">
-			<text class="storageTitle">缝制任务单号：</text>
+		<view class="storageLocation" v-show="sewingTaskRecord">
+			<text class="storageTitle">缝制任务单号：<text style="color: #666666; font-size: 36rpx;">{{sewingTaskRecord? sewingTaskRecord: '请扫描缝制任务单号码'}}</text></text>
+			<!-- <text class="storageTitle">缝制任务单号：</text>
 			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="sewingTaskRecord"
-				confirm-type="search" placeholder="请扫描缝制任务单号码" disabled />
+				confirm-type="search" placeholder="请扫描缝制任务单号码" disabled /> -->
 		</view>
 		<view class="radioLocation">
 			<checkbox-group @change="checkboxChange">
 				<view class="checkboxStyle">
 					<checkbox value="" :checked="!isSelectCheckbox" style="transform: scale(0.8)" />
 				</view>
-				<view class="checkboxStyle">全部</view>
+				<view class="checkboxStyle">展示全部</view>
 			</checkbox-group>
 		</view>
 		<view class="pannelContent">
 			<scroll-view  scroll-y="true" class="scroll-Y">
 				<uni-swipe-action>
-				<uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" :name="item.id"
-					 class="storageItem" v-for="(item, index) in outStorageArr" :key="item.id" v-if="item.isShowScan">
-					<view :class="[item.isSelectScan ? 'selectLine': '' , 'touch-list', 'list-touch']"
-						class="swipe-action u-border-top u-border-bottom">
-						<view class="swipe-action__content">
-							<text class="serialNumber">{{ index + 1 }}.</text>
-				 		<view>
-						<view class="storageTop">
-							<view class="storageCode">{{ item.proNum }}</view>
-							<view v-if="item.packageState=='齐套可用'" class="storageUse">齐套可用</view>
-							<view v-else-if="item.packageState=='齐套不可用'" class="storageUnUse">齐套不可用</view>
-							<view v-else class="NoStorageUnUse">非齐套不可用</view>
-						</view>
+					<uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" :name="item.id"
+						 class="storageItem" v-for="(item, index) in outStorageArr" :key="item.id" v-if="item.isShowScan">
+						<view :class="[item.isSelectScan ? 'selectLine': '' , 'touch-list', 'list-touch']"
+							class="swipe-action u-border-top u-border-bottom">
+								<view class="serialNumber">{{ index + 1 }}.</view>
 								<view>
-									<text>颜色尺码：</text>
-									<text decode="true"
-										space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
-								</view>
-								<view class="storageContent">
+									<view class="storageTop">
+										<view class="storageCode">{{ item.proNum }}</view>
+										<view v-if="item.packageState=='齐套可用'" class="storageUse">齐套可用</view>
+										<view v-else-if="item.packageState=='齐套不可用'" class="storageUnUse">齐套不可用</view>
+										<view v-else class="NoStorageUnUse">非齐套不可用</view>
+									</view>
+								
+								
 									<view>
-										<text>扎号：</text>
-										<text>{{ item.packageNum }}</text>
+										<text>颜色尺码：</text>
+										<text decode="true"
+											space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
 									</view>
-									<view class="storageNum">
-				  				<text>数量：</text>
-										<text>{{ item.inputNumber }}</text>
-									</view>
-									<view class="storageArea">
-										<text>库位：</text>
-				  				<text>{{ item.locationCode }}</text>
+									<view class="storageContent">
+										<view>
+											<text>扎号：</text>
+											<text>{{ item.packageNum }}</text>
+										</view>
+										<view class="storageNum">
+											<text>数量：</text>
+											<text>{{ item.inputNumber }}</text>
+										</view>
+										<view class="storageArea">
+											<text>库位：</text>
+											<text>{{ item.locationCode }}</text>
+										</view>
 									</view>
 								</view>
-							</view>
 						</view>
-					</view>
-				</uni-swipe-action-item>
+					</uni-swipe-action-item>
 				</uni-swipe-action>
 			</scroll-view>
 		</view>
 		<view class="bottomLocation">
-			<view class="scanNum">总行数/已扫描行数：{{ outStorageArr.length }}/{{ alreadyOutStorageArr.length }}</view>
 			<view class="btnLocation">
-				<view class="commonBtn moreBtn" id="moreBtn" @tap="handleMore">更多</view>
-				<view class="commonBtn inStorageBtn" @tap="handleOutStorage"
-					v-if="outStorageArr.length > 0 && outStorageArr.length == alreadyOutStorageArr.length">出库</view>
-				<view class="commonBtn noInStorageBtn" v-else>出库</view>
+				<!-- <view class="commonBtn moreBtn" id="moreBtn" @tap="handleMore">更多</view> -->
+				<view class="moreBtn">
+					<u--text style="padding-right: 10rpx;"  size="32" text="更多" :color="'#333333'" lineHeight="104" @tap="handleMore"></u--text>
+					<view class="iconfont icon-gengduo icon_style"></view>
+				</view>
+				<view class="scanNum">
+					<text style="padding-right: 20px;">已扫描行数：{{ outStorageArr.length }}/{{ alreadyOutStorageArr.length }}</text>
+					<u-button class="inStorageBtn" type="primary" :class="!alreadyOutStorageArr.length > 0 ?'custom-style' : ''" @tap="handleInStorage" :disabled="!alreadyOutStorageArr.length > 0" text="出库"></u-button>
+				</view>
 			</view>
 		</view>
-		<view class="btnModal" v-show="showModal">
+		<!-- <view class="btnModal" v-show="showModal">
 			<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
 			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
-		</view>
+		</view> -->
+		<u-popup :show="showModal" @close="showModal = false" :overlayOpacity="0">
+			<view class="btnModal">
+				<image class="modalImage-out" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
+				<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
+			</view>
+		</u-popup>
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
 			<view style="margin: 0 20rpx 0 90rpx;">{{ showSuccessMessage }}</view>
@@ -81,6 +93,8 @@
 			<view style="margin: 0 20rpx 0 80rpx;">{{ showErrorMessage }}</view>
 		</view>
 		<scan-code></scan-code>
+		
+		
 		<u-modal :show="show"  :title="title" :showCancelButton="true" confirmColor="#476bf9" confirmText="确定" @confirm="handleConfirm" @cancel="handleCancel">
 					<view class="slot-content">
 						<rich-text :nodes="content"></rich-text>
@@ -142,8 +156,57 @@
 				showSuccessMessage: '',
 				showErrorMessage: '',
 				sewingTaskRecord: '',
-				outStorageArr: [],
-				alreadyOutStorageArr: [],
+				outStorageArr: [
+					{
+						id: "a",
+						productId:  "abc",
+						produceId: "ea",
+						subpackageId:  "ea",
+						proNum: "ea",
+						colorCode:  "ea",
+						colorName: "ea",
+						sizeCode: "ea",
+						sizeName: "ea",
+						packageNum: "ea",
+						inputNumber:  "ea",
+						locationCode: "ea",
+						packageState:  "ea",
+						outputNumber: 0,
+						storageStatus: 0,
+						isShowScan: true,
+						isSelectScan: false,
+						produceSkuId:  "ea",
+						sewingExecutionId:  "ea",
+						sewingExecutionSkuId:  "ea",
+						warehouseLocationId: "ea"
+					}
+				],
+				alreadyOutStorageArr: [
+					{
+						id: "a",
+						productId:  "abc",
+						produceId: "ea",
+						subpackageId:  "ea",
+						proNum: "ea",
+						colorCode:  "ea",
+						colorName: "ea",
+						sizeCode: "ea",
+						sizeName: "ea",
+						packageNum: "ea",
+						inputNumber:  "ea",
+						locationCode: "ea",
+						packageState:  "ea",
+						outputNumber: 0,
+						storageStatus: 0,
+						isShowScan: true,
+						isSelectScan: false,
+						produceSkuId:  "ea",
+						sewingExecutionId:  "ea",
+						sewingExecutionSkuId:  "ea",
+						warehouseLocationId: "ea"
+					}
+					
+				],
 				startX: '',
 				options1: [{
 					text: '删除',
@@ -295,7 +358,7 @@
 
 			closeModal(e){//点击页面其他地方关闭清空按钮
 				if(e.target.id!="moreBtn" && this.showModal){
-					this.showModal=false
+					// this.showModal=false
 				}
 			},
 
@@ -361,9 +424,20 @@
 	.mainContent {
 		position: relative;
 		background-color: #F3F3F3;
+		height: 100%;
+		width: 100%;
 		.location {
-			position: relative;
-			margin: 20rpx;
+			// position: relative;
+			// margin: 20rpx;
+			.tip_text {
+				background-color: #E4F4FF;
+				width: 100%;
+				font-family: PingFang-SC-Bold;
+				font-size: 18px;
+				color: #0C99F2;
+				padding: 13px 14px;
+				font-weight: 700;
+			}
 
 		.u-swipe-action-item__right__button__wrapper {
 			background-color: #cc3300 !important;
@@ -398,13 +472,17 @@
 			}
 		}
 		.storageLocation {
-			margin: 20rpx;
+			width: 100%;
 			display: flex;
+			font-size: 36rpx;
 			justify-content: flex-start;
+			// height: 100rpx;
+			padding: 26rpx 30rpx;
+			background-color: #ffffff;
 			align-items: center;
 			.storageTitle {
 				// font-size: 25rpx;
-				font-size: 33rpx;
+				color: #333333;
 				font-weight: bold;
 			}
 			.storageInput {
@@ -417,48 +495,45 @@
 			}
 		}
 		.radioLocation {
-			text-align: right;
-			margin-right: 20rpx;
+			text-align: left;
+			// margin-right: 20rpx;
+			margin-top: 30rpx;
 
 			.checkboxStyle {
 				display: inline-block;
 			}
 		}
 		.pannelContent {
-			height: calc(100vh - 460rpx);
+			height: calc(100vh - 230px);
 			overflow-y: auto;
 			.storageItem {
 				display: flex;
-				border: 1rpx solid #e4e4e4;
-				border-radius: 20rpx;
-				margin: 20rpx 5rpx;
-				position: relative;
+				width: 375px;
+				margin: 20rpx 0;
 				overflow: hidden;
 				.selectLine {
+					width: 375px;
 					background-color: #84D3F9 !important;
 				}
 				.touch-list{
-					position: absolute;
-					top: 0;
-					padding: 20rpx 60rpx;
+					width: 750rpx;
+					padding: 30rpx 26rpx;
 					background-color: #fff;
-					border-radius: 20rpx;
 					overflow: hidden;
 				}
 
-				.list-touch {
-					position: relative;
-					width: 740rpx;
-					// z-index: 2;
+				.list-touch{
+					width: 750rpx;
 					transition: left 0.2s ease-in-out;
 					white-space: nowrap;
 					text-overflow: ellipsis;
+					display: flex;
+					font-size: 32rpx;
+					justify-content: flex-start;
+					align-items: center;
 					.serialNumber {
-						position: absolute;
-						left: 20rpx;
-						top: 55rpx;
+						padding-right: 40rpx;
 						font-weight: bold;
-						font-size: 35rpx;
 					}
 					.storageTop{
 						display: flex;
@@ -468,13 +543,13 @@
 						// 	font-weight: bold;
 						// }
 						.storageUse{
-							color: #008000;
+							color: #0BC46F;
 						}
 						.storageUnUse{
-							color: #ffcc00;
+							color: #FFA600;
 						}
 						.NoStorageUnUse{
-							color: #ff0000;
+							color: #F4333F;
 						}
 					}
 					.storageContent {
@@ -508,33 +583,46 @@
 			background-color: #fafafa;
 			border-top: 1rpx solid #dcdcdc;
 			position: fixed;
+			height: 104rpx;
 			left: 0;
 			bottom: 0;
-			padding: 15rpx 30rpx 30rpx;
+			padding: 0 30rpx;
 			z-index: 99;
 			.scanNum {
-				height: 75rpx;
-				line-height: 75rpx;
-				text-align: right;
-				color: #4a70f5;
-				font-size: 30rpx;
-				font-weight: bold;
+			
+				line-height: 104rpx;
+				text-align: center;
+				color: #585858;
+				font-size: 32rpx;
+				// font-weight: bold;
+				display: flex;
+				justify-content: flex-end;
+				align-items:center;
 			}
 			.btnLocation {
 				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
+				align-items:center;
 				.moreBtn {
-					background-color: #fca147;
+					display: flex;
+					justify-content: flex-start;
+					align-items: center;
 					cursor: pointer;
+					.icon_style {
+						font-size: 20rpx;
+						color: #999999;
+						
+					}
 				}
 				.inStorageBtn {
-					background-color: #4a70f5;
-					cursor: pointer;
+					width: 200rpx;
+					margin: 0;
 				}
-				.noInStorageBtn {
-					background-color: #cccccc;
-					cursor: not-allowed;
+				.custom-style {
+					color: #999999;
+					background-color: #E0E0E0;
+					border-color: #E0E0E0;
 				}
 			}
 		}
@@ -543,11 +631,14 @@
 			position: absolute;
 			left: 30rpx;
 			bottom: 20rpx;
-			z-index: 10;
+			z-index: 90;
 			
-			.modalImage {
+			.modalImage-out {
 				width: 300rpx;
 				height: 166rpx;
+				background-color: url('../../static/cutWarehouse/chuku.png')
+				// background-color: rgba();
+				// color: red;
 			}
 		}
 

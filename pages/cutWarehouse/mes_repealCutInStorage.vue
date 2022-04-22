@@ -3,54 +3,85 @@
 		<!-- <view class="commonBtn" @tap="handleScanStorage" style="background-color: #fca147;">扫描库位</view> -->
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
+			<view class="tip_text"><text>{{storageValue ? '请扫描PCS码!': '请扫描库位码'}}</text></view>
 			<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-			<input class="uni-input scanInput" placeholder-style="font-size: 34rpx"  confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled/>
+			<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx"  confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled/> -->
 		</view>
-		<view class="storageLocation">
-			<text class="storageTitle">当前库位：</text>
-			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请扫描库位码" disabled/>
+		<view class="storageLocation" v-show="storageValue">
+			<text class="storageTitle">当前库位：<text style="color: #666666; font-size: 36rpx;">{{storageValue? storageValue: '请扫描库位码'}}</text></text>
+			<!-- <text class="storageTitle">当前库位：</text> -->
+			<!-- <input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请扫描库位码" disabled/> -->
 		</view>
 		<view class="pannelContent">
 			<uni-swipe-action>
-							 <uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
-							 	<view :class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
-							 		class="swipe-action u-border-top u-border-bottom">
-							 		<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
-							 		<view>
-							 			<view class="storageCode">{{ item.proNum }}</view>
-							 			<view>
-							 				<text>颜色尺码：</text>
-							 				<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeName }}</text>
-							 			</view>
-							 			<view class="storageContent">
-							 				<view>
-							 					<text>扎号：</text>
-							 					<text>{{ item.packageNum }}</text>
-							 				</view>
-							 				<view class="storageNum">
-							 					<text>数量：</text>
-							 					<text>{{ item.inputNumber }}</text>
-							 				</view>
-							 			</view>
-							 		</view>
-							 		<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag"></image>
-							 		<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
-							 	</view>
-							 </uni-swipe-action-item>
+				 <uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
+					<view :class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
+						class="swipe-action u-border-top u-border-bottom">
+						
+						
+						
+						<view :class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
+							class="swipe-action u-border-top u-border-bottom">
+							<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
+							<view class="item_content">
+								<view class="storageCode">{{ item.proNum }}</view>
+								<view class="colorCode_item">
+									<text class="label_style">颜色尺码：</text>
+									<text class="value_style" decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeName }}</text>
+								</view>
+								<view class="storageContent">
+									<view>
+										<text class="label_style">扎号：</text>
+										<text class="value_style">{{ item.packageNum }}</text>
+									</view>
+									<view class="storageNum">
+										<text class="label_style">数量：</text>
+										<text class="value_style">{{ item.inputNumber }}</text>
+									</view>
+								</view>
+							</view>
+							<view class="image_style">
+								<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag"></image>
+								<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
+							</view>
+						</view>
+	
+					</view>
+				 </uni-swipe-action-item>
 			</uni-swipe-action>
 		</view>
 		<view class="bottomLocation">
+			<view class="btnLocation">
+				<!-- <view class="commonBtn moreBtn" id="moreBtn" @tap="handleMore">更多</view> -->
+				<view class="moreBtn">
+					<u--text style="padding-right: 10rpx;"  size="32" text="更多" :color="'#333333'" lineHeight="104" @tap="handleMore"></u--text>
+					<view class="iconfont icon-gengduo icon_style"></view>
+				</view>
+				<view class="scanNum">
+					<text style="padding-right: 20px;">已扫描行数：{{ inStorageArr.length }}</text>
+					<u-button class="inStorageBtn" type="primary" :class="!inStorageArr.length > 0 ?'custom-style' : ''" @tap="handleRepealInStorage" :disabled="!inStorageArr.length > 0" text="撤销入库"></u-button>
+				</view>
+			</view>
+		</view>
+<!-- 		<view class="bottomLocation">
+			
 			<view class="scanNum">已扫描行数：{{ inStorageArr.length }}</view>
 			<view class="btnLocation">
 				<view class="commonBtn moreBtn" id="moreBtn" @tap="handleMore">更多</view>
 				<view class="commonBtn inStorageBtn" @tap="handleRepealInStorage" v-if="inStorageArr.length > 0">撤销入库</view>
 				<view class="commonBtn noInStorageBtn" v-else>撤销入库</view>
 			</view>
-		</view>
-		<view class="btnModal" v-show="showModal">
+		</view> -->
+		<!-- <view class="btnModal" v-show="showModal">
 			<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
 			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
-		</view>
+		</view> -->
+		<u-popup :show="showModal" @close="showModal = false" :overlayOpacity="0">
+			<view class="btnModal">
+				<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
+				<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
+			</view>
+		</u-popup>
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
 			<view style="margin: 0 20rpx 0 90rpx;">{{ showSuccessMessage }}</view>
@@ -61,25 +92,31 @@
 		</view>
 		<view class="reasonMask" v-if="showReasonMask">
 			<view class="reasonDialog">
+				<view class="reasonTitle">原因记录</view>
 				<view class="reasonContent">
-					<view class="reasonTitle">原因记录</view>
-					<view class="reasonInside">
+					<view class="reason_content" style="display: flex;justify-content: flex-start;">
 						<view class="reasonText">
-							<text style="color: red;">*</text>撤销入库原因：
+							<text style="color: red;">*</text><text>撤销入库原因:</text>
 						</view>
-						<view class="reasonSelect">
-							<picker @change="bindPickerChange" :value="selectIndex" :range="selectArr" range-key="selectIndex">
-								<view class="uni-input">
-									<text>{{selectArr[selectIndex]}}</text>
-								</view>
-							</picker>
-							<image src="../../static/cutWarehouse/selectDownArrow@2x.png" mode="aspectFit" class="selectDownArrow"></image>
+						<view class="reasonInside">
+							<view class="reasonSelect">
+								<picker @change="bindPickerChange" :value="selectIndex" :range="selectArr" range-key="selectIndex">
+									<view class="uni-input">
+										<text>{{selectArr[selectIndex]}}</text>
+									</view>
+								</picker>
+								<image src="../../static/cutWarehouse/selectDownArrow@2x.png" mode="aspectFit" class="selectDownArrow"></image>
+							</view>
 						</view>
 					</view>
-					<view>操作人：{{ username }}</view>
-					<view>操作时间：{{ date }}</view>
+					<view class="reason_content">
+						<view>操作人：{{ username }}</view>
+					</view>
+					<view class="reason_content">
+						<view>操作时间：{{ date }}</view>
+					</view>
 				</view>
-				<view class="btnLocation" style="margin-left: 40rpx;">
+				<view class="btnLocation">
 					<view class="cancelBtn" @tap="handleCancel">取消</view>
 					<view class="confirmBtn" @tap="handleConfirm">确定</view>
 				</view>
@@ -139,7 +176,22 @@
 				storageValue: '',
 				wareHouseLocation: '',
 				typeMode: '2',
-				inStorageArr: [],
+				inStorageArr: [
+					{
+						id: "1",
+						productId: "1",
+						produceId:"1",
+						subpackageId: "1",
+						proNum: "1",
+						colorCode:  "1",
+						colorName:  "1",
+						sizeCode: "1",
+						sizeName:  "1",
+						packageNum:  "1",
+						inputNumber:  "1",
+						arrowFlag: false
+					}
+				],
 				startX: '',
 				selectIndex: 0,
 				selectArr: [],
@@ -273,7 +325,7 @@
 
 			closeModal(e){//点击页面其他地方关闭清空按钮
 				if(e.target.id!="moreBtn" && this.showModal){
-					this.showModal=false
+					// this.showModal=false
 				}
 			},
 
@@ -366,8 +418,8 @@
 		position: relative;
 		background-color: #F3F3F3;
 		.location {
-			position: relative;
-			margin: 20rpx;
+			// position: relative;
+			// margin: 20rpx;
 			// .scanCodeBox {
 			// 	position: absolute;
 			// 	left: 2rpx;
@@ -375,6 +427,15 @@
 			// 	width: 60rpx;
 			// 	height: 60rpx;
 			// }
+			.tip_text {
+				background-color: #E4F4FF;
+				width: 100%;
+				font-family: PingFang-SC-Bold;
+				font-size: 18px;
+				color: #0C99F2;
+				padding: 13px 14px;
+				font-weight: 700;
+			}
 			.scanInput {
 				// width: 88%;
 				height: 80rpx;
@@ -386,12 +447,17 @@
 			}
 		}
 		.storageLocation {
-			margin: 20rpx;
+			width: 100%;
 			display: flex;
+			font-size: 36rpx;
 			justify-content: flex-start;
+			// height: 100rpx;
+			padding: 26rpx 30rpx;
+			background-color: #ffffff;
 			align-items: center;
 			.storageTitle {
-				font-size: 33rpx;
+				// font-size: 25rpx;
+				color: #333333;
 				font-weight: bold;
 			}
 			.storageInput {
@@ -407,54 +473,67 @@
 			height: calc(100vh - 350rpx);
 			overflow: auto;
 			.storageItem {
-				display: flex;
-				border: 1rpx solid #e4e4e4;
-				border-radius: 20rpx;
-				margin: 20rpx 5rpx;
-				position: relative;
+				margin: 20rpx 0;
+				width: 375px;
 				overflow: hidden;
 				.selectLine {
 					background-color: #84D3F9 !important;
+					border-color: #84D3F9 !important;
 				}
 				.touch-list{
-					position: absolute;
-					top: 0;
-					padding: 20rpx 60rpx;
-					background-color: #fff;
-					border-radius: 20rpx;
+					width: 375px;
+					padding: 30rpx 26rpx;
 					overflow: hidden;
 				}
 				.list-touch{
-					position: relative;
-					width: 740rpx;
+					width: 100%;
 					z-index: 5;
+					font-size: 32rpx;
 					transition: left 0.2s ease-in-out;
 					white-space: nowrap;
 					text-overflow: ellipsis;
+					display: flex;
+					justify-content: flex-start;
+					align-items: center;
+					
 					.serialNumber {
-						position: absolute;
-						left: 20rpx;
-						top: 55rpx;
-						font-weight: bold;
-						font-size: 35rpx;
-					}
-					.storageCode {
+						padding-right: 40rpx;
 						font-weight: bold;
 					}
-					.storageContent {
-						display: flex;
-						flex-direction: row;
-						justify-content: space-between;
-						.storageNum {
+					.item_content {
+						width: 70%;
+						.label_style {
+							color:  #333333;
+							font-weight: 700;
+						}
+						.value_style {
+							color:  #666666;
+						}
+						.storageCode {
 							font-weight: bold;
+							padding-bottom: 16rpx;
+						}
+						.colorCode_item {
+							padding-bottom: 8rpx;
+						}
+						.storageContent {
+							display: flex;
+							flex-direction: row;
+							justify-content: space-between;
+							
 						}
 					}
-					.arrowImage {
-						position: absolute;
-						right: 55rpx;
-						top: 55rpx;
-						width: 44rpx;
-						height: 46rpx;
+					.image_style {
+						width: 30%;
+						display: flex;
+						justify-content: flex-end;
+						.arrowImage {
+							// position: absolute;
+							// right: 55rpx;
+							// top: 55rpx;
+							width: 44rpx;
+							height: 46rpx;
+						}
 					}
 				}
 				.list-delete{
@@ -464,8 +543,8 @@
 					height: 155rpx;
 					line-height: 155rpx;
 					padding: 5rpx 16rpx;
-					background-color: #EA5863;
-					border-radius: 0 20rpx 20rpx 0;
+					background-color: #F4333F;
+					// border-radius: 0 20rpx 20rpx 0;
 					color: #fff;
 					font-size: 35rpx;
 					font-weight: lighter;
@@ -478,45 +557,108 @@
 			background-color: #fafafa;
 			border-top: 1rpx solid #dcdcdc;
 			position: fixed;
+			height: 104rpx;
 			left: 0;
 			bottom: 0;
-			padding: 15rpx 30rpx 30rpx;
+			padding: 0 30rpx;
+			z-index: 99;
 			.scanNum {
-				height: 75rpx;
-				line-height: 75rpx;
-				text-align: right;
-				color: #4a70f5;
-				font-size: 30rpx;
-				font-weight: bold;
+			
+				line-height: 104rpx;
+				text-align: center;
+				color: #585858;
+				font-size: 32rpx;
+				// font-weight: bold;
+				display: flex;
+				justify-content: flex-end;
+				align-items:center;
 			}
 			.btnLocation {
 				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
+				align-items:center;
 				.moreBtn {
-					background-color: #fca147;
+					display: flex;
+					justify-content: flex-start;
+					align-items: center;
 					cursor: pointer;
+					.icon_style {
+						font-size: 20rpx;
+						color: #999999;
+						
+					}
 				}
 				.inStorageBtn {
-					background-color: #4a70f5;
-					cursor: pointer;
+					width: 200rpx;
+					margin: 0;
 				}
-				.noInStorageBtn {
-					background-color: #cccccc;
-					cursor: not-allowed;
+				.custom-style {
+					color: #999999;
+					background-color: #E0E0E0;
+					border-color: #E0E0E0;
 				}
 			}
 		}
+		
 		.btnModal {
 			position: absolute;
 			left: 30rpx;
-			bottom: 20rpx;
-			z-index: 10;
+			bottom: 37px;
+			z-index: 90;
+			
 			.modalImage {
 				width: 300rpx;
 				height: 166rpx;
+				background-color: url('../../static/cutWarehouse/chuku.png')
+				// background-color: rgba();
+				// color: red;
 			}
 		}
+		// .bottomLocation {
+		// 	width: 100%;
+		// 	background-color: #fafafa;
+		// 	border-top: 1rpx solid #dcdcdc;
+		// 	position: fixed;
+		// 	left: 0;
+		// 	bottom: 0;
+		// 	padding: 15rpx 30rpx 30rpx;
+		// 	.scanNum {
+		// 		height: 75rpx;
+		// 		line-height: 75rpx;
+		// 		text-align: right;
+		// 		color: #4a70f5;
+		// 		font-size: 30rpx;
+		// 		font-weight: bold;
+		// 	}
+		// 	.btnLocation {
+		// 		display: flex;
+		// 		flex-direction: row;
+		// 		justify-content: space-between;
+		// 		.moreBtn {
+		// 			background-color: #fca147;
+		// 			cursor: pointer;
+		// 		}
+		// 		.inStorageBtn {
+		// 			background-color: #4a70f5;
+		// 			cursor: pointer;
+		// 		}
+		// 		.noInStorageBtn {
+		// 			background-color: #cccccc;
+		// 			cursor: not-allowed;
+		// 		}
+		// 	}
+		// }
+		// .btnModal {
+		// 	position: absolute;
+		// 	left: 30rpx;
+		// 	bottom: 20rpx;
+		// 	z-index: 10;
+		// 	.modalImage {
+		// 		width: 300rpx;
+		// 		height: 166rpx;
+		// 	}
+		// }
 		.commonBtn {
 			display: inline-block;
 			text-align: center;
@@ -533,22 +675,25 @@
 		.cancelBtn {
 			display: inline-block;
 			text-align: center;
-			padding: 20rpx 55rpx;
+			padding: 14rpx 74rpx;
+			font-size: 36rpx;
 			background-color: #fff;
-			border: 1rpx solid #000;
-			color: #000;
-			border-radius: 10rpx;
-			margin: 20rpx 30rpx;
+			border: 1rpx solid #0C99F2;
+			color: #0C99F2;
+			border-radius: 40rpx;
+			margin: 40rpx 20rpx 40rpx 30rpx;
 			cursor: pointer;
 		}
 		.confirmBtn {
 			display: inline-block;
 			text-align: center;
-			padding: 20rpx 55rpx;
-			background-color: #4a70f5;
+			padding: 14rpx 74rpx;
+			font-size: 36rpx;
+			background-color: #0C99F2;
+			border: 1rpx solid #0C99F2;
 			color: #fff;
-			border-radius: 10rpx;
-			margin: 20rpx 30rpx;
+			border-radius: 40rpx;
+			margin: 40rpx 30rpx 40rpx 20rpx;
 			cursor: pointer;
 		}
 		.remindPopup {
@@ -606,37 +751,46 @@
 			bottom: 0;
 			z-index: 5;
 			.reasonDialog {
-				width: 700rpx;
-				height: 440rpx;
+				width: 600rpx;
+				height: 560rpx;
 				position: absolute;
 				left: 50%;
 				top: 50%;
-				margin-left: -350rpx;
-				margin-top: -220rpx;
+				margin-left: -300rpx;
+				margin-top: -300rpx;
 				background-color: #fff;
-				padding: 30rpx 40rpx;
-				border-radius: 20rpx;
+				// padding: 30rpx 40rpx;
+				border-radius: 16rpx;
 				text-align: left;
 				color: #666;
 				font-size: 34rpx;
+				.reasonTitle {
+					font-size: 32rpx;
+					font-weight: bold;
+					text-align: center;
+					background-color: #E4F4FF;
+					border-radius: 16rpx;
+					padding: 28rpx 0;
+				}
 				.reasonContent {
-					.reasonTitle {
-						font-size: 45rpx;
-						font-weight: bold;
-						text-align: center;
+					padding: 0 30rpx;
+					.reason_content {
+						padding: 24rpx 0;
+						
+						border-bottom: 1px #EAEAEA solid;
 					}
 					.reasonInside {
-						margin: 20rpx 0;
+						// margin: 20rpx 0;
 						.reasonText {
 							display: inline-block;
-							font-size: 40rpx;
+							font-size: 32rpx;
 							font-weight: bold;
 						}
 						.reasonSelect {
 							position: relative;
 							display: inline-block;
 							background-color: #fff;
-							width: 300rpx;
+							width: 250rpx;
 							height: 50rpx;
 							line-height: 50rpx;
 							text-align: center;
