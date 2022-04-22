@@ -1,30 +1,29 @@
 <template>
 	<view class="mainContent" @tap="handleClick">
 		<view class="borderBottom">
-			<view class="location">
+			<!-- <view class="location"> -->
 				<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" disabled/> -->
-				<text class="scanInput">请扫描PCS码!</text>
-			</view>
-			<view class="box">
-				<view class="storage">
-					<text class="storage-left">报工工段</text>
-					<view class="storage-right" @click="show = true">
+			<!-- </view> -->
+			<view class="scanInput">请扫描PCS码!</view>
+			<view class="storage">
+				<view class="storage-item">
+					<text class="storage-item-left">报工工段</text>
+					<view class="storage-item-right" @click="show = true">
 						<text class="info">{{productNum?productNum:'请选择报工工段'}}</text>
-						<text class="icon">></text>
-					</view>
-				</view>			
-				<view class="storage">
-					<text class="storage-left">报工工序</text>
-					<view class="storage-right" @click="showMultiple">
-						<text class="info">{{supplierName?supplierName:'请选择报工工序'}}</text>
-						<text class="icon">></text>
+						<text class="iconfont icon-youjiantou"></text>
 					</view>
 				</view>
-				<view class="storage">
-					<text class="storage-left">当前员工</text>
-					<view class="storage-right">
+				<view class="storage-item">
+					<text class="storage-item-left">报工工序</text>
+					<view class="storage-item-right" @click="showMultiple">
+						<text class="info">{{supplierName?supplierName:'请选择报工工序'}}</text>
+						<text class="iconfont icon-youjiantou"></text>
+					</view>
+				</view>
+				<view class="storage-item">
+					<text class="storage-item-left">当前员工</text>
+					<view class="storage-item-right">
 						<text class="info">{{employeeName?employeeName:''}}</text>
-						<!-- <text class="icon">></text> -->
 					</view>
 				</view>
 			</view>
@@ -67,11 +66,11 @@
 		</view>
 		
 		<view class="bottom">
-			<view class="bottom-left" @click="handleMore" id="moreBtn">更多 ↓</view>
+			<view class="bottom-left" @click="handleMore" id="moreBtn">更多 <text class="iconfont icon-youjiantou"></text></view>
 			<view class="bottom-right">
-				<view class="num">已扫描行数：{{outStorageArr.length?outStorageArr.length:'0'}}</view>
-				<view class="btn btn1" @click="handleOutStorage" v-if="outStorageArr.length > 0">报工</view>
-				<view class="btn btn2" v-else >报工</view>
+				<view class="count">已扫描行数：{{outStorageArr.length?outStorageArr.length:'0'}}</view>
+				<view class="btn btnActive" @click="handleOutStorage" v-if="outStorageArr.length > 0">报工</view>
+				<view class="btn btnDisable" v-else >报工</view>
 			</view>
 		</view>
 <!-- 		<view class="bottomLocation">
@@ -339,6 +338,9 @@
 </script>
 
 <style lang="scss" scoped>
+	.iconfont{
+		font-size: 12rpx;
+	}
 	@mixin delSty {
 		position:absolute;
 		top:10rpx;
@@ -354,46 +356,6 @@
 		background-color: #F3F3F3;
 		.borderBottom{
 			padding-bottom: 10rpx;
-		}
-		.location {
-			width: 100%;
-			height: 44px;
-			background-color: #E4F4FF;
-			.scanInput {
-				line-height: 44px;
-				font-family: PingFang-SC-Bold;
-				font-size: 18px;
-				color: #0C99F2;
-				font-weight: 700;
-				text-align: center;
-				margin-left: 15px;
-			}
-		}
-		.box{
-			background-color: #FFFFFF;
-			width: 100%;
-			.storage{
-				height: 100rpx;
-				display: flex;
-				justify-content: space-between;
-				margin: 0 30rpx;
-				font-size: 32rpx;
-				line-height: 100rpx;
-				border-bottom: 1px solid #EAEAEA;
-				.storage-left{
-					font-weight: bold;
-					color: #333333;
-				}
-				.storage-right{
-					color: #999999;
-					.info{
-						margin-right: 15rpx;
-					}
-				}
-			}
-		}
-		.storage:last-child{
-			border-bottom: 0;
 		}
 
 		//查询按钮样式
@@ -502,48 +464,6 @@
 				color: #0C99F2!important;
 			}
 
-		}
-		
-		.bottom{
-			width: 100%;
-			height: 104rpx;
-			line-height: 104rpx;
-			background-color: #FFFFFF;
-			position: fixed;
-			left: 0;
-			bottom: 0;
-			border-top: 1px solid #EAEAEA;
-			display: flex;
-			justify-content: space-between;
-			font-size: 32rpx;
-			padding: 0 30rpx;
-			box-sizing: border-box;
-			.bottom-left{
-				color: #585858;
-			}
-			.bottom-right{
-				display: flex;
-				.num{
-					color: #585858;
-					margin-right: 15rpx;
-				}
-				.btn{
-					height:80rpx;
-					width: 200rpx;
-					margin-top: 12rpx;
-					line-height: 80rpx;
-					text-align: center;
-					border-radius: 4px;
-				}
-				.btn1{
-					background: #0C99F2;
-					color: #FFFFFF;
-				}
-				.btn2{
-					color: #999999;
-					background: #E0E0E0;
-				}
-			}
 		}
 		
 		.btnModal {

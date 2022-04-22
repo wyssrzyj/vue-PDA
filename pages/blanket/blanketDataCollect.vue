@@ -2,198 +2,130 @@
 	<view class="mainContent">
 		<u-toast ref="uToast"></u-toast>
 		
-		<view class="search">
-			<u-input
-				v-model="scanValue"
-				placeholder="请扫描布条码"
-				prefixIcon="search"
-				prefixIconStyle="font-size: 22px;color: #909399"
-				clearable
-				:disabled="isSearch"
-			>
-				<template slot="suffix">
-					<u-icon 
-						name="scan"
-						size="80"
-					></u-icon>
-				</template>
+		<!-- <view class="search"> -->
+			<!-- <u-input v-model="scanValue" placeholder="请扫描布条码" prefixIcon="search" prefixIconStyle="font-size: 22px;color: #909399" clearable :disabled="isSearch"> -->
+<!-- 				<template slot="suffix">
+					<u-icon name="scan" size="80"></u-icon>
+				</template> -->
+			<!-- </u-input> -->
+<!-- 			<u-input  v-model="clothCodeValue" placeholder="请扫描布条码" disabled>	
+				<u-text text="布条码:" slot="prefix" size="40" margin="0 10rpx 0 0" type="tips"></u-text>
 			</u-input>
-			<u-input 
-				v-model="clothCodeValue"
-				placeholder="请扫描布条码"
-				disabled
-			>	
-				<u-text
-					text="布条码:"
-					slot="prefix"
-					size="40"
-					margin="0 10rpx 0 0"
-					type="tips"
-				></u-text>
-			</u-input>
+		</view> -->
+		<view class="scanInput">请扫描布条码!</view>
+		<view class="storage" style="margin-bottom: 20rpx;">
+			<view class="storage-item">
+				<text class="storage-item-left" style="font-size: 36rpx;">布条码：{{clothCodeValue}}</text>
+			</view>
 		</view>
-		<view class="content">
+		
+		<view class="storage" style="margin-bottom: 20rpx;">
+			<view class="storage-item sorageTitle">
+				<text class="storage-item-left">收货数量</text>
+			</view>
+			<view class="message">
+				<view class="label">物料代码、颜色：<text class="numInfo">{{materialColor}}</text></view>
+				<view class="messageFlex">
+					<view class="label">幅宽(cm)：<text class="numInfo">{{larghezza}}</text></view>
+					<view class="label">克重(g/㎡)：<text class="numInfo">{{weight}}</text></view>
+					<view class="label">库存数量：<text class="numInfo">{{sendQty}}</text></view>
+					<view class="label">单耗：<text class="numInfo">{{materialQtyPd}}</text></view>
+				</view>
+				<view class="label">数量单位：<text class="numInfo">米</text></view>
+			</view>
+		</view>
+		
+<!-- 		<view class="content">
 			<view class="titleContent">
 				<text class="title">收货数据</text>
 				<text class="unit">数量单位：米</text>
 			</view>
 			<u-cell-group>
-				<u-cell
-					:value="materialColor"
-					label="物料代码、颜色:" 
-					center
-					size="large"
-				></u-cell>
-				<u-cell
-					:value="larghezza"
-					label="幅宽(cm):" 
-					center
-					size="large"
-				></u-cell>
-				<u-cell
-					:value="weight"
-					label="克重(g/㎡):" 
-					center
-					size="large"
-				></u-cell>
-				<u-cell
-					:value="sendQty"
-					label="库存数量:" 
-					center
-					size="large"
-				></u-cell>
-				<u-cell
-					:value="materialQtyPd"
-					label="单耗:" 
-					center
-					size="large"
-				></u-cell>
+				<u-cell :value="materialColor" label="物料代码、颜色:"  center size="large"></u-cell>
+				<u-cell :value="larghezza" label="幅宽(cm):"  center size="large"></u-cell>
+				<u-cell :value="weight" label="克重(g/㎡):"  center size="large"></u-cell>
+				<u-cell :value="sendQty" label="库存数量:"  center size="large"></u-cell>
+				<u-cell :value="materialQtyPd" label="单耗:"  center size="large"></u-cell>
 			</u-cell-group>
-		</view>
-		<view class="content" style="margin-top: 10px;">
-			<view class="titleContent">
-				<text class="title">铺布数据</text>
+		</view> -->
+		
+		
+		<!-- 铺布数据 -->
+		<view class="storage" style="margin-bottom: 20rpx;">
+			<view class="storage-item sorageTitle">
+				<text class="storage-item-left">铺布数据</text>
 			</view>
-			<u--form
-				labelPosition="left"
-				labelWidth="180"
-				labelAlign="right"
-				:model="modelData"
-			>
-				<u-form-item
-					label="铺布层数:"
-					prop="spreadClothNumberPlies"
-					borderBottom
-				>
-					<u-input
-						v-model="modelData.spreadClothNumberPlies"
-						placeholder="请输入铺布层数"
-						inputAlign="right"
-						border="none"
-						@change="onClothNumberPlies"
-						clearable
-					></u-input>
+			<view class="storage-item">
+				<text class="storage-item-left">铺布层数</text>
+				<view class="storage-item-right">
+					<u-input class="input" v-model="modelData.spreadClothNumberPlies" placeholder="请输入铺布层数" inputAlign="right" border="none" @change="onClothNumberPlies" clearable></u-input>
+				</view>
+			</view>
+			<view class="storage-item">
+				<text class="storage-item-left">段长</text>
+				<view class="storage-item-right">
+					<u-input class="input" v-model="modelData.fragmentExtent" placeholder="请输入段长" inputAlign="right" border="none" @change="onFragmentExtent" clearable></u-input>
+				</view>
+			</view>
+			<view class="storage-item">
+				<text class="storage-item-left">铺布日期</text>
+				<view class="storage-item-right" @tap="onSelectDate">
+					<u-input class="input" v-model="modelData.spreadClothDate" placeholder="请选择铺布日期" inputAlign="right" border="none" clearable></u-input>
+					<!-- <text class="iconfont icon-youjiantou"></text> -->
+				</view>
+			</view>
+			<view class="storage-item">
+				<text class="storage-item-left">铺布数量</text>
+				<view class="storage-item-right">
+					<u-input class="input" v-model="modelData.spreadClothQuantity" placeholder="请输入铺布数量" inputAlign="right" border="none" @change="onClothQuantity" clearable></u-input>
+				</view>
+			</view>
+			<view class="storage-item">
+				<text class="storage-item-left">剩余数量</text>
+				<view class="storage-item-right">
+					<u-input class="input" v-model="modelData.spreadClothLeftQuantity" placeholder="请输入剩余数量" inputAlign="right" border="none" @change="onClothLeftQuantity" clearable></u-input>
+				</view>
+			</view>
+			<view class="storage-item">
+				<text class="storage-item-left">缺料数量</text>
+				<view class="storage-item-right">
+					<u-input class="input" v-model="modelData.spreadClothLackQuantity" placeholder="请输入缺料数量" inputAlign="right" border="none" clearable></u-input>
+				</view>
+			</view>
+		</view>
+		
+		<!-- <view class="content" style="margin-top: 10px;"> -->
+<!-- 			<view class="titleContent">
+				<text class="title">铺布数据</text>
+			</view> -->
+<!-- 			<u-form labelPosition="left" labelWidth="180" labelAlign="right" :model="modelData">
+				<u-form-item label="铺布层数:" prop="spreadClothNumberPlies" borderBottom>
+					<u-input v-model="modelData.spreadClothNumberPlies" placeholder="请输入铺布层数" inputAlign="right" border="none" @change="onClothNumberPlies" clearable></u-input>
 				</u-form-item>
-				<u-form-item
-					label="段长:" 
-					prop="fragmentExtent"
-					borderBottom
-				>
-					<u-input
-						v-model="modelData.fragmentExtent"
-						placeholder="请输入段长"
-						inputAlign="right"
-						border="none"
-						@change="onFragmentExtent"
-						clearable
-					></u-input>
+				<u-form-item label="段长:" prop="fragmentExtent" borderBottom>
+					<u-input v-model="modelData.fragmentExtent" placeholder="请输入段长" inputAlign="right" border="none" @change="onFragmentExtent" clearable></u-input>
 				</u-form-item>
-				<u-form-item
-					label="铺布日期:"
-					prop="spreadClothDate"
-					borderBottom
-				>
-					<u-input
-						class="dateInput"
-						v-model="modelData.spreadClothDate"
-						placeholder="请选择铺布日期"
-						inputAlign="right"
-						border="none"
-						clearable
-					>
+				<u-form-item label="铺布日期:" prop="spreadClothDate" borderBottom>
+					<u-input class="dateInput" v-model="modelData.spreadClothDate" placeholder="请选择铺布日期" inputAlign="right" border="none" clearable>
 						<template slot="suffix">
-							<u-icon 
-								name="calendar"
-								size="80"
-								@tap="onSelectDate"
-								style="margin-right: -400rpx;"
-							></u-icon>
+							<u-icon name="calendar" size="80" @tap="onSelectDate" style="margin-right: -400rpx;"></u-icon>
 						</template>
 					</u-input>
-					<u-calendar
-						:defaultDate="defaultDate"
-						minDate="2021-01"
-						maxDate="2024-12"
-						monthNum="60"
-						round="10"
-						:show="showCalendar" 
-						@confirm="onConfirmCalendar"
-						@close="onCloseCalendar"
-						style="margin-right: -400rpx;"
-					></u-calendar>
 				</u-form-item>
-				<u-form-item
-					label="铺布数量:"
-					prop="spreadClothQuantity"
-					borderBottom
-				>
-					<u-input
-						v-model="modelData.spreadClothQuantity"
-						placeholder="请输入铺布数量"
-						inputAlign="right"
-						border="none"
-						@change="onClothQuantity"
-						clearable
-					></u-input>
+				<u-form-item label="铺布数量:" prop="spreadClothQuantity" borderBottom>
+					<u-input v-model="modelData.spreadClothQuantity" placeholder="请输入铺布数量" inputAlign="right" border="none" @change="onClothQuantity" clearable></u-input>
 				</u-form-item>
-				<u-form-item
-					label="剩余数量:"
-					prop="spreadClothLeftQuantity"
-					borderBottom
-				>
-					<u-input
-						v-model="modelData.spreadClothLeftQuantity"
-						placeholder="请输入剩余数量"
-						inputAlign="right"
-						border="none"
-						@change="onClothLeftQuantity"
-						clearable
-					></u-input>
+				<u-form-item label="剩余数量:" prop="spreadClothLeftQuantity" borderBottom>
+					<u-input v-model="modelData.spreadClothLeftQuantity" placeholder="请输入剩余数量" inputAlign="right" border="none" @change="onClothLeftQuantity" clearable></u-input>
 				</u-form-item>
-				<u-form-item
-					label="缺料数量:"
-					prop="spreadClothLackQuantity"
-					borderBottom
-				>
-					<u-input
-						v-model="modelData.spreadClothLackQuantity"
-						placeholder="请输入缺料数量"
-						inputAlign="right"
-						border="none"
-						clearable
-					></u-input>
+				<u-form-item label="缺料数量:" prop="spreadClothLackQuantity" borderBottom>
+					<u-input v-model="modelData.spreadClothLackQuantity" placeholder="请输入缺料数量" inputAlign="right" border="none" clearable></u-input>
 				</u-form-item>
-			</u--form>
+			</u-form> -->
+			
 			<view class="gridContent">
-				<view style="width: 150rpx;margin: 20rpx 0;">
-					<u-button 
-						icon="plus" 
-						size="small" 
-						color="#1F9BEF" 
-						type="primary" 
-						text="新增" 
-						@tap="addGrid"
-					></u-button>
+				<view style="width: 140rpx;height: 64rpx;">
+					<u-button class="newBtn" size="small" color="#0C99F2" type="primary" @tap="addGrid">新增</u-button>
 				</view>
 				<scroll-view scroll-y="true" enable-flex="true" class="scrollClass">
 					<view class="table">
@@ -207,52 +139,56 @@
 						 <view class="tdContent" v-for="(item, index) in gridList">
 							<view class="tableText">{{index+1}}</view>
 							<view class="tableText">
-								<u-input
-									v-model="item.pliesNo"
-									placeholder="请输入"
-									inputAlign="center"
-									shape="circle"
-									@change="onPliesNo($event,item)"
-									clearable
+								<u-input class="input" v-model="item.pliesNo" placeholder="请输入" inputAlign="center" @change="onPliesNo($event,item)" clearable
 								></u-input>
 							</view>
 							<view class="tableText">
-								<u-input
-									v-model="item.defectQuantity"
-									placeholder="请输入"
-									inputAlign="center"
-									shape="circle"
-									@change="onDefectQuantity"
-									clearable
-								></u-input>
+								<u-input class="input" v-model="item.defectQuantity" placeholder="请输入" inputAlign="center" @change="onDefectQuantity" clearable></u-input>
 							</view>
 							<view class="tableText">
-								<u-button 
-									shape="circle" 
-									size="small"
-									color="#DC143C" 
-									text="删除" 
-									@tap="deleteGrid(index)"
-								></u-button>
+								<u-button class="button" shape="circle" size="small" @tap="deleteGrid(index)">删除</u-button>
 							</view>
 						 </view>
 					  </view>
 					</view>
 				</scroll-view>
 			</view>
-		</view>
-		<view class="bottomLocation">
-			<view class="btnLocation">
+		<!-- </view> -->
+		<!-- <view class="bottomLocation"> -->
+<!-- 			<view class="btnLocation">
 				<view class="commonBtn moreBtn" @tap="handleMore">更多</view>
 				<view class="commonBtn submitBtn" @tap="onSubmit" v-if="isSubmit">提交</view>
 				<view class="commonBtn noSubmitBtn" v-else>提交</view>
-			</view>
-			<view class="btnModal" v-show="showModal">
+			</view> -->
+<!-- 			<view class="btnModal" v-show="showModal">
 				<image class="modalImage" src="../../static/blanket/modalImage.png" mode="aspectFit"></image>
 				<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
+			</view> -->
+		<!-- </view> -->
+		<view class="bottom">
+			<view class="bottom-left" @click="handleMore">更多 <text class="iconfont icon-gengduo"></text></view>
+			<view class="bottom-right">
+				<view class="btn btnActive" @click="onSubmit" v-if="isSubmit">提交</view>
+				<view class="btn btnDisable" v-else >提交</view>
 			</view>
 		</view>
+		<view class="btnModal" v-show="showModal">
+			<image class="modalImage" src="../../static/blanket/modalImage.png" mode="aspectFit"></image>
+			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
+		</view>
 		<scan-code></scan-code>
+		<!-- 日期选择组件 -->
+		<u-calendar
+			:defaultDate="defaultDate"
+			minDate="2021-01"
+			maxDate="2024-12"
+			monthNum="60"
+			round="10"
+			:show="showCalendar" 
+			@confirm="onConfirmCalendar"
+			@close="onCloseCalendar"
+			style="margin-right: -400rpx;"
+		></u-calendar>
 	</view>
 </template>
 
@@ -603,143 +539,127 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-	
-.mainContent {
-	/deep/.u-form-item{
-		background-color: #fff;
-	}
-	background-color: #F3F3F3;
-	
-	.search {
-		.searchStyle {
-			color: #999;
-			font-size: 44rpx;
-		}
-		.scanStyle {
-			color: #999;
-			font-size: 44rpx;
-		}
-	}
-	.content {
-		/deep/.u-input__content{
-			padding-right: 40rpx;
-		}
-		.titleContent {
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-			align-items: center;
-			height: 100rpx;
-			background-color: #fff;
-			padding: 0 20rpx;
-			.title {
-				font-size: 34rpx;
-				font-weight: bold;
-				color: #333;
-			}
-			.unit {
-				font-size: 24rpx;
-			}
-		}
-		.gridContent {
-			background-color: #fff;
-			padding: 40rpx 20rpx;
-			.scrollClass {
-			  display: flex;
-			  width: 100%;
-			  height: 100%;
-			  white-space: nowrap;
-			  background-color: #fff;
-			  margin: 40rpx 0 100rpx;
-			  flex-direction: row;
-			  justify-content: center;
-			  align-items: center;
-			  overflow-x: auto;
-			  .table {
-			    width: 100%;
-			    border: 2rpx solid #eaeaea;
-				box-sizing: border-box;
-				.tableHeader {
-				  display: flex;
-				  justify-content: center;
-				  align-items: center;
-				  width: 100%;
-				  height: 90rpx;
-				  background-color: #FAFAFA;
-				  color: #000;
-				}
-				.tableContent {
-					background-color: #fff;
-					width: 100%;
-					height: 320rpx;
-					overflow: auto;
-					.tdContent {
-						display: flex;
-						justify-content: center;
-						align-items: center;
-						height: 100rpx;
-						border-bottom: 2rpx solid #D8D8D8;
-					}
-				}
-				.tableText {
-				  width: 25%;
-				  text-align: center;
-				}
-			  }
-			}
+.sorageTitle{
+	margin: 0;
+	padding: 0 30rpx;
+	height: 80rpx;
+	line-height: 80rpx;
+}
+
+.message{
+	padding: 0 30rpx 12rpx 30rpx;
+	.label{
+		font-size: 30rpx;
+		font-weight: 700;
+		margin-top: 12rpx;
+		color: #333333;
+		text{
+			font-weight: 400;
+			color: #666666;
 		}
 	}
-	.bottomLocation {
-		position: relative;
-		width: 100%;
-		background-color: #fafafa;
-		border-top: 1rpx solid #dcdcdc;
-		position: fixed;
-		left: 0;
-		bottom: 0;
-		padding: 15rpx 30rpx 30rpx;
-		.btnLocation {
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-			align-items: center;
-			.moreBtn {
-				background-color: #fca147;
-				cursor: pointer;
-			}
-			.submitBtn {
-				background-color: #4a70f5;
-				cursor: pointer;
-			}
-			.noSubmitBtn {
-				background-color: #cccccc;
-				cursor: not-allowed;
-			}
+	.messageFlex{
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		.label{
+			width: 340rpx;
 		}
-	}
-	.btnModal {
-		position: absolute;
-		left: 30rpx;
-		bottom: 100rpx;
-		z-index: 10;
-		.modalImage {
-			width: 300rpx;
-			height: 166rpx;
-		}
-	}
-	.commonBtn {
-		display: inline-block;
-		text-align: center;
-		color: #fff;
-		padding: 18rpx 50rpx;
-		border-radius: 12rpx;
-		font-size: 38rpx;
-	}
-	.emptyBtn {
-		background-color: #FC361D;
-		position: absolute;
-		left: 65rpx;
-		top: 35rpx;
 	}
 }
+.btnModal {
+	position: absolute;
+	left: 30rpx;
+	bottom: 10rpx;
+	z-index: 10;
+	.modalImage {
+		width: 300rpx;
+		height: 166rpx;
+	}
+}
+.commonBtn {
+	display: inline-block;
+	text-align: center;
+	color: #fff;
+	padding: 18rpx 50rpx;
+	border-radius: 12rpx;
+	font-size: 38rpx;
+}
+.emptyBtn {
+	background-color: #FC361D;
+	position: absolute;
+	left: 65rpx;
+	top: 35rpx;
+}
+
+.gridContent {
+	background-color: #fff;
+	padding: 30rpx 15rpx;
+	margin-bottom: 124rpx;
+	.newBtn{
+		width: 140rpx;
+		height: 64rpx;
+		font-size: 32rpx;
+		border-radius: 8rpx;
+	}
+	.scrollClass {
+	  display: flex;
+	  width: 100%;
+	  height: 100%;
+	  white-space: nowrap;
+	  background-color: #fff;
+	  margin: 15rpx 0 30rpx 0;
+	  flex-direction: row;
+	  justify-content: center;
+	  align-items: center;
+	  overflow-x: auto;
+	  .table {
+		width: 100%;
+		border: 2rpx solid #eaeaea;
+		box-sizing: border-box;
+		.tableHeader {
+		  display: flex;
+		  justify-content: center;
+		  align-items: center;
+		  width: 100%;
+		  height: 90rpx;
+		  background-color: #FAFAFA;
+		  color: #000;
+		  .tableText{
+			  font-size: 32rpx;
+			  font-weight: 700;
+		  }
+		}
+		.tableContent {
+			background-color: #fff;
+			width: 100%;
+			height: 268rpx;
+			overflow: auto;
+			.tdContent {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100rpx;
+				border-bottom: 2rpx solid #D8D8D8;
+			}
+		}
+		.tableText {
+		  width: 25%;
+		  text-align: center;
+		  .input{
+			  margin-left: 10rpx;
+			  width: 160rpx;
+			  height: 70rpx;
+		  }
+		  .button{
+			  width: 60rpx;
+			  height: 40rpx;
+			  background-color: #ffdfe1;
+			  color: #f87179;
+		  }
+		}
+	  }
+	}
+}
+
 </style>

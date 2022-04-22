@@ -1,0 +1,99 @@
+
+/* 头部扫码样式 */
+.scanInput {
+	width: 100%;
+	height: 88rpx;
+	background-color: #E4F4FF;
+	line-height: 88rpx;
+	font-family: PingFang-SC-Bold;
+	font-size: 36rpx;
+	color: #0C99F2;
+	font-weight: 700;
+	padding-left: 30rpx;
+}
+
+/* 表格式样式  */
+/* 示例看产量报工头部表格 */
+.storage{
+	background-color: #FFFFFF;
+	width: 100%;
+}
+.storage > .storage-item{
+		height: 100rpx;
+		display: flex;
+		justify-content: space-between;
+		margin: 0 30rpx;
+		font-size: 32rpx;
+		line-height: 100rpx;
+		border-bottom: 1px solid #EAEAEA;
+	}
+.storage > .storage-item .storage-item-left{
+			font-weight: bold;
+			color: #333333;
+			}
+.storage > .storage-item > .storage-item-right{
+			color: #999999;
+			}
+.storage > .storage-item > .storage-item-right > .info{
+				margin-right: 15rpx;
+				}
+.storage > .storage-item > .storage-item-right > .input{
+				height: 100rpx;
+				text-align: right;
+				color: #666666;
+				}
+.storage-item:last-child{
+	border-bottom: 0;
+}
+		
+
+/* 字体样式大小 */
+.iconfont{
+	font-size: 12rpx;
+}
+
+/* 底部更多按钮样式 */
+.bottom{
+	width: 100%;
+	height: 104rpx;
+	line-height: 104rpx;
+	background-color: #FFFFFF;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	border-top: 1px solid #EAEAEA;
+	display: flex;
+	justify-content: space-between;
+	font-size: 32rpx;
+	padding: 0 30rpx;
+	box-sizing: border-box;
+}
+.bottom > .bottom-left{
+		color: #585858;
+	}
+.bottom > .bottom-left > text{
+		margin-left: 15rpx;
+	}
+.bottom > .bottom-right{
+		display: flex;
+		}
+.bottom > .bottom-right > .count{
+			color: #585858;
+			margin-right: 15rpx;
+		}
+.bottom > .bottom-right > .btn{
+			height:80rpx;
+			width: 200rpx;
+			margin-top: 12rpx;
+			line-height: 80rpx;
+			text-align: center;
+			border-radius: 4px;
+		}
+.bottom > .bottom-right > .btnActive{
+			background: #0C99F2;
+			color: #FFFFFF;
+		}
+.bottom > .bottom-right > .btnDisable{
+			color: #999999;
+			background: #E0E0E0;
+		}
