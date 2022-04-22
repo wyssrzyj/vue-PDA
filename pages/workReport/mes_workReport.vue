@@ -66,7 +66,7 @@
 		</view>
 		
 		<view class="bottom">
-			<view class="bottom-left" @click="handleMore" id="moreBtn">更多 <text class="iconfont icon-youjiantou"></text></view>
+			<view class="bottom-left" @click="handleMore" id="moreBtn">更多 <view class="iconfont icon-gengduo"></view></view>
 			<view class="bottom-right">
 				<view class="count">已扫描行数：{{outStorageArr.length?outStorageArr.length:'0'}}</view>
 				<view class="btn btnActive" @click="handleOutStorage" v-if="outStorageArr.length > 0">报工</view>

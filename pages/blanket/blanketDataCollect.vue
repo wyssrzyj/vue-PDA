@@ -58,38 +58,38 @@
 			<view class="storage-item">
 				<text class="storage-item-left">铺布层数</text>
 				<view class="storage-item-right">
-					<u-input class="input" v-model="modelData.spreadClothNumberPlies" placeholder="请输入铺布层数" inputAlign="right" border="none" @change="onClothNumberPlies" clearable></u-input>
+					<u-input v-model="modelData.spreadClothNumberPlies" placeholder="请输入铺布层数" inputAlign="right" border="none" @change="onClothNumberPlies" clearable></u-input>
 				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left">段长</text>
 				<view class="storage-item-right">
-					<u-input class="input" v-model="modelData.fragmentExtent" placeholder="请输入段长" inputAlign="right" border="none" @change="onFragmentExtent" clearable></u-input>
+					<u-input v-model="modelData.fragmentExtent" placeholder="请输入段长" inputAlign="right" border="none" @change="onFragmentExtent" clearable></u-input>
 				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left">铺布日期</text>
 				<view class="storage-item-right" @tap="onSelectDate">
-					<u-input class="input" v-model="modelData.spreadClothDate" placeholder="请选择铺布日期" inputAlign="right" border="none" clearable></u-input>
-					<!-- <text class="iconfont icon-youjiantou"></text> -->
+					<u-input style="margin-right: 15rpx;" v-model="modelData.spreadClothDate" placeholder="请选择铺布日期" inputAlign="right" border="none" clearable></u-input>
+					<text class="iconfont icon-youjiantou"></text>
 				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left">铺布数量</text>
 				<view class="storage-item-right">
-					<u-input class="input" v-model="modelData.spreadClothQuantity" placeholder="请输入铺布数量" inputAlign="right" border="none" @change="onClothQuantity" clearable></u-input>
+					<u-input v-model="modelData.spreadClothQuantity" placeholder="请输入铺布数量" inputAlign="right" border="none" @change="onClothQuantity" clearable></u-input>
 				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left">剩余数量</text>
 				<view class="storage-item-right">
-					<u-input class="input" v-model="modelData.spreadClothLeftQuantity" placeholder="请输入剩余数量" inputAlign="right" border="none" @change="onClothLeftQuantity" clearable></u-input>
+					<u-input v-model="modelData.spreadClothLeftQuantity" placeholder="请输入剩余数量" inputAlign="right" border="none" @change="onClothLeftQuantity" clearable></u-input>
 				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left">缺料数量</text>
 				<view class="storage-item-right">
-					<u-input class="input" v-model="modelData.spreadClothLackQuantity" placeholder="请输入缺料数量" inputAlign="right" border="none" clearable></u-input>
+					<u-input v-model="modelData.spreadClothLackQuantity" placeholder="请输入缺料数量" inputAlign="right" border="none" clearable></u-input>
 				</view>
 			</view>
 		</view>
@@ -166,7 +166,7 @@
 			</view> -->
 		<!-- </view> -->
 		<view class="bottom">
-			<view class="bottom-left" @click="handleMore">更多 <text class="iconfont icon-gengduo"></text></view>
+			<view class="bottom-left" @click="handleMore">更多 <view class="iconfont icon-gengduo"></view></view>
 			<view class="bottom-right">
 				<view class="btn btnActive" @click="onSubmit" v-if="isSubmit">提交</view>
 				<view class="btn btnDisable" v-else >提交</view>
@@ -247,7 +247,7 @@ export default {
 		let day = date.getDate()
 		day = day < 10 ? ('0' + day) : day
 		let time = year + '-' + month + '-' + day
-		this.modelData.spreadClothDate = time
+		// this.modelData.spreadClothDate = time
 		this.defaultDate = time
 	},
 	methods: {
@@ -539,6 +539,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .uni-input-input{
+	font-size: 32rpx;
+	color: #666666;
+}
 .sorageTitle{
 	margin: 0;
 	padding: 0 30rpx;
