@@ -1,6 +1,6 @@
 <template>
 	<view class="select_code" v-show="isShow">
-		<view class="dialog_cover"></view>
+		<view class="dialog_cover" @touchmove.prevent="()=>{}"></view>
 		<transition>
 			<view class="dialog_content">
 				<view class="top">
@@ -12,10 +12,10 @@
 						<checkbox-group @change="checkboxChange">
 							<label class="option_item" v-for="(item, index) in options" :key="index">
 								<view>
-									<checkbox :value="item[value]" :checked="item.checked" />
+									<checkbox :value="item[value]" :checked="item.checked" style="transform:scale(0.8)"/>
 								</view>
 								<view>{{item[label]}}</view>
-							</label>
+							</label>						
 						</checkbox-group>
 					</view>
 				</scroll-view>
@@ -136,7 +136,12 @@
 	}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+	::v-deep .uni-checkbox-input-checked{
+		background-color: #007AFF!important;
+		border:1px solid #007AFF!important;
+		color: #FFFFFF!important;
+	}
 	.select_code {
 		margin: 0;
 		padding: 0;
@@ -158,43 +163,54 @@
 
 	.dialog_content {
 		position: fixed;
-		top: 40%;
+		bottom: 0;
 		width: 100%;
-		height: 80%;
+		height: 460rpx;
 		background-color: #FFFFFF;
 		z-index: 300;
 	}
 
 	.top {
 		width: 100%;
-		height: 40px;
+		height: 92rpx;
 		display: flex;
 		justify-content: space-between;
+		border-bottom: 1px solid #EAEAEA;
+		line-height: 92rpx;
+		font-size: 30rpx;
 		text-align: center;
-		line-height: 40px;
-		background-color: #D7DEEB;
-		border-radius: 5px;
-
-		.top_left,
+		.top_left{
+			width: 120rpx;
+			color: #666666;
+		}
 		.top_right {
-			width: 20%;
-			cursor: pointer;
+			width: 120rpx;
+			color: #0C99F2;
 		}
 	}
 
 	.search_content {
-		height: 75%;
-		margin-top: 20px;
+		height: 368rpx;
 		width: 100%;
-		padding: 5px 0px 10px 0px;
-		padding-bottom: 5%;
-
 		.option_item {
-			line-height: 40px;
-			font-size: 16px;
+			height: 92rpx;
+			line-height: 92rpx;
+			font-size: 32rpx;
+			color: #666666;
+			border-bottom: 1px solid #EAEAEA;
 			display: flex;
-			margin: 0 15px;
-			border-bottom: 1px solid #C0C4CC;
+			padding-left: 90rpx;
+			view:first-child{
+				margin-right: 30rpx;
+			}
+
 		}
+		.option_item:last-child{
+			border-bottom: 0;
+		}
+	}
+	.uni-checkbox-input-checked{
+		background-color: #000000!important; 
+		color: #FFFFFF!important;
 	}
 </style>

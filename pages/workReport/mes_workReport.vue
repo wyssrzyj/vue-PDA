@@ -2,12 +2,36 @@
 	<view class="mainContent" @tap="handleClick">
 		<view class="borderBottom">
 			<view class="location">
-				<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" disabled/>
+				<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" disabled/> -->
+				<text class="scanInput">请扫描PCS码!</text>
 			</view>
-			<view class="storageLocation">
+			<view class="box">
+				<view class="storage">
+					<text class="storage-left">报工工段</text>
+					<view class="storage-right" @click="show = true">
+						<text class="info">{{productNum?productNum:'请选择报工工段'}}</text>
+						<text class="icon">></text>
+					</view>
+				</view>			
+				<view class="storage">
+					<text class="storage-left">报工工序</text>
+					<view class="storage-right" @click="showMultiple">
+						<text class="info">{{supplierName?supplierName:'请选择报工工序'}}</text>
+						<text class="icon">></text>
+					</view>
+				</view>
+				<view class="storage">
+					<text class="storage-left">当前员工</text>
+					<view class="storage-right">
+						<text class="info">{{employeeName?employeeName:''}}</text>
+						<!-- <text class="icon">></text> -->
+					</view>
+				</view>
+			</view>
+			<u-picker :show="show" :visibleItemCount="4" :itemHeight="92" :columns="columns" @confirm="handleConfirm" @cancel="handleCancel"></u-picker>
+<!-- 			<view class="storageLocation">
 				<text class="storageTitle">报工工段：</text>
 				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="productNum" confirm-type="search" @click="show = true" disabled/>
-				<u-picker :show="show" :columns="columns" @confirm="handleConfirm" @cancel="handleCancel"></u-picker>
 			</view>
 			<view class="storageLocation">
 				<text class="storageTitle">报工工序：</text>
@@ -16,47 +40,48 @@
 			<view class="storageLocation">
 				<text class="storageTitle">当前员工：</text>
 				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="employeeName" confirm-type="search" disabled/>
-			</view>
+			</view> -->
 		</view>
 		<view class="pannelContent">
-			<view
-				class="storageItem"
-				v-for="(item,index) in outStorageArr"
-				:key="index"
-			>
-				<view
-					:class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
-				>
-					<text class="serialNumber">{{ index + 1 }}.</text>
-					<view>
-						<view class="storageCode">{{ item.packageCode }}</view>
-						<view>
-							<text>颜色尺码：</text>
-							<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
+			<view class="storageItem" v-for="(item,index) in outStorageArr" :key="index" :class="index == 0?'selectLine':''">
+				<text class="serialNumber">{{ index + 1 }}.</text>
+				<view class="storageInfo">
+					<text class="storageCode">{{ item.packageCode }}</text>
+					<view class="storageColor">
+						<text>颜色尺码：</text>
+						<text>{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
+					</view>
+					<view class="storageContent">
+						<view class="number">
+							<text>扎号：</text>
+							<text>{{ item.packageNum }}</text>
 						</view>
-						<view class="storageContent">
-							<view>
-								<text>扎号：</text>
-								<text>{{ item.packageNum }}</text>
-							</view>
-							<view style="display: flex;">
-								<text>数量：</text>
-								<!-- <text>{{ item.count }}</text> -->
-								<input class="itemCount" placeholder-style="font-size: 17rpx" v-model="item.count" confirm-type="search"/>
-							</view>
+						<view class="count">
+							<text>数量：</text>
+							<!-- <text>{{ item.count }}</text> -->
+							<input v-model="item.count"/>
 						</view>
 					</view>
 				</view>
 			</view>
 		</view>
-		<view class="bottomLocation">
+		
+		<view class="bottom">
+			<view class="bottom-left" @click="handleMore" id="moreBtn">更多 ↓</view>
+			<view class="bottom-right">
+				<view class="num">已扫描行数：{{outStorageArr.length?outStorageArr.length:'0'}}</view>
+				<view class="btn btn1" @click="handleOutStorage" v-if="outStorageArr.length > 0">报工</view>
+				<view class="btn btn2" v-else >报工</view>
+			</view>
+		</view>
+<!-- 		<view class="bottomLocation">
 			<view class="scanNum"><view><text>已扫描行数：</text><text class="scannedAllNum">{{outStorageArr.length}}</text></view></view>
 			<view class="btnLocation">
 				<view class="commonBtn moreBtn" @tap="handleMore" id="moreBtn">更多</view>
 				<view class="commonBtn inStorageBtn" @tap="handleOutStorage" v-if="outStorageArr.length > 0 ">报工</view>
 				<view class="commonBtn noInStorageBtn" v-else>报工</view>
 			</view>
-		</view>
+		</view> -->
 		<view class="btnModal" v-if="showModal" id="btnModal">
 			<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
 			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
@@ -312,7 +337,7 @@
 	};
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	@mixin delSty {
 		position:absolute;
 		top:10rpx;
@@ -320,49 +345,56 @@
 		height: 2px;
 		background-color: #afafaf;
 	}
-	.u-popup{
-		flex: 0 !important;
-	}
-	.u-picker__view{
-		height: 600rpx !important;
+	::v-deep .u-toolbar[data-v-6d25fc6f]{
+		border-bottom: 1px solid  #EAEAEA!important;
 	}
 	.mainContent {
 		position: relative;
 		background-color: #F3F3F3;
 		.borderBottom{
 			padding-bottom: 10rpx;
-			border-bottom: 1px solid #ccc;
 		}
 		.location {
-			position: relative;
-			margin: 20rpx;
+			width: 100%;
+			height: 44px;
+			background-color: #E4F4FF;
 			.scanInput {
-				height: 80rpx;
-				border: 1px solid #767676;
-				background-color: #FFF;
-				padding: 0 10rpx;
+				line-height: 44px;
+				font-family: PingFang-SC-Bold;
+				font-size: 18px;
+				color: #0C99F2;
+				font-weight: 700;
 				text-align: center;
+				margin-left: 15px;
 			}
 		}
-		.storageLocation {
-			margin: 10rpx 20rpx;
-			display: flex;
-			justify-content: flex-start;
-			align-items: center;
-			.storageTitle {
-				font-size: 30rpx;
-				font-weight: 900;
-				width: 180rpx;
-			}
-			.storageInput {
-				height: 60rpx;
-				display: inline-block;
-				border: 1rpx solid #212121;
-				background-color: #F2F2F2;
-				padding: 0 10rpx;
-				flex: 1;
+		.box{
+			background-color: #FFFFFF;
+			width: 100%;
+			.storage{
+				height: 100rpx;
+				display: flex;
+				justify-content: space-between;
+				margin: 0 30rpx;
+				font-size: 32rpx;
+				line-height: 100rpx;
+				border-bottom: 1px solid #EAEAEA;
+				.storage-left{
+					font-weight: bold;
+					color: #333333;
+				}
+				.storage-right{
+					color: #999999;
+					.info{
+						margin-right: 15rpx;
+					}
+				}
 			}
 		}
+		.storage:last-child{
+			border-bottom: 0;
+		}
+
 		//查询按钮样式
 		.queryBtn{
 			background-color: $theme-color;
@@ -384,125 +416,135 @@
 				display: inline-block;
 			}
 		}
+		
 		.pannelContent {
 			height: calc(100vh - 474rpx);
-			// margin-bottom: 202rpx;
 			overflow: auto;
+			width: 100%;
+			.first_item {
+				color: #0C99F2;
+			
+			}
 			.storageItem {
+				height: 214rpx;
+				width: 100%;
 				display: flex;
-				border: 1rpx solid #e4e4e4;
-				border-radius: 20rpx;
-				margin: 10rpx 5rpx;
-				position: relative;
+				margin: 10rpx 0;
+				padding: 0 30rpx ;
+				background-color: #FFFFFF;
 				overflow: hidden;
-				.selectLine {
-					background-color: #84D3F9 !important;
+				.serialNumber{
+					font-size: 18px;
+					font-weight: bold;
+					color: #333333;
+					line-height: 214rpx;
+					margin-right: 30rpx;
 				}
-				.touch-list{
-					position: absolute;
-					top: 0;
-					padding: 20rpx 60rpx;
-					background-color: #fff;
-					border-radius: 20rpx;
-					overflow: hidden;
-				}
-				.list-touch{
-					position: relative;
-					width: 100%;
-					z-index: 5;
-					transition: left 0.2s ease-in-out;
-					white-space: nowrap;
-					text-overflow: ellipsis;
-					.serialNumber {
-						position: absolute;
-						left: 20rpx;
-						top: 55rpx;
-						font-weight: bold;
-						font-size: 35rpx;
-					}
-					.storageCode {
+				.storageInfo{
+					font-size: 16px;
+					color: #333333;
+					.storageCode{
+						font-size: 18px!important;
+						line-height: 80rpx;
 						font-weight: bold;
 					}
-					.storageContent {
-						display: flex;
-						flex-direction: row;
-						justify-content: space-between;
-						.storageNum {
+					.storageColor{
+						margin-bottom: 20rpx;
+						text:first-child{
 							font-weight: bold;
 						}
-						.itemCount{
-							width: 70rpx;
-							border: 1px solid #000000;
-							background-color: #ffffcc;
+						text:last-child{
+							color: #666666;
 						}
 					}
-					.arrowImage {
-						position: absolute;
-						right: 55rpx;
-						top: 55rpx;
-						width: 44rpx;
-						height: 46rpx;
+					.storageContent{
+						display: flex;
+						justify-content: space-between;
+						.number{
+							width: 360rpx;
+							text:first-child{
+								font-weight: bold;
+							}
+							text:last-child{
+								color: #666666;
+							}
+							
+							
+						}
+						
+						.count{
+							display: flex;
+							text:first-child{
+								font-weight: bold;
+								width: 100rpx;
+							}
+							input{
+								width: 140rpx;
+								height: 52rpx;
+								border: 1px solid #0C99F2;
+								border-radius: 4rpx;
+								text-align: center;
+							}
+						}
 					}
 				}
-				.list-delete{
-					right: 0;
-					float: left;
-					width: 100rpx;
-					height: 162rpx;
-					line-height: 155rpx;
-					padding: 5rpx 16rpx;
-					background-color: #EA5863;
-					border-radius: 0 20rpx 20rpx 0;
-					color: #fff;
-					font-size: 35rpx;
-					font-weight: lighter;
-					text-align: center;
-				}
 			}
+			
+			//index为1的时候
+			.selectLine{
+				background: #E4F4FF !important;
+			}
+			.selectLine text{
+				color: #0C99F2!important;
+			}
+			.selectLine input{
+				color: #0C99F2!important;
+			}
+
 		}
-		.bottomLocation {
+		
+		.bottom{
 			width: 100%;
-			background-color: #fafafa;
-			border-top: 1rpx solid #dcdcdc;
+			height: 104rpx;
+			line-height: 104rpx;
+			background-color: #FFFFFF;
 			position: fixed;
 			left: 0;
 			bottom: 0;
-			padding: 15rpx 30rpx 30rpx;
-			.scanNum {
-				height: 75rpx;
-				line-height: 75rpx;
-				text-align: right;
-				font-size: 30rpx;
-				font-weight: bold;
-				display: flex;
-				justify-content: flex-end;
-				.scannedNum{
-					color: #fca147;
-				}
-				.scannedAllNum{
-					color: $theme-color;
-				}
+			border-top: 1px solid #EAEAEA;
+			display: flex;
+			justify-content: space-between;
+			font-size: 32rpx;
+			padding: 0 30rpx;
+			box-sizing: border-box;
+			.bottom-left{
+				color: #585858;
 			}
-			.btnLocation {
+			.bottom-right{
 				display: flex;
-				flex-direction: row;
-				justify-content: space-between;
-				.moreBtn {
-					background-color: #fca147;
-					cursor: pointer;
+				.num{
+					color: #585858;
+					margin-right: 15rpx;
 				}
-				.inStorageBtn {
-					background-color: #4a70f5;
-					cursor: pointer;
-					padding: 20rpx 50rpx;
+				.btn{
+					height:80rpx;
+					width: 200rpx;
+					margin-top: 12rpx;
+					line-height: 80rpx;
+					text-align: center;
+					border-radius: 4px;
 				}
-				.noInStorageBtn {
-					background-color: #cccccc;
-					cursor: not-allowed;
-					padding: 20rpx 50rpx;
+				.btn1{
+					background: #0C99F2;
+					color: #FFFFFF;
+				}
+				.btn2{
+					color: #999999;
+					background: #E0E0E0;
 				}
 			}
 		}
+		
 		.btnModal {
 			position: absolute;
 			left: 30rpx;
