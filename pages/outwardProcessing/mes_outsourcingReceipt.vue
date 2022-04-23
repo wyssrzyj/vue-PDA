@@ -2,48 +2,52 @@
 	<view class="mainContent" @click="closeModal">
 		<!-- <view class="commonBtn" @tap="handleScanStorage" style="background-color: #fca147;">扫描库位</view> -->
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
-		<view class="location">
-			<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled/> -->
-			<view class="placeholderInput">{{storageValue? '请扫描PCS码！': '请扫描库位码！'}}</view>
-		</view>
-		<view class="storageLocation">
+		<!-- <view class="location"> -->
+			<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled  @click="handleScanCodeBox"/> -->
+			<view class="scanInput" >{{storageValue? '请扫描PCS码！': '请扫描库位码！'}}</view>
+		<!-- </view> -->
+		<view class="locationPrompt">
 			<text>库位：</text>
 			<!-- <input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请扫描库位码" disabled/> -->
-			<text class="locationText">{{storageValue}}</text>
+			<text class="locationPromptText">{{storageValue}}</text>
 		</view>
 		<view class="pannelContent">
 			<uni-swipe-action>
 				<uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
-					<view :class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
-						class="swipe-action u-border-top u-border-bottom">
+					<view :class="index == 0 ? 'selectLine': ''" class="storageWrap">
 						<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
-						<view>
+						<view class="storageItem">
 							<view class="storageCode">{{ item.proNum }}</view>
-							<view>
-								<text>颜色尺码：</text>
-								<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
+							<view class="storageColorCode">
+								<text class="label">颜色尺码：</text>
+								<text decode="true" space="true" class="value">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
 							</view>
 							<view class="storageContent">
 								<view>
-									<text>扎号：</text>
-									<text>{{ item.packageNum }}</text>
+									<text class="label">扎号：</text>
+									<text class="value">{{ item.packageNum }}</text>
 								</view>
 								<view class="storageNum">
-									<text>数量：</text>
-									<text>{{ item.outputNumber }}</text>
+									<text class="label">数量：</text>
+									<text class="value">{{ item.outputNumber }}</text>
 								</view>
 							</view>
 						</view>
-						<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag"></image>
-						<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
+						<view class="storageArrow">
+							<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag"></image>
+							<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
+						</view>
 					</view>
 				 </uni-swipe-action-item>
 			</uni-swipe-action>
 		</view>
 		<view class="bottomLocation">
-			<view class="scanNum">已扫描行数：{{ inStorageArr.length }}</view>
-			<view class="btnLocation">
-				<view class="commonBtn moreBtn" id="moreBtn" @tap="handleMore">更多</view>
+			<view class="bottomLocationLeft">
+				<view  id="moreBtn" @tap="handleMore">更多</view>
+				<view class="iconfont icon-gengduo"></view>
+			</view>
+			<view class="bottomLocationRight">
+				<view class="scanNum">已扫描行数：{{ inStorageArr.length}}</view>
 				<view class="commonBtn inStorageBtn" @tap="handleInStorage" v-if="inStorageArr.length > 0">入库</view>
 				<view class="commonBtn noInStorageBtn" v-else>入库</view>
 			</view>
@@ -65,14 +69,12 @@
 </template>
 
 <script>
-	// import { defineComponent, ref, reactive, toRefs } from 'vue';
 	import { arrayToHeavy, toasting,useDebounce } from '../../utils/index.js'
 	import Api from '../../service/api'
 	import scanCode from "../../components/scan/scan.vue"
 	import throttle from "../../utils/index"
 
 	export default{
-		// name: 'cutInStorage',
 		onLoad() {
 			// console.log('onLoad');
 		},
@@ -80,7 +82,7 @@
 			// console.log('onShow');
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
 			uni.$on('scancodedate', (data) => {
-				console.log(data)
+				// console.log(data)
 				if(this.storageValue) {
 					console.log("扫描PCS码")
 					// 扫描PCS码
@@ -90,7 +92,7 @@
 					// 扫描库位
 					try{
 						data=JSON.parse(data.code)
-						this.handleScanStorage(data.code,data.warehouseFileName)
+						this.handleScanStorage(data.code,data.factoryManagerName)
 					}catch(error){
 						this.showErrorMessage = '请扫描正确的库位码！'
 						this.showErrorPop = true
@@ -114,7 +116,7 @@
 				storageValue: '',
 				wareHouseLocation: '',
 				typeMode: '1',
-				inStorageArr: [],
+				inStorageArr: [{},{},{},{}],
 				startX: '',
 				copyInStorageArr:[],
 				nowTime:0,
@@ -132,7 +134,6 @@
 			// 	uni.scanCode({
 			// 		onlyFromCamera: true,
 			// 		success: res => {
-			// 			// console.log(res.result)
 			// 			//这里即拿到了扫描出的数据
 			// 			if(this.storageValue) {
 			// 				console.log("扫描扫描PCS码")
@@ -141,8 +142,9 @@
 			// 			}else {
 			// 				console.log("扫描扫描库位")
 			// 				// 扫描库位
-			// 				res=JSON.parse(res.result)
-			// 				this.handleScanStorage(res.code,res.warehouseFileName)
+			// 				let data=JSON.parse(res.result)
+			// 				console.log(data.code,data.warehouseFileName)
+			// 				this.handleScanStorage(data.code,data.warehouseFileName)
 			// 			}
 			// 		},
 			// 		fail: err => {
@@ -151,10 +153,10 @@
 			// 	});
 			// },
 			
-			handleScanStorage(locationCode,warehouseFileName){ // 扫描库位
+			handleScanStorage(locationCode,factoryManagerName){ // 扫描库位
 				Api.outReceiptScanLocation({
 					locationCode,// 'A-01'
-					warehouseFileName,//库位名
+					factoryManagerName,//库位名
 				}).then(res => {
 					if (res.code === 0) {
 						uni.showToast({
@@ -318,126 +320,95 @@
 	.mainContent {
 		position: relative;
 		background-color: #F3F3F3;
-		.location {
-			position: relative;
-			.placeholderInput{
-				height: 88rpx;
-				padding: 26rpx 474rpx 26rpx 28rpx;
-				color: rgba(12,153,242,1);
-				font-family: PingFang-SC-Bold;
-				font-size: 36rpx;
-				line-height: 36rpx;
-				background-color: rgba(228,244,255,1);
-				font-weight: bold;
-			}
-		}
-		.storageLocation {
-			padding:26rpx  482rpx 24rpx 30rpx;
-			color: rgba(51,51,51,1);
-			font-family: PingFang-SC-Bold;
-			font-size: 36rpx;
-			line-height: 50rpx;
-			font-weight: 500;
-			background-color: rgba(255,255,255,1);
-			.locationText{
-				font-size: 36rpx;
-				font-family: Helvetica-Bold;
-				color: rgba(42,42,42,1);
-			}
-		}
 		.pannelContent {
-			height: calc(100vh - 350rpx);
+			height: calc(100vh - 308rpx);
 			overflow: auto;
-			.storageItem {
+			background-color: ;
+			.storageWrap{
 				display: flex;
-				border: 1rpx solid #e4e4e4;
-				border-radius: 20rpx;
-				margin: 20rpx 5rpx;
-				position: relative;
+				height: 208rpx;
+				margin-top: 20rpx;
+				padding: 30rpx 0rpx;
 				overflow: hidden;
-				.selectLine {
-					background-color: #84D3F9 !important;
-				}
-				.touch-list{
-					position: absolute;
-					top: 0;
-					padding: 20rpx 60rpx;
-					background-color: #fff;
-					border-radius: 20rpx;
-					overflow: hidden;
-				}
-				.list-touch{
-					position: relative;
-					width: 740rpx;
-					z-index: 5;
-					transition: left 0.2s ease-in-out;
-					white-space: nowrap;
-					text-overflow: ellipsis;
-					.serialNumber {
-						position: absolute;
-						left: 20rpx;
-						top: 55rpx;
-						font-weight: bold;
-						font-size: 35rpx;
-					}
-					.storageCode {
-						font-weight: bold;
-					}
-					.storageContent {
-						display: flex;
-						flex-direction: row;
-						justify-content: space-between;
-						.storageNum {
-							font-weight: bold;
-						}
-					}
-					.arrowImage {
-						position: absolute;
-						right: 55rpx;
-						top: 55rpx;
-						width: 44rpx;
-						height: 46rpx;
-					}
-				}
-				.list-delete{
-					right: 0;
-					float: left;
-					width: 100rpx;
-					height: 155rpx;
-					line-height: 155rpx;
-					padding: 5rpx 16rpx;
-					background-color: #EA5863;
-					border-radius: 0 20rpx 20rpx 0;
-					color: #fff;
+				background-color: #FFFFFF;
+				position: relative;
+			}
+			
+			.serialNumber {
+					width: 98rpx;
+					font-weight: bold;
 					font-size: 35rpx;
-					font-weight: lighter;
-					text-align: center;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
+			.storageItem{
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				font-family: PingFang-SC-Bold;
+				.storageCode{
+					font-size: 36rpx;
+					color: #333333;
+					line-height: 32rpx;
+					font-weight: 600;
+				}
+				.storageContent {
+					display: flex;
+					flex-direction: row;
+					justify-content: space-between;
 				}
 			}
+			.storageArrow{
+				width: 154rpx;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				.arrowImage{
+					width:36rpx;
+					height: 32rpx;
+				}
+			}
+			
 		}
 		.bottomLocation {
 			width: 100%;
-			background-color: #fafafa;
-			border-top: 1rpx solid #dcdcdc;
+			background-color: rgba(255,255,255,1);
+			border-top: 1rpx solid #D8D8D8;
 			position: fixed;
 			left: 0;
 			bottom: 0;
-			padding: 15rpx 30rpx 30rpx;
-			.scanNum {
-				height: 75rpx;
-				line-height: 75rpx;
-				text-align: right;
-				color: #4a70f5;
-				font-size: 30rpx;
-				font-weight: bold;
-			}
-			.btnLocation {
+			padding: 12rpx 30rpx;
+			height: 120rpx;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			color: #585858;
+			// #moreBtn {
+			// 	// background-color: #fca147;
+			// }
+			.bottomLocationLeft{
 				display: flex;
-				flex-direction: row;
-				justify-content: space-between;
-				.moreBtn {
-					background-color: #fca147;
-					cursor: pointer;
+				align-items: center;
+				#moreBtn{
+					margin-right: 12rpx;
+				}
+				.icon-gengduo{
+					color: #999;
+					font-size: 12rpx;
+				}
+			}
+			.bottomLocationRight{
+				display: flex;
+				align-items: center;
+				font-size: 32rpx;
+				line-height: 44rpx;
+				font-family: PingFangSC-Regular;
+				color:#585858;
+				letter-spacing: 0;
+				.scanNum{
+					margin-right: 20rpx;
 				}
 				.inStorageBtn {
 					background-color: #4a70f5;
@@ -452,7 +423,7 @@
 		.btnModal {
 			position: absolute;
 			left: 30rpx;
-			bottom: 20rpx;
+			bottom: -6rpx;
 			z-index: 10;
 			.modalImage {
 				width: 300rpx;
@@ -463,13 +434,17 @@
 			display: inline-block;
 			text-align: center;
 			color: #fff;
-			padding: 20rpx 55rpx;
-			border-radius: 15rpx;
+			padding: 24rpx 68rpx;
+			line-height: 32rpx;
+			font-size: 32rpx;
+			border-radius: 8rpx;
+			width: 200rpx;
+			height: 80rpx;
 		}
 		.emptyBtn {
 			background-color: #FC361D;
 			position: absolute;
-			left: 65rpx;
+			left: 50rpx;
 			top: 35rpx
 		}
 		.remindPopup {
@@ -477,15 +452,12 @@
 			font-size: 30rpx;
 			font-weight: bold;
 			border-radius: 10rpx;
-			// width: 530rpx;
 			height: 80rpx;
 			text-align: center;
 			line-height: 80rpx;
 			position: absolute;
 			left: 50%;
 			top: 50%;
-			// margin-left: -265rpx;
-			// margin-top: -40rpx;
 			transform: translate(-50%,-50%);
 			white-space:nowrap;
 			z-index: 999;

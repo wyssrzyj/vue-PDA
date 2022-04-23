@@ -1,21 +1,30 @@
 <template>
 	<view class="mainContent" @tap="handleClick">
-		<view class="borderBottom">
-			<view class="location">
+		<!-- <view class="borderBottom"> -->
+			<!-- <view class="location"> -->
 				<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-				<input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" disabled/>
+				<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" disabled/>
+			</view> -->
+			<view class="scanInput">请扫描PCS码!</view>
+			<view class="storageLocationItem">
+				<view class="storageLocation">
+					<text style="color: red;">*</text><text class="storageTitle">产品款号</text>
+					<view class="line"></view>
+					<input class="uni-input storageInput" placeholder-style="font-size: 30rpx;line-height:32rpx" v-model="productNum" confirm-type="search" disabled placeholder="请输入产品款号"/>
+					<view class="queryBtn" id="proBtn">搜索</view>
+				</view>
 			</view>
-			<view class="storageLocation">
-				<text style="color: red;">*</text><text class="storageTitle">产品款号：</text>
-				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="productNum" confirm-type="search" disabled/>
-				<view class="queryBtn" id="proBtn">查询</view>
-			</view>
-			<view class="storageLocation">
-				<text style="color: red;">*</text><text class="storageTitle">供应商简称：</text>
-				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search" disabled/>
-				<view class="queryBtn" id="supplierBtn">查询</view>
-			</view>
+			<view class="storageLocationItem">
+				<view class="storageLocation">
+					<view class="storageTitle">
+						<text style="color: red;">*</text><text>供应商简称</text>
+					</view>
+					<view class="line"></view>
+					<input class="uni-input storageInput" placeholder-style="font-size: 30rpx;line-height:32rpx" v-model="supplierName" confirm-type="search" disabled placeholder="请输入供应商简称"/>
+					<view class="queryBtn" id="supplierBtn">搜索</view>
+				</view>
 		</view>
+		<!-- </view> -->
 		<!-- <view class="radioLocation">
 			<checkbox-group @change="checkboxChange">
 				<view class="checkboxStyle">
@@ -27,48 +36,59 @@
 		<view class="pannelContent">
 			<uni-swipe-action>
 			<uni-swipe-action-item :right-options="options" @click="onClick($event,item)" @change="swipeChange($event, index)"
-				:name="item.id" class="storageItem" v-for="(item, index) in outStorageArr" :key="item.id" :disabled="!item.isSelectScan">
-				<view :class="[item.isSelectScan ? 'selectLine': '' , 'touch-list', 'list-touch',]"
-					class="swipe-action u-border-top u-border-bottom">
+				:name="item.id" v-for="(item, index) in outStorageArr" :key="item.id" :disabled="!item.isSelectScan">
+				<view :class="item.isSelectScan ? 'selectLine': ''" class="storageWrap">
 					<text class="serialNumber">{{ index + 1 }}.</text>
-					<view>
+					<view class="storageItem">
 						<view class="storageCode">{{ item.proNum }}</view>
-						<view>
-							<text>颜色尺码：</text>
-							<text decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
+						<view class="storageColorCode">
+							<text class="label">颜色尺码：</text>
+							<text decode="true" space="true" class="value">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
 						</view>
 						<view class="storageContent">
 							<view>
-								<text>扎号：</text>
-								<text>{{ item.packageNum }}</text>
+								<text class="label">扎号：</text>
+								<text class="value">{{ item.packageNum }}</text>
 							</view>
 							<view>
-								<text>数量：</text>
-								<text>{{ item.count }}</text>
-							</view>
-							<view class="storageNum">
-								<text>库位：</text>
-								<text>{{ item.locationCode }}</text>
+								<text class="label">数量：</text>
+								<text class="value">{{ item.count }}</text>
 							</view>
 						</view>
+						<view class="storageNum">
+							<text class="label">库位：</text>
+							<text class="value">{{ item.locationCode }}</text>
+						</view>
 					</view>	
-					<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag&&item.isSelectScan"></image>
-					<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-if="item.arrowFlag&&item.isSelectScan"></image>
+					<view class="storageArrow">
+						<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag&&item.isSelectScan"></image>
+						<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-if="item.arrowFlag&&item.isSelectScan"></image>
+						<view class="iconfont icon-a-bianzu4" v-if="item.isSelectScan"></view>
+						<!-- <view class="iconfont icon-a-bianzu4"></view> -->
+					</view>
 				</view>
 			</uni-swipe-action-item>
 			</uni-swipe-action>
 		</view>
-		<view class="bottomLocation">
+		<!-- <view class="bottomLocation">
 			<view class="scanNum"><view><text class="scannedNum">{{ alreadyOutStorageArr.length }}</text>/{{ outStorageArr.length }}</view><view><text>已扫描数量：</text><text class="scannedAllNum">{{alreadyCount}}</text></view></view>
 			<view class="btnLocation">
 				<view class="commonBtn moreBtn" @tap="handleMore" id="moreBtn">更多</view>
 				<button type="default" class='commonBtn inStorageBtn' @click="handleOutStorage" v-if="alreadyCount > 0 ">出库并打印</button>
 				<button type="default" class='commonBtn noInStorageBtn ' v-else>出库并打印</button>
 			</view>
+		</view> -->
+		<view class="bottom">
+			<view class="bottom-left" @tap="handleMore" id="moreBtn">更多 <text class="iconfont icon-gengduo"></text></view>
+			<view class="bottom-right">
+				<view class="count">已选：{{ alreadyOutStorageArr.length }}/{{ outStorageArr.length }},数量{{alreadyCount}}</view>
+				<view class="btn btnActive" @click="handleOutStorage" v-if="alreadyCount > 0 ">出库并打印</view>
+				<view class="btn btnDisable" v-else >出库并打印</view>
+			</view>
 		</view>
 		<view class="btnModal" v-if="showModal" id="btnModal">
 			<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
-			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
+			<view class="emptyBtn" @tap="handleEmpty">清空</view>
 		</view>
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
@@ -853,99 +873,86 @@ export default{
 	.mainContent {
 	position: relative;
 	background-color: #F3F3F3;
-	.borderBottom{
-		padding-bottom: 10rpx;
-		border-bottom: 1px solid #ccc;
-	}
-	.location {
-		position: relative;
-		margin: 20rpx;
-		.scanInput {
-			height: 80rpx;
-			border: 1px solid #767676;
-			background-color: #FFF;
-			padding: 0 10rpx;
-			text-align: center;
+	//搜索框样式
+	.storageLocationItem{
+		padding: 14rpx 30rpx;
+		background-color: #FFFFFF;
+		width: 750rpx;
+		height: 100rpx;
+		.storageLocation {
+			border: 1px solid #0C99F2;
+			border-radius: 8rpx;
+			display: flex;
+			padding: 4rpx 4rpx 4rpx 20rpx;
+			justify-content: flex-start;
+			align-items: center;
+			.storageTitle {
+				font-size: 30rpx;
+				font-weight: 900;
+				color: #151515;
+				line-height: 42rpx;
+				white-space: nowrap;
+			}
+			.line{
+				width: 2rpx;
+				height: 36rpx;
+				background-color: #C4C4C4;
+				margin: 0 20rpx;
+			}
+			.queryBtn{
+				margin-left: auto;
+			}
 		}
-	}
-	.storageLocation {
-		margin: 10rpx 20rpx;
-		display: flex;
-		justify-content: flex-start;
-		align-items: center;
-		.storageTitle {
-			font-size: 30rpx;
-			font-weight: 900;
-			width: 180rpx;
-		}
-		.storageInput {
-			height: 60rpx;
-			display: inline-block;
-			border: 1rpx solid #212121;
-			background-color: #F2F2F2;
-			padding: 0 10rpx;
-			flex: 1;
-		}
-		
 	}
 	//查询按钮样式
 	.queryBtn{
 		background-color: $theme-color;
-		width: 130rpx;
+		width: 100rpx;
 		border-radius: 8rpx;
-		margin: 0 10rpx;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		height: 60rpx;
+		height: 64rpx;
 		color: white;
 		font-weight: 600;
-		cursor: pointer;
+		font-family: PingFangSC-Medium;
+		color: #FFFFFF;
+		font-size: 30rpx;
+		line-height: 42rpx;
 	}
-	.radioLocation {
-		text-align: right;
-		margin-right: 20rpx;
-		.checkboxStyle {
-			display: inline-block;
-		}
-	}
+	//外发加工裁片样式
 	.pannelContent {
-		height: calc(100vh - 474rpx);
+		height: calc(100vh - 386rpx);
 		overflow: auto;
-		.storageItem {
-			display: flex;
-			border: 1rpx solid #e4e4e4;
-			border-radius: 20rpx;
-			margin: 10rpx 5rpx;
-			position: relative;
-			overflow: hidden;
-			.selectLine {
-				background-color: #84D3F9 !important;
-			}
-			.touch-list{
-				position: absolute; 
-				top: 0;
-				padding: 20rpx 60rpx;
-				background-color: #fff;
-				border-radius: 20rpx;
+			.storageWrap{
+				display: flex;
+				height: 260rpx;
+				margin-top: 20rpx;
+				padding: 30rpx 0rpx;
 				overflow: hidden;
+				background-color: #FFFFFF;
 			}
-			.list-touch{
-				position: relative;
-				width: 740rpx;   
-				z-index: 5;    
-				transition: left 0.2s ease-in-out;   
-				white-space: nowrap;   
-				text-overflow: ellipsis; 
-				.serialNumber {
-					position: absolute;
-					left: 20rpx;
-					top: 55rpx;
+			
+			.serialNumber {
+					width: 98rpx;
 					font-weight: bold;
 					font-size: 35rpx;
+					display: flex;
+					justify-content: center;
+					align-items: center;
 				}
-				.storageCode {
-					font-weight: bold;
+			.storageItem{
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				// padding: 10rpx;
+				font-family: PingFang-SC-Bold;
+				.storageCode{
+					font-size: 36rpx;
+					color: #333333;
+					line-height: 32rpx;
+					font-weight: 600;
 				}
 				.storageContent {
 					display: flex;
@@ -955,99 +962,41 @@ export default{
 						font-weight: bold;
 					}
 				}
-				.arrowImage {
+			}
+			.storageArrow{
+				width: 154rpx;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				// position: relative;
+				.arrowImage{
+					width:36rpx;
+					height: 32rpx;
+				}
+				.icon-a-bianzu4{
 					position: absolute;
-					right: 55rpx;
-					top: 55rpx;
-					width: 44rpx;
-					height: 46rpx;
+					top: 0;
+					right: -46rpx;
+					font-size: 100rpx;
 				}
 			}
-			.list-delete{
-				right: 0; 
-				float: left;
-				width: 100rpx;
-				height: 162rpx;
-				line-height: 155rpx;
-				padding: 5rpx 16rpx;
-				background-color: #EA5863;
-				border-radius: 0 20rpx 20rpx 0;
-				color: #fff;
-				font-size: 35rpx;
-				font-weight: lighter;
-				text-align: center;
-			}
-		}
-	}
-	.bottomLocation {
-		width: 100%;
-		background-color: #fafafa;
-		border-top: 1rpx solid #dcdcdc;
-		position: fixed;
-		left: 0;
-		bottom: 0;
-		padding: 15rpx 30rpx 30rpx;
-		.scanNum {
-			height: 75rpx;
-			line-height: 75rpx;
-			text-align: right;
-			font-size: 30rpx;
-			font-weight: bold;
-			display: flex;
-			justify-content: space-between;
-			.scannedNum{
-				color: #fca147;
-			}
-			.scannedAllNum{
-				color: $theme-color;
-			}
-		}
-		.btnLocation {
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
 			
-			.moreBtn {
-				background-color: #fca147;
-				cursor: pointer;
-			}
-			.inStorageBtn {
-				background-color: #4a70f5;
-				cursor: pointer;
-				padding: 20rpx 30rpx;
-			}
-			.noInStorageBtn {
-				background-color: #cccccc;
-				cursor: not-allowed;
-				padding: 20rpx 30rpx;
-			}
-		}
+			
 	}
-	.btnModal {
-		position: absolute;
-		left: 30rpx;
-		bottom: 20rpx;
-		z-index: 10;
-		.modalImage {
-			width: 300rpx;
-			height:166rpx;
-		}
-	}
-	.commonBtn {
+	//清空按钮样式
+	.emptyBtn {
 		display: inline-block;
 		text-align: center;
 		color: #fff;
-		padding: 32rpx 55rpx;
+		padding: 24rpx 55rpx;
 		border-radius: 15rpx;
 		font-size: 14px;
 		margin-right: initial;
 		font-size: 14px;
-	}
-	.emptyBtn {
 		background-color: #FC361D;
 		position: absolute;
 		left: 65rpx;
-		top: 35rpx
+		top: 30rpx
 	}
 	.remindPopup {
 		color: #666;
@@ -1090,6 +1039,7 @@ export default{
 			top: 20rpx;
 		}
 	}
+	//产品款号弹出框
 	.productNumModel{
 		width:600rpx;
 		position: absolute;

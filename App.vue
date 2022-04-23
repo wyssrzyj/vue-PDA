@@ -20,7 +20,7 @@
 /*全局字体图标*/
 @import url("./assets/iconfont/iconfont.css");
 /*全局公用样式*/
-@import url("./assets/common.css");
+@import url("./assets/common.scss");
 // #ifdef H5
 checkbox .uni-checkbox-input {
 	border-radius: 50%;
