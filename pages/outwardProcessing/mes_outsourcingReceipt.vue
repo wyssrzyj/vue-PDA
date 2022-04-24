@@ -13,7 +13,7 @@
 		</view>
 		<view class="pannelContent">
 			<uni-swipe-action>
-				<uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
+				<uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" @change="swipeChange($event, index)" :name="item.id"  v-for="(item, index) in inStorageArr" :key="item.id" class="AllStorage">
 					<view :class="index == 0 ? 'selectLine': ''" class="storageWrap">
 						<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
 						<view class="storageItem">
@@ -116,7 +116,7 @@
 				storageValue: '',
 				wareHouseLocation: '',
 				typeMode: '1',
-				inStorageArr: [{},{},{},{}],
+				inStorageArr: [],
 				startX: '',
 				copyInStorageArr:[],
 				nowTime:0,
@@ -124,7 +124,10 @@
 				options1: [{
 				     text: '删除',
 					 style: {
-					 	backgroundColor: '#cc3300',
+					 	backgroundColor: '#F4333F',
+						width:"180rpx",
+						fontSize:"32rpx",
+						color:'#fff'
 					 }
 				}]
 			}
@@ -284,6 +287,7 @@
 
 			handleEmpty(){ // 清空
 				this.inStorageArr = []
+				this.copyInStorageArr=[]
 				this.showModal = false
 				this.storageValue = ''
 			},
@@ -324,10 +328,12 @@
 			height: calc(100vh - 308rpx);
 			overflow: auto;
 			background-color: ;
+			.AllStorage{
+				margin-top: 20rpx;
+			}
 			.storageWrap{
 				display: flex;
 				height: 208rpx;
-				margin-top: 20rpx;
 				padding: 30rpx 0rpx;
 				overflow: hidden;
 				background-color: #FFFFFF;
@@ -352,7 +358,7 @@
 					font-size: 36rpx;
 					color: #333333;
 					line-height: 32rpx;
-					font-weight: 600;
+					font-weight: blod;
 				}
 				.storageContent {
 					display: flex;
@@ -385,14 +391,12 @@
 			align-items: center;
 			justify-content: space-between;
 			color: #585858;
-			// #moreBtn {
-			// 	// background-color: #fca147;
-			// }
 			.bottomLocationLeft{
 				display: flex;
 				align-items: center;
 				#moreBtn{
 					margin-right: 12rpx;
+					font-size: 32rpx;
 				}
 				.icon-gengduo{
 					color: #999;

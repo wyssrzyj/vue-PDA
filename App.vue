@@ -19,6 +19,7 @@
 @import "colorui/main.css";
 /*全局字体图标*/
 @import url("./assets/iconfont/iconfont.css");
+@import url("./assets/iconfont/iconfont-weapp-icon.css");
 /*全局公用样式*/
 @import url("./assets/common.scss");
 // #ifdef H5

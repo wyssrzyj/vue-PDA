@@ -36,7 +36,7 @@
 		<view class="pannelContent">
 			<uni-swipe-action>
 			<uni-swipe-action-item :right-options="options" @click="onClick($event,item)" @change="swipeChange($event, index)"
-				:name="item.id" v-for="(item, index) in outStorageArr" :key="item.id" :disabled="!item.isSelectScan">
+				:name="item.id" v-for="(item, index) in outStorageArr" :key="item.id" :disabled="!item.isSelectScan" class="AllStorage">
 				<view :class="item.isSelectScan ? 'selectLine': ''" class="storageWrap">
 					<text class="serialNumber">{{ index + 1 }}.</text>
 					<view class="storageItem">
@@ -63,8 +63,8 @@
 					<view class="storageArrow">
 						<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag&&item.isSelectScan"></image>
 						<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-if="item.arrowFlag&&item.isSelectScan"></image>
-						<view class="iconfont icon-a-bianzu4" v-if="item.isSelectScan"></view>
-						<!-- <view class="iconfont icon-a-bianzu4"></view> -->
+						<!-- <view class="iconfont icon-a-bianzu4" v-if="item.isSelectScan"></view> -->
+						<view class="t-icon t-icon-a-bianzu4" v-if="item.isSelectScan"></view>
 					</view>
 				</view>
 			</uni-swipe-action-item>
@@ -217,7 +217,10 @@ export default{
 			options: [{
 			     text: '删除',
 				 style: {
-				 	backgroundColor: '#cc3300',
+				 	backgroundColor: '#F4333F',
+				 	width:"180rpx",
+				 	fontSize:"32rpx",
+				 	color:'#fff'
 				 }
 			}],
 		}
@@ -924,10 +927,12 @@ export default{
 	.pannelContent {
 		height: calc(100vh - 386rpx);
 		overflow: auto;
+			.AllStorage{
+				margin-top: 20rpx;
+			}
 			.storageWrap{
 				display: flex;
 				height: 260rpx;
-				margin-top: 20rpx;
 				padding: 30rpx 0rpx;
 				overflow: hidden;
 				background-color: #FFFFFF;
@@ -973,15 +978,21 @@ export default{
 					width:36rpx;
 					height: 32rpx;
 				}
-				.icon-a-bianzu4{
+				.t-icon-a-bianzu4{
 					position: absolute;
-					top: 0;
-					right: -46rpx;
-					font-size: 100rpx;
+					top: -5rpx;
+					right: -48rpx;
+					width: 137rpx;
+					height: 70rpx;
 				}
 			}
 			
 			
+	}
+	.bottom{
+		#moreBtn{
+			font-size: 32rpx;
+		}
 	}
 	//清空按钮样式
 	.emptyBtn {
