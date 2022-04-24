@@ -42,7 +42,7 @@
 			</view> -->
 		</view>
 		<view class="pannelContent">
-			<view class="storageItem" v-for="(item,index) in outStorageArr" :key="index" :class="index == 0?'selectLine':''">
+			<view class="storageItem" v-for="(item,index) in outStorageArr" :key="index" :class="index == 0?'selectStorage':''">
 				<text class="serialNumber">{{ index + 1 }}.</text>
 				<view class="storageInfo">
 					<text class="storageCode">{{ item.packageCode }}</text>
@@ -59,6 +59,26 @@
 							<text>数量：</text>
 							<!-- <text>{{ item.count }}</text> -->
 							<input v-model="item.count"/>
+						</view>
+					</view>
+				</view>
+			</view>
+			<view class="storageItem selectStorage">
+				<text class="serialNumber">1.</text>
+				<view class="storageInfo">
+					<text class="storageCode">123234345345</text>
+					<view class="storageColor">
+						<text>颜色尺码：</text>
+						<text>{{ 1 }}&emsp;{{ 2 }}&emsp;{{ 3 }}</text>
+					</view>
+					<view class="storageContent">
+						<view class="number">
+							<text>扎号：</text>
+							<text>{{ 123456 }}</text>
+						</view>
+						<view class="count">
+							<text>数量：</text>
+							<input value="123"/>
 						</view>
 					</view>
 				</view>
@@ -424,22 +444,20 @@
 						display: flex;
 						justify-content: space-between;
 						.number{
-							width: 360rpx;
+							width: 320rpx;
 							text:first-child{
 								font-weight: bold;
 							}
 							text:last-child{
 								color: #666666;
 							}
-							
-							
 						}
-						
 						.count{
+							width: 360rpx;
 							display: flex;
 							text:first-child{
 								font-weight: bold;
-								width: 100rpx;
+								width: 120rpx;
 							}
 							input{
 								width: 140rpx;
@@ -454,13 +472,13 @@
 			}
 			
 			//index为1的时候
-			.selectLine{
+			.selectStorage{
 				background: #E4F4FF !important;
 			}
-			.selectLine text{
+			.selectStorage text{
 				color: #0C99F2!important;
 			}
-			.selectLine input{
+			.selectStorage input{
 				color: #0C99F2!important;
 			}
 
