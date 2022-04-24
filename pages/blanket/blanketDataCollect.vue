@@ -1,5 +1,5 @@
 <template>
-	<view class="mainContent">
+	<view class="mainContent" @click="closeClear">
 		<u-toast ref="uToast"></u-toast>
 		
 		<!-- <view class="search"> -->
@@ -58,38 +58,38 @@
 			<view class="storage-item">
 				<text class="storage-item-left">铺布层数</text>
 				<view class="storage-item-right">
-					<u-input v-model="modelData.spreadClothNumberPlies" placeholder="请输入铺布层数" inputAlign="right" border="none" @change="onClothNumberPlies" clearable></u-input>
+					<input class="input" placeholder-style="font-size:14px;color:#999999" v-model="modelData.spreadClothNumberPlies" placeholder="请输入铺布层数" @input="onClothNumberPlies"></input>
 				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left">段长</text>
 				<view class="storage-item-right">
-					<u-input v-model="modelData.fragmentExtent" placeholder="请输入段长" inputAlign="right" border="none" @change="onFragmentExtent" clearable></u-input>
+					<input class="input" placeholder-style="font-size:14px;color:#999999" v-model="modelData.fragmentExtent" placeholder="请输入段长" @input="onFragmentExtent"></input>
 				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left">铺布日期</text>
 				<view class="storage-item-right" @tap="onSelectDate">
-					<u-input style="margin-right: 15rpx;" v-model="modelData.spreadClothDate" placeholder="请选择铺布日期" inputAlign="right" border="none" clearable></u-input>
+					<input class="input" placeholder-style="font-size:14px;color:#999999" style="margin-right: 15rpx;" v-model="modelData.spreadClothDate" placeholder="请选择铺布日期"></input>
 					<text class="iconfont icon-youjiantou"></text>
 				</view>
-			</view>
+			</view> 
 			<view class="storage-item">
 				<text class="storage-item-left">铺布数量</text>
 				<view class="storage-item-right">
-					<u-input v-model="modelData.spreadClothQuantity" placeholder="请输入铺布数量" inputAlign="right" border="none" @change="onClothQuantity" clearable></u-input>
+					<input class="input" placeholder-style="font-size:14px;color:#999999" v-model="modelData.spreadClothQuantity" placeholder="请输入铺布数量" @input="onClothQuantity"></input>
 				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left">剩余数量</text>
 				<view class="storage-item-right">
-					<u-input v-model="modelData.spreadClothLeftQuantity" placeholder="请输入剩余数量" inputAlign="right" border="none" @change="onClothLeftQuantity" clearable></u-input>
+					<input class="input" placeholder-style="font-size:14px;color:#999999" v-model="modelData.spreadClothLeftQuantity" placeholder="请输入剩余数量" @input="onClothLeftQuantity"></u-input>
 				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left">缺料数量</text>
 				<view class="storage-item-right">
-					<u-input v-model="modelData.spreadClothLackQuantity" placeholder="请输入缺料数量" inputAlign="right" border="none" clearable></u-input>
+					<input class="input" placeholder-style="font-size:14px;color:#999999" v-model="modelData.spreadClothLackQuantity" placeholder="请输入缺料数量"></u-input>
 				</view>
 			</view>
 		</view>
@@ -166,13 +166,13 @@
 			</view> -->
 		<!-- </view> -->
 		<view class="bottom">
-			<view class="bottom-left" @click="handleMore">更多 <view class="iconfont icon-gengduo"></view></view>
+			<view class="bottom-left" id="moreBtn" @click="handleMore">更多 <view class="iconfont icon-gengduo"></view></view>
 			<view class="bottom-right">
 				<view class="btn btnActive" @click="onSubmit" v-if="isSubmit">提交</view>
 				<view class="btn btnDisable" v-else >提交</view>
 			</view>
 		</view>
-		<view class="btnModal" v-show="showModal">
+		<view class="btnModal" id="btnModal" v-show="showModal">
 			<image class="modalImage" src="../../static/blanket/modalImage.png" mode="aspectFit"></image>
 			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
 		</view>
@@ -247,7 +247,7 @@ export default {
 		let day = date.getDate()
 		day = day < 10 ? ('0' + day) : day
 		let time = year + '-' + month + '-' + day
-		// this.modelData.spreadClothDate = time
+		this.modelData.spreadClothDate = time
 		this.defaultDate = time
 	},
 	methods: {
@@ -320,7 +320,9 @@ export default {
 			const reg = /^\d+(\.\d+)?$/
 			return reg.test(value)
 		},
-		onClothNumberPlies(e) { // 铺布层数事件
+		onClothNumberPlies(event) { // 铺布层数事件
+			let e = event.detail.value
+			console.log(e)
 			if(e===""){
 				this.modelData.spreadClothQuantity=""
 				this.modelData.spreadClothLeftQuantity=""
@@ -349,7 +351,8 @@ export default {
 				this.modelData.spreadClothLackQuantity = Number(this.sendQty) - Number(this.modelData.spreadClothQuantity) - Number(this.modelData.spreadClothLeftQuantity)
 			}
 		},
-		onFragmentExtent(e) { // 段长事件
+		onFragmentExtent(event) { // 段长事件
+			let e = event.detail.value
 			if(e===""){
 				this.modelData.spreadClothQuantity=""
 				this.modelData.spreadClothLeftQuantity=""
@@ -382,14 +385,16 @@ export default {
 				this.modelData.spreadClothLackQuantity = Number(this.sendQty) - Number(this.modelData.spreadClothQuantity) - Number(this.modelData.spreadClothLeftQuantity)
 			}
 		},
-		onClothQuantity(e) { // 铺布数量事件
+		onClothQuantity(event) { // 铺布数量事件
+			let e = event.detail.value
 			this.modelData.spreadClothQuantity = e
 			if(this.sendQty) {
 				// 剩余数量
 				this.modelData.spreadClothLeftQuantity = Number(this.sendQty) - Number(this.modelData.spreadClothQuantity)
 			}
 		},
-		onClothLeftQuantity(e) { // 剩余数量事件
+		onClothLeftQuantity(event) { // 剩余数量事件
+			let e = event.detail.value
 			this.modelData.spreadClothLeftQuantity = e
 			if(this.sendQty) {
 				// 缺料数量
@@ -480,6 +485,11 @@ export default {
 		handleMore() { // 更多
 			this.showModal = true
 		},
+		closeClear(e){
+			if(e.target.id != "btnModal" && e.target.id != "moreBtn" && this.showModal){
+				this.showModal = false
+			}
+		},
 		onSubmit() { // 提交
 		if(this.errorFlag){
 			Api.saveData({
@@ -551,9 +561,10 @@ export default {
 }
 
 .message{
-	padding: 0 30rpx 12rpx 30rpx;
+	padding: 0 30rpx 15rpx 30rpx;
 	.label{
 		font-size: 30rpx;
+		line-height: 40rpx;
 		font-weight: 700;
 		margin-top: 12rpx;
 		color: #333333;

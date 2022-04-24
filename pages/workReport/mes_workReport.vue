@@ -7,14 +7,14 @@
 			<view class="scanInput">请扫描PCS码!</view>
 			<view class="storage">
 				<view class="storage-item">
-					<text class="storage-item-left">报工工段</text>
+					<text class="storage-item-left"><text class="requier">*</text>报工工段</text>
 					<view class="storage-item-right" @click="show = true">
 						<text class="info">{{productNum?productNum:'请选择报工工段'}}</text>
 						<text class="iconfont icon-youjiantou"></text>
 					</view>
 				</view>
 				<view class="storage-item">
-					<text class="storage-item-left">报工工序</text>
+					<text class="storage-item-left"><text class="requier">*</text>报工工序</text>
 					<view class="storage-item-right" @click="showMultiple">
 						<text class="info">{{supplierName?supplierName:'请选择报工工序'}}</text>
 						<text class="iconfont icon-youjiantou"></text>
@@ -63,7 +63,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="storageItem selectStorage">
+<!-- 			<view class="storageItem selectStorage">
 				<text class="serialNumber">1.</text>
 				<view class="storageInfo">
 					<text class="storageCode">123234345345</text>
@@ -82,7 +82,7 @@
 						</view>
 					</view>
 				</view>
-			</view>
+			</view> -->
 		</view>
 		
 		<view class="bottom">
@@ -358,6 +358,10 @@
 </script>
 
 <style lang="scss" scoped>
+	.requier{
+		color: red;
+		margin-right: 10rpx;
+	}
 	.iconfont{
 		font-size: 12rpx;
 	}
@@ -424,10 +428,9 @@
 					margin-right: 30rpx;
 				}
 				.storageInfo{
-					font-size: 16px;
+					font-size: 32rpx;
 					color: #333333;
 					.storageCode{
-						font-size: 18px!important;
 						line-height: 80rpx;
 						font-weight: bold;
 					}

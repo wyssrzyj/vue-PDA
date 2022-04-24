@@ -65,6 +65,7 @@
 			color: #333333;
 			}
 .storage > .storage-item > .storage-item-right{
+			display: flex;
 			color: #999999;
 			}
 .storage > .storage-item > .storage-item-right > .info{
@@ -74,6 +75,7 @@
 				height: 100rpx;
 				text-align: right;
 				color: #666666;
+				margin-right: 15rpx;
 				}
 .storage-item:last-child{
 	border-bottom: 0;
