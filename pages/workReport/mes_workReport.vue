@@ -1,5 +1,5 @@
 <template>
-	<view class="mainContent" @tap="handleClick">
+	<view class="mainContent">
 		<view class="borderBottom">
 			<!-- <view class="location"> -->
 				<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" disabled/> -->
@@ -84,9 +84,10 @@
 				</view>
 			</view> -->
 		</view>
-		
+		<!-- 更多组件 -->
+		<u-action-sheet :actions="list" :show="showMore" @select="selectClick" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showMore=false"></u-action-sheet>
 		<view class="bottom">
-			<view class="bottom-left" @click="handleMore" id="moreBtn">更多 <view class="iconfont icon-gengduo"></view></view>
+			<view class="bottom-left" @click="showMore = true" id="moreBtn">更多 <view class="iconfont icon-gengduo"></view></view>
 			<view class="bottom-right">
 				<view class="count">已扫描行数：{{outStorageArr.length?outStorageArr.length:'0'}}</view>
 				<view class="btn btnActive" @click="handleOutStorage" v-if="outStorageArr.length > 0">报工</view>
@@ -101,10 +102,10 @@
 				<view class="commonBtn noInStorageBtn" v-else>报工</view>
 			</view>
 		</view> -->
-		<view class="btnModal" v-if="showModal" id="btnModal">
+<!-- 		<view class="btnModal" v-if="showModal" id="btnModal">
 			<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
 			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
-		</view>
+		</view> -->
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
 			<view style="margin-left: 20rpx;">{{ showSuccessMessage }}</view>
@@ -157,7 +158,6 @@
 		data(){
 			return{
 				isSelectCheckbox: true,
-				showModal: false,
 				showSuccessPop: false,
 				showErrorPop: false,
 				showSuccessMessage: '',
@@ -176,6 +176,9 @@
 				//选中的值
 				checkedList: [],
 				workshopObj:{},
+				// 更多组件
+				showMore:false,
+				list:[{name:'清空',color:'#FC361D'}]
 			}
 		},
 		methods:{
@@ -213,12 +216,6 @@
 			// 		}
 			// 	});
 			// },
-			//事件委托全局按钮
-			handleClick(e){
-				if(e.target.id!=="btnModal"&& e.target.id!=="moreBtn"&& this.showModal){
-					this.showModal=false
-				}
-			},
 			async handleConfirm(e){	//报工工段确认
 				if(this.productNum!==e.value[0]){
 					this.supplierName=""
@@ -312,9 +309,14 @@
 				})
 			},
 
-
-			handleMore(){ // 更多
-				this.showModal = !this.showModal
+			//弹出按钮点击事件
+			selectClick(e){
+				if(e.name=='清空'){
+					this.outStorageArr = []
+					this.coutryList=[]
+					this.productNum = ''
+					this.supplierName=""
+				}
 			},
 
 			handleOutStorage(){ // 出库
@@ -342,14 +344,6 @@
 					}
 				})
 			},
-
-			handleEmpty(){ // 清空
-				this.outStorageArr = []
-				this.coutryList=[]
-				this.showModal = false
-				this.productNum = ''
-				this.supplierName=""
-			},
 		},
 		created(){    //防抖
 			this.handleOutStorage = useDebounce(this.handleOutStorage);
@@ -358,6 +352,10 @@
 </script>
 
 <style lang="scss" scoped>
+	::v-deep .uni-actionsheet__menu{
+		background-color: #FC361D!important;
+		color: #007AFF;
+	}
 	.requier{
 		color: red;
 		margin-right: 10rpx;

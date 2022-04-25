@@ -1,5 +1,5 @@
 <template>
-	<view class="mainContent" @click="closeClear">
+	<view class="mainContent">
 		<u-toast ref="uToast"></u-toast>
 		
 		<!-- <view class="search"> -->
@@ -165,17 +165,18 @@
 				<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
 			</view> -->
 		<!-- </view> -->
+		<u-action-sheet :actions="list" :show="showMore" @select="selectClick" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showMore=false"></u-action-sheet>
 		<view class="bottom">
-			<view class="bottom-left" id="moreBtn" @click="handleMore">更多 <view class="iconfont icon-gengduo"></view></view>
+			<view class="bottom-left" id="moreBtn" @click="showMore = true">更多 <view class="iconfont icon-gengduo"></view></view>
 			<view class="bottom-right">
 				<view class="btn btnActive" @click="onSubmit" v-if="isSubmit">提交</view>
 				<view class="btn btnDisable" v-else >提交</view>
 			</view>
 		</view>
-		<view class="btnModal" id="btnModal" v-show="showModal">
+<!-- 		<view class="btnModal" id="btnModal" v-show="showModal">
 			<image class="modalImage" src="../../static/blanket/modalImage.png" mode="aspectFit"></image>
 			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
-		</view>
+		</view> -->
 		<scan-code></scan-code>
 		<!-- 日期选择组件 -->
 		<u-calendar
@@ -218,7 +219,8 @@ export default {
 			showCalendar: false,
 			gridList: [],
 			isSubmit: false,
-			showModal: false,
+			showMore: false,
+			list:[{name:'清空',color:'#FC361D'}],
 			defaultDate:"",
 			mesReceiveDataId: '', // 收货数据的id
 			materialColor: '', // 物料代码、颜色
@@ -322,7 +324,6 @@ export default {
 		},
 		onClothNumberPlies(event) { // 铺布层数事件
 			let e = event.detail.value
-			console.log(e)
 			if(e===""){
 				this.modelData.spreadClothQuantity=""
 				this.modelData.spreadClothLeftQuantity=""
@@ -482,14 +483,6 @@ export default {
 				this.errorMsg="疵点个数不能为空或者为0！"
 			}
 		},
-		handleMore() { // 更多
-			this.showModal = true
-		},
-		closeClear(e){
-			if(e.target.id != "btnModal" && e.target.id != "moreBtn" && this.showModal){
-				this.showModal = false
-			}
-		},
 		onSubmit() { // 提交
 		if(this.errorFlag){
 			Api.saveData({
@@ -521,28 +514,29 @@ export default {
 			})
 		}
 		},
-		handleEmpty() { // 清空
-			this.isSearch = false
-			this.showModal = false
-			// 布条码清空
-			this.clothCodeValue = ''
-			// 提交按钮置灰
-			this.isSubmit = false
-			// 表格清空
-			this.gridList = []
-			// 收货数据清空
-			this.materialColor = ''
-			this.larghezza = ''
-			this.weight = ''
-			this.sendQty = ''
-			this.materialQtyPd = ''
-			// 铺布数据清空
-			this.modelData.spreadClothNumberPlies = ''
-			this.modelData.fragmentExtent = ''
-			// this.modelData.spreadClothDate = ''
-			this.modelData.spreadClothQuantity = ''
-			this.modelData.spreadClothLeftQuantity = ''
-			this.modelData.spreadClothLackQuantity = ''
+		selectClick(e) { // 清空
+			if(e.name == '清空'){
+				this.isSearch = false
+				// 布条码清空
+				this.clothCodeValue = ''
+				// 提交按钮置灰
+				this.isSubmit = false
+				// 表格清空
+				this.gridList = []
+				// 收货数据清空
+				this.materialColor = ''
+				this.larghezza = ''
+				this.weight = ''
+				this.sendQty = ''
+				this.materialQtyPd = ''
+				// 铺布数据清空
+				this.modelData.spreadClothNumberPlies = ''
+				this.modelData.fragmentExtent = ''
+				// this.modelData.spreadClothDate = ''
+				this.modelData.spreadClothQuantity = ''
+				this.modelData.spreadClothLeftQuantity = ''
+				this.modelData.spreadClothLackQuantity = ''
+			}
 		}
 	}
 }
