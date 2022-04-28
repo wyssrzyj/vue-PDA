@@ -41,9 +41,10 @@
 				 </uni-swipe-action-item>
 			</uni-swipe-action>
 		</view>
+		<u-action-sheet :actions="deletelist" :show="showMore" @select="handleEmpty" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showMore=false"></u-action-sheet>
 		<view class="bottomLocation">
 			<view class="bottomLocationLeft">
-				<view  id="moreBtn" @tap="handleMore">更多</view>
+				<view  id="moreBtn" @tap="showMore=true">更多</view>
 				<view class="iconfont icon-gengduo"></view>
 			</view>
 			<view class="bottomLocationRight">
@@ -51,10 +52,6 @@
 				<view class="commonBtn inStorageBtn" @tap="handleInStorage" v-if="inStorageArr.length > 0">入库</view>
 				<view class="commonBtn noInStorageBtn" v-else>入库</view>
 			</view>
-		</view>
-		<view class="btnModal" v-show="showModal">
-			<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
-			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
 		</view>
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
@@ -129,7 +126,9 @@
 						fontSize:"32rpx",
 						color:'#fff'
 					 }
-				}]
+				}],
+				deletelist:[{name:'清空',color:'#FC361D'}],
+				showMore:false
 			}
 		},
 		methods:{
@@ -285,11 +284,13 @@
 				})
 			},
 
-			handleEmpty(){ // 清空
+			handleEmpty(e){ // 清空
+			if(e.name == '清空'){
 				this.inStorageArr = []
 				this.copyInStorageArr=[]
 				this.showModal = false
 				this.storageValue = ''
+				}
 			},
 		},
 		components: {
@@ -328,14 +329,15 @@
 			height: calc(100vh - 308rpx);
 			overflow: auto;
 			background-color: ;
-			.AllStorage{
-				margin-top: 20rpx;
-			}
+			// .AllStorage{
+			// 	margin-top: 20rpx;
+			// }
 			.storageWrap{
 				display: flex;
 				height: 208rpx;
 				padding: 30rpx 0rpx;
 				overflow: hidden;
+				margin-top: 20rpx;
 				background-color: #FFFFFF;
 				position: relative;
 			}
@@ -424,16 +426,6 @@
 				}
 			}
 		}
-		.btnModal {
-			position: absolute;
-			left: 30rpx;
-			bottom: -6rpx;
-			z-index: 10;
-			.modalImage {
-				width: 300rpx;
-				height: 166rpx;
-			}
-		}
 		.commonBtn {
 			display: inline-block;
 			text-align: center;
@@ -444,12 +436,6 @@
 			border-radius: 8rpx;
 			width: 200rpx;
 			height: 80rpx;
-		}
-		.emptyBtn {
-			background-color: #FC361D;
-			position: absolute;
-			left: 50rpx;
-			top: 35rpx
 		}
 		.remindPopup {
 			color: #666;

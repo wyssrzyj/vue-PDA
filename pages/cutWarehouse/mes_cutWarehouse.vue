@@ -26,7 +26,7 @@
 			<view class="text">
 				产量报工
 			</view>
-			<view class="factoryAccess outboundProcessing">
+			<view class="factoryAccess workReport">
 			<view v-for="(item, index) in workReportList" :key="index" class="factoryAccessItem " @tap="toList(item)">
 				<image :src="item.src" class="image"></image>
 				<text class="boxItemTitle">{{ item.title }}</text>
@@ -37,7 +37,7 @@
 			<view class="text">
 				铺布数据采集
 			</view>
-			<view class="factoryAccess">
+			<view class="factoryAccess blanket">
 				<view v-for="(item, index) in blanketDataList" :key="index" @tap="toList(item)" class="factoryAccessItem">
 					<image :src="item.src" class="image"></image>
 					<text class="titleItem">{{ item.title }}</text>
@@ -72,42 +72,60 @@ export default{
 
 <style lang="scss" scoped>
 .tabBox {
-	padding: 30rpx 20rpx;
+	padding: 36rpx 30rpx 0 30rpx;
+	background-color: #FFFFFF;
 	.tabBoxItem{
-		height: 330rpx;
+		height: 340rpx;
 		.text{
-			font-size: 40rpx;
-			margin: 10rpx 0;
-			font-weight: 900;
+			font-size: 36rpx;
+			margin-bottom: 30rpx;
+			font-weight: 600;
 		}
 		.factoryAccess{
 			display: flex;
 			justify-content: space-between;
 			.factoryAccessItem{
-				width: 225rpx;
-				height: 225rpx;
+				width: 200rpx;
+				height: 200rpx;
 				background-color: #ecf7fc;
-				border-radius: 50rpx;
+				border-radius: 28rpx;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				flex-direction: column;
 				font-weight: 600;
 				font-size: 30rpx;
+				margin-right: 30rpx;
 				.image{
-					width: 113rpx;
-					height: 113rpx;
-					margin-bottom: 10rpx;
+					width: 90rpx;
+					height: 90rpx;
+					margin-bottom: 15rpx;
+				}
+				.boxItemTitle{
+					font-family: AlibabaPuHuiTiM;
+					font-size: 30rpx;
+					color: #333333;
+					text-align: center;
+					line-height: 16px;
 				}
 			}
 		}
 		.outboundProcessing{
 			justify-content: flex-start;
 			.factoryAccessItem{
-				background-color:#f2f3f8;
+				background-color:#ecf8f3;
 			}
-			.factoryAccessItem:nth-child(2){
-				margin-left: 20rpx;
+		}
+		.workReport{
+			justify-content: flex-start;
+			.factoryAccessItem{
+				background-color:#fef7e4;
+			}
+		}
+		.blanket{
+			justify-content: flex-start;
+			.factoryAccessItem{
+				background-color:#ecf2ff;
 			}
 		}
 	}

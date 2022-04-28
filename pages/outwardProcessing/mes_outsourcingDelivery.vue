@@ -1,10 +1,5 @@
 <template>
 	<view class="mainContent" @tap="handleClick">
-		<!-- <view class="borderBottom"> -->
-			<!-- <view class="location"> -->
-				<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-				<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" disabled/>
-			</view> -->
 			<view class="scanInput">请扫描PCS码!</view>
 			<view class="storageLocationItem">
 				<view class="storageLocation">
@@ -24,15 +19,6 @@
 					<view class="queryBtn" id="supplierBtn">搜索</view>
 				</view>
 		</view>
-		<!-- </view> -->
-		<!-- <view class="radioLocation">
-			<checkbox-group @change="checkboxChange">
-				<view class="checkboxStyle">
-					<checkbox value="" :checked="!isSelectCheckbox" style="transform: scale(0.8)"/>
-				</view>
-				<view class="checkboxStyle">全部</view>
-			</checkbox-group>
-		</view> -->
 		<view class="pannelContent">
 			<uni-swipe-action>
 			<uni-swipe-action-item :right-options="options" @click="onClick($event,item)" @change="swipeChange($event, index)"
@@ -70,25 +56,14 @@
 			</uni-swipe-action-item>
 			</uni-swipe-action>
 		</view>
-		<!-- <view class="bottomLocation">
-			<view class="scanNum"><view><text class="scannedNum">{{ alreadyOutStorageArr.length }}</text>/{{ outStorageArr.length }}</view><view><text>已扫描数量：</text><text class="scannedAllNum">{{alreadyCount}}</text></view></view>
-			<view class="btnLocation">
-				<view class="commonBtn moreBtn" @tap="handleMore" id="moreBtn">更多</view>
-				<button type="default" class='commonBtn inStorageBtn' @click="handleOutStorage" v-if="alreadyCount > 0 ">出库并打印</button>
-				<button type="default" class='commonBtn noInStorageBtn ' v-else>出库并打印</button>
-			</view>
-		</view> -->
+		<u-action-sheet :actions="deletelist" :show="showMore" @select="handleEmpty" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showMore=false"></u-action-sheet>
 		<view class="bottom">
-			<view class="bottom-left" @tap="handleMore" id="moreBtn">更多 <text class="iconfont icon-gengduo"></text></view>
+			<view class="bottom-left" @tap="showMore=true" id="moreBtn">更多 <text class="iconfont icon-gengduo"></text></view>
 			<view class="bottom-right">
 				<view class="count">已选：{{ alreadyOutStorageArr.length }}/{{ outStorageArr.length }},数量{{alreadyCount}}</view>
 				<view class="btn btnActive" @click="handleOutStorage" v-if="alreadyCount > 0 ">出库并打印</view>
 				<view class="btn btnDisable" v-else >出库并打印</view>
 			</view>
-		</view>
-		<view class="btnModal" v-if="showModal" id="btnModal">
-			<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
-			<view class="emptyBtn" @tap="handleEmpty">清空</view>
 		</view>
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
@@ -99,24 +74,27 @@
 			<view style="margin: 0 20rpx 0 80rpx;">{{ showErrorMessage }}</view>
 		</view>
 		<view class="productNumModel" v-if="showProductNumModel" id="productNumModel">
+			<view class="delCx">
+				查询
+			</view>
 			<view class="del" @click="closeProduct">
 				<view class="del-1"></view>
 				<view class="del-2"></view>
 			</view>
 			<view class="productNumSelect">
-				<input placeholder-style="font-size: 34rpx" v-model="productForm.proNum" confirm-type="search" placeholder="产品款号" class="productNumInput"/>
-				<input placeholder-style="font-size: 34rpx" v-model="productForm.clientNum" confirm-type="search" placeholder="客户款号" class="productNumInput"/>
+				<input placeholder-style="font-size: 28rpx" v-model="productForm.proNum" confirm-type="search" placeholder="产品款号" class="productNumInput"/>
+				<input placeholder-style="font-size: 28rpx" v-model="productForm.clientNum" confirm-type="search" placeholder="客户款号" class="productNumInput"/>
 				<view class="queryBtn" @tap="queryProduct">查询</view>
 			</view>
 			<view class="productTable">
 				<view class="miniHeight-table">
-					<view class="tableColumn" >
-						<view class="td" style="background-color: #bbdef5;max-width: 260rpx;">产品款号</view>
-						<view class="td" style="background-color: #bbdef5;max-width: 260rpx;">客户款号</view>
+					<view class="tableColumn firstLine" >
+						<view class="td firstTd">产品款号</view>
+						<view class="td">客户款号</view>
 					</view>
-					<view class="tableColumn" v-for="(item,index) in productData" @tap="getProductNum(item)" :key="index">
-						<view class="td" style="max-width: 260rpx;">{{item.proNum}}</view>
-						<view class="td" style="max-width: 260rpx;">{{item.clientNum}}</view>
+					<view class="tableColumn" v-for="(item,index) in productData" @tap="getProductNum(item)" :key="index" :class="item.active?'active':''">
+						<view class="td firstTd" :class="item.active?'active':''">{{item.proNum}}</view>
+						<view class="td" :class="item.active?'active':''">{{item.clientNum}}</view>
 					</view>
 				</view>
 			</view>
@@ -127,17 +105,17 @@
 				<view class="del-2"></view>
 			</view>
 			<view class="productNumSelect">
-				<input placeholder-style="font-size: 34rpx" v-model="supplierForm.supplierAbbreviation" confirm-type="search" placeholder="供应商简称" class="productNumInput"/>
+				<input placeholder-style="font-size: 28rpx" v-model="supplierForm.supplierAbbreviation" confirm-type="search" placeholder="供应商简称" class="productNumInput"/>
 				<view class="queryBtn" @tap="querySupplier">查询</view>
 			</view>
 			<view class="productTable">
-				<view class="tableColumn" >
-					<view class="td firstTd" style="background-color: #bbdef5;">供应商简称</view>
-					<view class="td" style="background-color: #bbdef5;">供应商全称</view>
+				<view class="tableColumn firstLine">
+					<view class="td firstTd">供应商简称</view>
+					<view class="td">供应商全称</view>
 				</view>
-				<view class="tableColumn" v-for="(item,index) in supplierData" :key="index" @tap="getSupplier(item)">
-					<view class="td firstTd" style="display: flex;align-items: center;justify-content: center;">{{item.supplierAbbreviation}}</view>
-					<view class="td">{{item.supplierName}}</view>
+				<view class="tableColumn" v-for="(item,index) in supplierData" :key="index" @tap="getSupplier(item)" :class="item.active?'active':''">
+					<view class="td firstTd" :class="item.active?'active':''" style="display: flex;align-items: center;justify-content: center;">{{item.supplierAbbreviation}}</view>
+					<view class="td" :class="item.active?'active':''">{{item.supplierName}}</view>
 				</view>
 			</view>
 		</view>
@@ -223,6 +201,8 @@ export default{
 				 	color:'#fff'
 				 }
 			}],
+			deletelist:[{name:'清空',color:'#FC361D'}],
+			showMore:false
 		}
 	},
 	computed: mapState(['is_b_link']),
@@ -283,8 +263,11 @@ export default{
 				this.outStorageArr=[]
 				this.supplierName=""
 			}
+			item.active=true
 			this.productNum=item.proNum
-			this.showProductNumModel=false
+			setTimeout(()=>{
+				this.showProductNumModel=false
+			},100)
 		},
 		closeSupplier(){    //关闭供应商弹窗
 			this.showSupplierModel=false
@@ -296,11 +279,14 @@ export default{
 		},
 		//获取供应商
 		async getSupplier(item){
+			item.active=true
 			this.supplierName=item.supplierAbbreviation
 			this.supplierId=item.id
 			const res=await Api.pickingDet({proNum:this.productNum,outProcessSupplier:item.id})
 			this.outStorageArr=res.data.map((item)=>{return{...item,arrowFlag:false,isSelectScan:false,show:false}})
-			this.showSupplierModel=false
+			setTimeout(()=>{
+				this.showSupplierModel=false
+			},100)
 		},
 		//扫描PCS码
 		// handleScanCodeBox(){
@@ -399,11 +385,6 @@ export default{
 			})
 		},
 		
-		
-		handleMore(){ // 更多
-			this.showModal = !this.showModal
-		},
-		
 		handleOutStorage(){ // 出库
 			Api.outOutsourcingDelivery({
 				mesOrderSubpackageOutwardDTOList:this.PCSData
@@ -421,12 +402,6 @@ export default{
 							}, index * 2000)
 						})
 					}
-					// console.log(this.alreadyOutStorageArr)
-					// this.outStorageArr=this.outStorageArr.filter(item=>{
-					// 	this.alreadyOutStorageArr.forEach(val=>{
-					// 		return item.packageNum!==val.packageNum
-					// 	})
-					// })
 					for (let i = 0; i < this.alreadyOutStorageArr.length; i++) {
 					        let val = this.alreadyOutStorageArr;
 					        // 获取选中行的索引的方法
@@ -458,7 +433,8 @@ export default{
 			})
 		},
 		
-		handleEmpty(){ // 清空
+		handleEmpty(e){ // 清空
+		if(e.name == '清空'){
 			this.outStorageArr = []
 			this.PCSData=[]
 			this.showModal = false
@@ -466,6 +442,7 @@ export default{
 			this.supplierName=""
 			this.alreadyCount=0
 			this.alreadyOutStorageArr=[]
+			}
 		},
 		
 		//蓝牙连接
@@ -869,9 +846,9 @@ export default{
 	@mixin delSty {
 		position:absolute;
 		top:10rpx;
-		width: 26rpx;
-		height: 2px;
-		background-color: #afafaf;
+		width: 40rpx;
+		height: 1px;
+		background-color: #0C99F2;
 	}
 	.mainContent {
 	position: relative;
@@ -927,13 +904,14 @@ export default{
 	.pannelContent {
 		height: calc(100vh - 386rpx);
 		overflow: auto;
-			.AllStorage{
-				margin-top: 20rpx;
-			}
+			// .AllStorage{
+			// 	margin-top: 20rpx;
+			// }
 			.storageWrap{
 				display: flex;
 				height: 260rpx;
 				padding: 30rpx 0rpx;
+				margin-top: 20rpx;
 				overflow: hidden;
 				background-color: #FFFFFF;
 			}
@@ -1054,18 +1032,31 @@ export default{
 	.productNumModel{
 		width:600rpx;
 		position: absolute;
-		top: 250rpx;
-		left: 75rpx;
+		top: 107rpx;
+		left: 72rpx;
 		z-index: 99;
-		padding: 40rpx 30rpx;
-		background-color: #f2f2f2;
-		border: 3px solid #afafaf;
+		padding-bottom: 66rpx;
+		border-radius: 16rpx;
+		background-color: #fff;
+		overflow: hidden;
+		.delCx{
+			height: 100rpx;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: #E4F4FF;
+			color: #0C99F2;
+			font-size:32rpx;
+			font-family: PingFang-SC-Bold;
+			letter-spacing: 0;
+			font-weight: 600;
+		}
 		.del{
 			position: absolute;
-			top: 10rpx;
-			right: 10rpx;
-			width: 30rpx;
-			height: 30rpx;
+			top: 40rpx;
+			right: 30rpx;
+			width: 42rpx;
+			height: 42rpx;
 			.del-1{
 				@include delSty;
 				transform: rotateZ(45deg);
@@ -1077,38 +1068,56 @@ export default{
 		}
 		.productNumSelect{
 			display: flex;
-			margin:0rpx 0rpx 30rpx;
+			height: 110rpx;
+			padding: 18rpx 20rpx;
 			.productNumInput{
-				width: 200rpx;
-				height: 55rpx;
-				border: 1px solid #ccc;
+				width: 220rpx;
+				height: 72rpx;
+				border: 1px solid #C4C4C4;
 				background-color: #FFFFFF;
-				margin: 0 6rpx;
+				border-radius: 8rpx;
+				padding: 16rpx 0 16rpx 20rpx;
+				margin-right: 8rpx;
 			}
 			.queryBtn{
-				height: 55rpx;
+				height: 72rpx;
 			}
 		}
 		.productTable{
-			width:520rpx;
-			border-top: 1px solid black;
-			border-left: 1px solid black;
 			.miniHeight-table{
-				max-height: 500rpx;
+				max-height: 528rpx;
 				overflow: auto;
+			}
+			.active{
+				background: #E4F4FF;
+				color: #0C99F2 !important;
+			}
+			.firstLine{
+				background-color: #EFEFEF;
+				font-weight: 800;
+				font-family: PingFang-SC-Bold;
+				font-size: 16px;
+				color: #333333;
+				letter-spacing: 0;
+				line-height: 16px;
 			}
 			.tableColumn{
 				display: flex;
+				height: 88rpx;
+				width: 100%;
+				align-items: center;
+				border-bottom: 1px solid #D8D8D8;
 				.td{
 					flex: 1;
-					border-bottom: 1px solid black;
-					border-right: 1px solid black;
 					text-align: center;
-					line-height: 50rpx;
-					background-color: white;
+					line-height: 88rpx;
+					font-family: PingFangSC-Regular;
+					font-size: 16px;
+					color: #585858;
+					letter-spacing: 0;
 				}
 				.firstTd{
-					flex: 0.6;
+					flex: 0.7;
 				}
 			}
 		}

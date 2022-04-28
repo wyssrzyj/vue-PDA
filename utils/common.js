@@ -1,29 +1,29 @@
 export const cutWarehouseList = [
   {
     title: '裁片入库',
-    src: '../../static/outwardProcessing/cutInStorageIcon.png',
+    src: '../../static/outwardProcessing/cutInStorage.png',
     link: '/pages/cutWarehouse/mes_cutInStorage'
   },
   {
     title: '裁片出库',
-    src: '../../static/outwardProcessing/cutOutStorageIcon.png',
+    src: '../../static/outwardProcessing/cutOutStorage.png',
     link: '/pages/cutWarehouse/mes_cutOutStorage'
   },
   {
     title: '撤销裁片入库',
-    src: '../../static/outwardProcessing/repealCutInStorageIcon.png',
+    src: '../../static/outwardProcessing/repealCutStorage.png',
     link: '/pages/cutWarehouse/mes_repealCutInStorage'
   }
 ]
 export const outwardProcessingList = [
   {
     title: '外发加工入库',
-    src: '../../static/outwardProcessing/outsourcingReceiptIcon.png',
+    src: '../../static/outwardProcessing/outSourcingReceipt.png',
     link: '/pages/outwardProcessing/mes_outsourcingReceipt'
   },
   {
     title: '外发加工出库',
-    src: '../../static/outwardProcessing/outsourcingDeliveryIcon.png',
+    src: '../../static/outwardProcessing/outSourcingDelivery.png',
     link: '/pages/outwardProcessing/mes_outsourcingDelivery'
   }
 ]
