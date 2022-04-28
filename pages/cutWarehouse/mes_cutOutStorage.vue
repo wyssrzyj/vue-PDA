@@ -61,6 +61,7 @@
 				</uni-swipe-action>
 			</scroll-view>
 		</view>
+		<u-action-sheet :actions="deletelist" :show="showModal" @select="handleEmpty" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showModal=false"></u-action-sheet>
 		<view class="bottomLocation">
 			<view class="btnLocation">
 				<!-- <view class="commonBtn moreBtn" id="moreBtn" @tap="handleMore">更多</view> -->
@@ -78,12 +79,12 @@
 			<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
 			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
 		</view> -->
-		<u-popup :show="showModal" @close="showModal = false" :overlayOpacity="0">
+		<!-- <u-popup :show="showModal" @close="showModal = false" :overlayOpacity="0">
 			<view class="btnModal">
 				<image class="modalImage-out" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
 				<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
 			</view>
-		</u-popup>
+		</u-popup> -->
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
 			<view style="margin: 0 20rpx 0 90rpx;">{{ showSuccessMessage }}</view>
@@ -157,54 +158,10 @@
 				showErrorMessage: '',
 				sewingTaskRecord: '',
 				outStorageArr: [
-					{
-						id: "a",
-						productId:  "abc",
-						produceId: "ea",
-						subpackageId:  "ea",
-						proNum: "ea",
-						colorCode:  "ea",
-						colorName: "ea",
-						sizeCode: "ea",
-						sizeName: "ea",
-						packageNum: "ea",
-						inputNumber:  "ea",
-						locationCode: "ea",
-						packageState:  "ea",
-						outputNumber: 0,
-						storageStatus: 0,
-						isShowScan: true,
-						isSelectScan: false,
-						produceSkuId:  "ea",
-						sewingExecutionId:  "ea",
-						sewingExecutionSkuId:  "ea",
-						warehouseLocationId: "ea"
-					}
+				
 				],
 				alreadyOutStorageArr: [
-					{
-						id: "a",
-						productId:  "abc",
-						produceId: "ea",
-						subpackageId:  "ea",
-						proNum: "ea",
-						colorCode:  "ea",
-						colorName: "ea",
-						sizeCode: "ea",
-						sizeName: "ea",
-						packageNum: "ea",
-						inputNumber:  "ea",
-						locationCode: "ea",
-						packageState:  "ea",
-						outputNumber: 0,
-						storageStatus: 0,
-						isShowScan: true,
-						isSelectScan: false,
-						produceSkuId:  "ea",
-						sewingExecutionId:  "ea",
-						sewingExecutionSkuId:  "ea",
-						warehouseLocationId: "ea"
-					}
+				
 					
 				],
 				startX: '',
@@ -218,6 +175,7 @@
 				show:false,
 				title:'提示',
 				content:`存在齐套不可用或非齐套不<br>可用数据，是否继续出库？`,
+				deletelist:[{name:'清空',color:'#FC361D'}],
 				showM:false,
 				contentM:`该任务单已完成拣货，请出<br>库！`,
 			}
@@ -630,7 +588,7 @@
 		.btnModal {
 			position: absolute;
 			left: 30rpx;
-			bottom: 20rpx;
+			bottom: 74rpx;
 			z-index: 90;
 			
 			.modalImage-out {

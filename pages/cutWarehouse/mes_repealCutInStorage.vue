@@ -50,9 +50,9 @@
 				 </uni-swipe-action-item>
 			</uni-swipe-action>
 		</view>
+		<u-action-sheet :actions="deletelist" :show="showModal" @select="handleEmpty" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showModal=false"></u-action-sheet>
 		<view class="bottomLocation">
 			<view class="btnLocation">
-				<!-- <view class="commonBtn moreBtn" id="moreBtn" @tap="handleMore">更多</view> -->
 				<view class="moreBtn">
 					<u--text style="padding-right: 10rpx;"  size="32" text="更多" :color="'#333333'" lineHeight="104" @tap="handleMore"></u--text>
 					<view class="iconfont icon-gengduo icon_style"></view>
@@ -72,16 +72,12 @@
 				<view class="commonBtn noInStorageBtn" v-else>撤销入库</view>
 			</view>
 		</view> -->
-		<!-- <view class="btnModal" v-show="showModal">
-			<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
-			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
-		</view> -->
-		<u-popup :show="showModal" @close="showModal = false" :overlayOpacity="0">
+		<!-- <u-popup :show="showModal" @close="showModal = false" :overlayOpacity="0">
 			<view class="btnModal">
 				<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
 				<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
 			</view>
-		</u-popup>
+		</u-popup> -->
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
 			<view style="margin: 0 20rpx 0 90rpx;">{{ showSuccessMessage }}</view>
@@ -176,26 +172,12 @@
 				storageValue: '',
 				wareHouseLocation: '',
 				typeMode: '2',
-				inStorageArr: [
-					{
-						id: "1",
-						productId: "1",
-						produceId:"1",
-						subpackageId: "1",
-						proNum: "1",
-						colorCode:  "1",
-						colorName:  "1",
-						sizeCode: "1",
-						sizeName:  "1",
-						packageNum:  "1",
-						inputNumber:  "1",
-						arrowFlag: false
-					}
-				],
+				inStorageArr: [],
 				startX: '',
 				selectIndex: 0,
 				selectArr: [],
 				username: '',
+				deletelist:[{name:'清空',color:'#FC361D'}],
 				date: '',
 				options1: [{
 				     text: '删除',

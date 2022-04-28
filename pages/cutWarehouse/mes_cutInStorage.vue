@@ -42,7 +42,7 @@
 				 </uni-swipe-action-item>
 			 </uni-swipe-action>
 		</view>
-
+		<u-action-sheet :actions="deletelist" :show="showModal" @select="handleEmpty" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showModal=false"></u-action-sheet>
 		<view class="bottomLocation">
 			<view class="btnLocation">
 				<!-- <view class="commonBtn moreBtn" >
@@ -59,12 +59,12 @@
 				<!-- <view class="commonBtn noInStorageBtn" v-else>入库</view> -->
 			</view>
 		</view>
-		<u-popup :show="showModal" @close="showModal = false" :overlayOpacity="0">
+		<!-- <u-popup :show="showModal" @close="showModal = false" :overlayOpacity="0">
 			<view class="btnModal-cut">
 				<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
 				<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
 			</view>
-		</u-popup>
+		</u-popup> -->
 		<!-- <view class="btnModal" v-if="showModal">
 			<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
 			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
@@ -133,6 +133,7 @@
 				typeMode: '1',
 				inStorageArr: [],
 				startX: '',
+				deletelist:[{name:'清空',color:'#FC361D'}],
 				options1: [{
 				     text: '删除',
 					 style: {
