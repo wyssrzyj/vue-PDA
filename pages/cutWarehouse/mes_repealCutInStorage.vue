@@ -203,20 +203,6 @@
 				wareHouseLocation: '',
 				typeMode: '2',
 				inStorageArr: [
-					{
-						id: "q",
-						productId: "1",
-						produceId: "1",
-						subpackageId: "1",
-						proNum: "1",
-						colorCode: "1",
-						colorName: "1",
-						sizeCode: "1",
-						sizeName: "1",
-						packageNum: "1",
-						inputNumber: "1",
-						arrowFlag: false
-					}
 				],
 				startX: '',
 				selectIndex: 0,
