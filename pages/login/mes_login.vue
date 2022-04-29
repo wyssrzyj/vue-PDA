@@ -30,6 +30,7 @@
 import { toasting } from '../../utils/index.js'
 import Api from '../../service/api'
 import selectApi from './select-api.vue'
+import {Store} from 'vuex'; 
 
 export default {
 	components:{
@@ -70,6 +71,15 @@ export default {
 							uni.setStorageSync('token', res.data.token)
 							uni.navigateTo({
 								url: '/pages/cutWarehouse/mes_cutWarehouse'
+							})
+							Api.pdaNav({}).then(res => {
+								// console.log(res,'---------res')
+							})
+							Api.getPermissions().then(res => {
+								// $store.commit('set_is_b_link', true)
+								this.$store.commit('setPermissions', res.data)
+								console.log(this.$store)
+								console.log(res,'---------res')
 							})
 							// uni.switchTab({
 							// 	url:'/pages/cutWarehouse/cutWarehouse'

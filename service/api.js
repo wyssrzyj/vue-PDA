@@ -19,7 +19,15 @@ export const changeApi=(api)=>{
 const Api = {
 	// 登录
 	login(reqData) {
-	  return requestApi(`${API_ADDRESS}/login`, 'POST', reqData)
+	  return requestApi(`${API_ADDRESS}/mes/pdalogin/login`, 'POST', reqData)
+	},
+	// 导航窗格接口
+	pdaNav(reqData) {
+	  return requestApi(`${API_ADDRESS}/mes/pdalogin/nav`, 'GET', reqData)
+	},
+	// 权限标识
+	getPermissions(reqData) {
+	  return requestApi(`${API_ADDRESS}/mes/pdalogin/permissions`, 'GET', reqData)
 	},
 	// 扫描库位
 	getLocation(reqData) {

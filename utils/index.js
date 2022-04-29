@@ -103,6 +103,11 @@ export const findKey=(obj, value, compare = (a, b) => a === b)=> {
   return Object.keys(obj).find(k => compare(obj[k], value))
 }
 
+export const checkPermission = (permission,key) =>{
+	console.log(key,permission.includes(key))
+	return permission.includes(key)
+}
+
 
 /**
  * 节流函数 `created() {this.dataFormSubmitHandle = useDebounce(this.dataFormSubmitHandle);}`
@@ -131,3 +136,4 @@ export const useDebounce=(func, wait=1000)=> {
 　　　　return result;
 　　 }
 }
+

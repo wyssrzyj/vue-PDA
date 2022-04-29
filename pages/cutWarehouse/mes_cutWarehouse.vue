@@ -5,9 +5,11 @@
 				本厂出入
 			</view>
 			<view class="factoryAccess">
-				<view v-for="(item, index) in cutWarehouseList" :key="index" @tap="toList(item)" class="factoryAccessItem">
-					<image :src="item.src" class="image"></image>
-					<text class="boxItemTitle">{{ item.title }}</text>
+				<view v-for="(item, index) in cutWarehouseList" :key="index" @tap="toList(item)" >
+					<view class="factoryAccessItem" v-if="checkPermission($store.state.permissions,item.permissions)">
+						<image :src="item.src" class="image"></image>
+						<text class="boxItemTitle">{{ item.title }}</text>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -16,9 +18,11 @@
 				外发加工出入
 			</view>
 			<view class="factoryAccess outboundProcessing">
-			<view v-for="(item, index) in outwardProcessingList" :key="index" class="factoryAccessItem " @tap="toList(item)">
-				<image :src="item.src" class="image"></image>
-				<text class="boxItemTitle">{{ item.title }}</text>
+			<view v-for="(item, index) in outwardProcessingList" :key="index"  @tap="toList(item)">
+				<view class="factoryAccessItem " v-if="checkPermission($store.state.permissions,item.permissions)">
+					<image :src="item.src" class="image"></image>
+					<text class="boxItemTitle">{{ item.title }}</text>
+				</view>
 			</view>
 			</view>
 		</view>
@@ -27,20 +31,24 @@
 				产量报工
 			</view>
 			<view class="factoryAccess workReport">
-			<view v-for="(item, index) in workReportList" :key="index" class="factoryAccessItem " @tap="toList(item)">
-				<image :src="item.src" class="image"></image>
-				<text class="boxItemTitle">{{ item.title }}</text>
+			<view v-for="(item, index) in workReportList" :key="index"  @tap="toList(item)">
+				<view class="factoryAccessItem " v-if="checkPermission($store.state.permissions,item.permissions)">
+					<image :src="item.src" class="image"></image>
+					<text class="boxItemTitle">{{ item.title }}</text>
+				</view>
 			</view>
 			</view>
 		</view>
-		<view class="tabBoxItem">
+		<view class="tabBoxItem" >
 			<view class="text">
 				铺布数据采集
 			</view>
 			<view class="factoryAccess blanket">
-				<view v-for="(item, index) in blanketDataList" :key="index" @tap="toList(item)" class="factoryAccessItem">
-					<image :src="item.src" class="image"></image>
-					<text class="titleItem">{{ item.title }}</text>
+				<view v-for="(item, index) in blanketDataList" :key="index" @tap="toList(item)" >
+					<view class="factoryAccessItem" v-if="checkPermission($store.state.permissions,item.permissions)">
+						<image :src="item.src" class="image"></image>
+						<text class="titleItem">{{ item.title }}</text>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -48,7 +56,8 @@
 </template>
 
 <script>
-import { cutWarehouseList, outwardProcessingList,blanketDataList,workReportList } from '../../utils/common.js';
+import { cutWarehouseList, outwardProcessingList,blanketDataList,workReportList,ch } from '../../utils/common.js';
+import { checkPermission } from '../../utils/index.js'
 
 export default{
 	// name: 'cutWarehouse',
@@ -57,7 +66,8 @@ export default{
 			cutWarehouseList,
 			outwardProcessingList,
 			blanketDataList,
-			workReportList
+			workReportList,
+			checkPermission
 		}
 	},
 	methods:{
