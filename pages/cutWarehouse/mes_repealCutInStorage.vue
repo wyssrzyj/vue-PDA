@@ -7,36 +7,31 @@
 			<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
 			<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx"  confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled/> -->
 		</view>
-		<view class="storageLocation" v-show="storageValue">
-			<text class="storageTitle">当前库位：<text style="color: #666666; font-size: 36rpx;">{{storageValue? storageValue: '请扫描库位码'}}</text></text>
-			<!-- <text class="storageTitle">当前库位：</text> -->
-			<!-- <input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请扫描库位码" disabled/> -->
+		<view class="storageLocation">
+			<text class="storageTitle">当前库位：<text style="color: #666666; font-size: 36rpx;">{{storageValue}}</text></text>
 		</view>
 		<view class="pannelContent">
 			<uni-swipe-action>
 				 <uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
 					<view :class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
 						class="swipe-action u-border-top u-border-bottom">
-						
-						
-						
 						<view :class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
 							class="swipe-action u-border-top u-border-bottom">
 							<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
 							<view class="item_content">
 								<view class="storageCode">{{ item.proNum }}</view>
 								<view class="colorCode_item">
-									<text class="label_style">颜色尺码：</text>
-									<text class="value_style" decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeName }}</text>
+									<text :class="[index == 0 ? 'first-item' :'label_style']">颜色尺码：</text>
+									<text :class="[index == 0 ? 'first-item-value' :'value_style']" decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeName }}</text>
 								</view>
 								<view class="storageContent">
 									<view>
-										<text class="label_style">扎号：</text>
-										<text class="value_style">{{ item.packageNum }}</text>
+										<text :class="[index == 0 ? 'first-item' :'label_style']">扎号：</text>
+										<text :class="[index == 0 ? 'first-item-value' :'value_style']">{{ item.packageNum }}</text>
 									</view>
 									<view class="storageNum">
-										<text class="label_style">数量：</text>
-										<text class="value_style">{{ item.inputNumber }}</text>
+										<text :class="[index == 0 ? 'first-item' :'label_style']">数量：</text>
+										<text :class="[index == 0 ? 'first-item-value' :'value_style']">{{ item.inputNumber }}</text>
 									</view>
 								</view>
 							</view>
@@ -90,7 +85,35 @@
 			<view class="reasonDialog">
 				<view class="reasonTitle">原因记录</view>
 				<view class="reasonContent">
-					<view class="reason_content" style="display: flex;justify-content: flex-start;">
+					<view class="storage">
+						<view class="storage-item">
+							<text class="storage-item-left"><text class="requier">*</text>撤销入库原因</text>
+							<view class="storage-item-right" @click="show = true">
+								<text class="info">{{selectArr[selectIndex] ? selectArr[selectIndex] : '请选择' }}</text>
+								<text class="iconfont icon-youjiantou"></text>
+							</view>
+						</view>
+						
+						<view class="storage-item">
+							<text class="storage-item-left">操作人</text>
+							<view class="storage-item-right" >
+								<text class="info">{{ username }}</text>
+							</view>
+						</view>
+						<view class="storage-item">
+							<text class="storage-item-left">操作时间</text>
+							<view class="storage-item-right">
+								<text class="info">{{ date }}</text>
+							</view>
+						</view>
+					</view>
+					
+				</view>
+				
+				<!-- <view class="reasonTitle">原因记录</view>
+				<view class="reasonContent"> -->
+					<!-- <view class="reason_content" style="display: flex;justify-content: flex-start;">
+						
 						<view class="reasonText">
 							<text style="color: red;">*</text><text>撤销入库原因:</text>
 						</view>
@@ -111,7 +134,7 @@
 					<view class="reason_content">
 						<view>操作时间：{{ date }}</view>
 					</view>
-				</view>
+				</view> -->
 				<view class="btnLocation">
 					<view class="cancelBtn" @tap="handleCancel">取消</view>
 					<view class="confirmBtn" @tap="handleConfirm">确定</view>
@@ -119,6 +142,12 @@
 			</view>
 		</view>
 		<scan-code></scan-code>
+		<!-- <picker :show="show" @change="bindPickerChange" :value="selectIndex" :range="selectArr" range-key="selectIndex">
+			<view class="uni-input">
+				<text>{{selectArr[selectIndex]}}</text>
+			</view>
+		</picker> -->
+		<u-picker :show="show" :columns="selectArr" @confirm="handleConfirm" @cancel="handleCancelPick" @change="bindPickerChange" ></u-picker>
 	</view>
 </template>
 
@@ -163,6 +192,7 @@
 		},
 		data(){
 			return {
+				show: false,
 				showModal: false,
 				showSuccessPop: false,
 				showErrorPop: false,
@@ -172,7 +202,22 @@
 				storageValue: '',
 				wareHouseLocation: '',
 				typeMode: '2',
-				inStorageArr: [],
+				inStorageArr: [
+					{
+						id: "q",
+						productId: "1",
+						produceId: "1",
+						subpackageId: "1",
+						proNum: "1",
+						colorCode: "1",
+						colorName: "1",
+						sizeCode: "1",
+						sizeName: "1",
+						packageNum: "1",
+						inputNumber: "1",
+						arrowFlag: false
+					}
+				],
 				startX: '',
 				selectIndex: 0,
 				selectArr: [],
@@ -321,6 +366,9 @@
 				this.showModal = false
 				this.storageValue = ''
 			},
+			handleCancelPick(){		
+				this.show=false
+			},
 
 			bindPickerChange(e){   //下拉框选择
 				this.selectIndex = e.detail.value
@@ -379,6 +427,7 @@
 					this.selectArr = res.data.dictList.map(item => {
 						return item.dictLabel
 					})
+					console.log(this.selectArr,'-------this.selectArr')
 					// 操作人
 					this.username = res.data.username
 					// 操作时间
@@ -399,6 +448,9 @@
 	.mainContent {
 		position: relative;
 		background-color: #F3F3F3;
+		.u-border-bottom {
+			border: none !important;
+		}
 		.location {
 			// position: relative;
 			// margin: 20rpx;
@@ -413,9 +465,9 @@
 				background-color: #E4F4FF;
 				width: 100%;
 				font-family: PingFang-SC-Bold;
-				font-size: 18px;
+				font-size: 36rpx;
 				color: #0C99F2;
-				padding: 13px 14px;
+				padding: 26rpx 28rpx;
 				font-weight: 700;
 			}
 			.scanInput {
@@ -456,19 +508,22 @@
 			overflow: auto;
 			.storageItem {
 				margin: 20rpx 0;
-				width: 375px;
+				width: 750rpx;
+				height: 208rpx;
 				overflow: hidden;
 				.selectLine {
-					background-color: #84D3F9 !important;
-					border-color: #84D3F9 !important;
+					background-color: #E4F4FF !important;
+					color: #0C99F2;
 				}
 				.touch-list{
-					width: 375px;
+					width: 750rpx;
 					padding: 30rpx 26rpx;
+					height: 208rpx;
 					overflow: hidden;
 				}
 				.list-touch{
 					width: 100%;
+					height: 208rpx;
 					z-index: 5;
 					font-size: 32rpx;
 					transition: left 0.2s ease-in-out;
@@ -488,7 +543,16 @@
 							color:  #333333;
 							font-weight: 700;
 						}
+						.first-item {
+							font-weight: 700;
+							color: #0C99F2;
+						}
+						.first-item-value {
+							font-weight: 400;
+							color: #0C99F2;
+						}
 						.value_style {
+							font-weight: 400;
 							color:  #666666;
 						}
 						.storageCode {
@@ -573,6 +637,7 @@
 				}
 				.inStorageBtn {
 					width: 200rpx;
+					height: 80rpx;
 					margin: 0;
 				}
 				.custom-style {
@@ -583,20 +648,7 @@
 			}
 		}
 		
-		.btnModal {
-			position: absolute;
-			left: 30rpx;
-			bottom: 37px;
-			z-index: 90;
-			
-			.modalImage {
-				width: 300rpx;
-				height: 166rpx;
-				background-color: url('../../static/cutWarehouse/chuku.png')
-				// background-color: rgba();
-				// color: red;
-			}
-		}
+		
 		// .bottomLocation {
 		// 	width: 100%;
 		// 	background-color: #fafafa;
@@ -629,16 +681,6 @@
 		// 			background-color: #cccccc;
 		// 			cursor: not-allowed;
 		// 		}
-		// 	}
-		// }
-		// .btnModal {
-		// 	position: absolute;
-		// 	left: 30rpx;
-		// 	bottom: 20rpx;
-		// 	z-index: 10;
-		// 	.modalImage {
-		// 		width: 300rpx;
-		// 		height: 166rpx;
 		// 	}
 		// }
 		.commonBtn {

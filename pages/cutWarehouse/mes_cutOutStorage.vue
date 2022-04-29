@@ -5,18 +5,16 @@
 			<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search"
 				:placeholder="sewingTaskRecord? '请扫描PCS码': '请扫描缝制任务单号码'"  disabled /> -->
 		</view>
-		<view class="storageLocation" v-show="sewingTaskRecord">
-			<text class="storageTitle">缝制任务单号：<text style="color: #666666; font-size: 36rpx;">{{sewingTaskRecord? sewingTaskRecord: '请扫描缝制任务单号码'}}</text></text>
-			<!-- <text class="storageTitle">缝制任务单号：</text>
-			<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="sewingTaskRecord"
-				confirm-type="search" placeholder="请扫描缝制任务单号码" disabled /> -->
+		<view class="storageLocation">
+			<text class="storageTitle">缝制任务单号：<text style="color: #666666; font-size: 36rpx;">{{sewingTaskRecord}}</text></text>
 		</view>
 		<view class="radioLocation">
 			<checkbox-group @change="checkboxChange">
 				<view class="checkboxStyle">
 					<checkbox value="" :checked="!isSelectCheckbox" style="transform: scale(0.8)" />
+					<view class="checkboxStyle">展示全部</view>
 				</view>
-				<view class="checkboxStyle">展示全部</view>
+				
 			</checkbox-group>
 		</view>
 		<view class="pannelContent">
@@ -27,36 +25,36 @@
 						<view :class="[item.isSelectScan ? 'selectLine': '' , 'touch-list', 'list-touch']"
 							class="swipe-action u-border-top u-border-bottom">
 								<view class="serialNumber">{{ index + 1 }}.</view>
-								<view>
+								<view style="width: 100%;">
 									<view class="storageTop">
 										<view class="storageCode">{{ item.proNum }}</view>
 										<view v-if="item.packageState=='齐套可用'" class="storageUse">齐套可用</view>
 										<view v-else-if="item.packageState=='齐套不可用'" class="storageUnUse">齐套不可用</view>
 										<view v-else class="NoStorageUnUse">非齐套不可用</view>
 									</view>
-								
-								
-									<view>
-										<text>颜色尺码：</text>
-										<text decode="true"
-											space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
-									</view>
-									<view class="storageContent">
-										<view>
-											<text>扎号：</text>
-											<text>{{ item.packageNum }}</text>
+									<view style="width: 70%;">
+										<view style="padding-bottom: 6rpx;">
+											<text :class="[item.isSelectScan ? 'first-item' :'label_style']">颜色尺码：</text>
+											<text :class="[item.isSelectScan ? 'first-item-value' :'value_style']" decode="true"
+												space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
 										</view>
-										<view class="storageNum">
-											<text>数量：</text>
-											<text>{{ item.inputNumber }}</text>
-										</view>
-										<view class="storageArea">
-											<text>库位：</text>
-											<text>{{ item.locationCode }}</text>
+										<view class="storageContent">
+											<view>
+												<text :class="[item.isSelectScan ? 'first-item' :'label_style']">扎号：</text>
+												<text :class="[item.isSelectScan ? 'first-item-value' :'value_style']">{{ item.packageNum }}</text>
+											</view>
+											<view class="storageNum">
+												<text :class="[item.isSelectScan ? 'first-item' :'label_style']">数量：</text>
+												<text :class="[item.isSelectScan ? 'first-item-value' :'value_style']">{{ item.inputNumber }}</text>
+											</view>
+											<view class="storageArea">
+												<text :class="[item.isSelectScan ? 'first-item' :'label_style']">库位：</text>
+												<text :class="[item.isSelectScan ? 'first-item-value' :'value_style']">{{ item.locationCode }}</text>
+											</view>
 										</view>
 									</view>
 								</view>
-						</view>
+						</view>	
 					</uni-swipe-action-item>
 				</uni-swipe-action>
 			</scroll-view>
@@ -158,7 +156,29 @@
 				showErrorMessage: '',
 				sewingTaskRecord: '',
 				outStorageArr: [
-				
+					{
+					id: "1",
+					productId: "1",
+					produceId: "1",
+					subpackageId:"1",
+					proNum: "1",
+					colorCode: "1",
+					colorName: "1",
+					sizeCode: "1",
+					sizeName: "1",
+					packageNum: "1",
+					inputNumber: "1",
+					locationCode: "1",
+					packageState: "1",
+					outputNumber: 0,
+					storageStatus: 0,
+					isShowScan: true,
+					isSelectScan: false,
+					produceSkuId: "1",
+					sewingExecutionId: "1",
+					sewingExecutionSkuId: "1",
+					warehouseLocationId: "1",
+					}
 				],
 				alreadyOutStorageArr: [
 				
@@ -384,6 +404,9 @@
 		background-color: #F3F3F3;
 		height: 100%;
 		width: 100%;
+		.u-border-bottom {
+			border: none !important;
+		}
 		.location {
 			// position: relative;
 			// margin: 20rpx;
@@ -458,7 +481,10 @@
 			margin-top: 30rpx;
 
 			.checkboxStyle {
-				display: inline-block;
+				padding-left: 10rpx;
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
 			}
 		}
 		.pannelContent {
@@ -466,12 +492,14 @@
 			overflow-y: auto;
 			.storageItem {
 				display: flex;
-				width: 375px;
+				width: 750rpx;
+				height: 208rpx;
 				margin: 20rpx 0;
 				overflow: hidden;
 				.selectLine {
-					width: 375px;
-					background-color: #84D3F9 !important;
+					width: 750rpx;
+					background-color: #E4F4FF !important;
+					color: #0C99F2;
 				}
 				.touch-list{
 					width: 750rpx;
@@ -482,6 +510,7 @@
 
 				.list-touch{
 					width: 750rpx;
+					height: 100%;
 					transition: left 0.2s ease-in-out;
 					white-space: nowrap;
 					text-overflow: ellipsis;
@@ -493,21 +522,37 @@
 						padding-right: 40rpx;
 						font-weight: bold;
 					}
+					.label_style {
+						color:  #333333;
+						font-weight: 700;
+					}
+					.first-item {
+						font-weight: 700;
+						color: #0C99F2;
+					}
+					.first-item-value {
+						font-weight: 400;
+						color: #0C99F2;
+					}
+					.value_style {
+						font-weight: 400;
+						color:  #666666;
+					}
 					.storageTop{
 						display: flex;
+						width: 100%;
+						padding-bottom: 8rpx;
 						justify-content: space-between;
 						font-weight: bold;
-						// .storageCode {
-						// 	font-weight: bold;
-						// }
+						
 						.storageUse{
-							color: #0BC46F;
+							color: #0BC46F !important;
 						}
 						.storageUnUse{
-							color: #FFA600;
+							color: #FFA600 !important;
 						}
 						.NoStorageUnUse{
-							color: #F4333F;
+							color: #F4333F !important;
 						}
 					}
 					.storageContent {
@@ -547,7 +592,6 @@
 			padding: 0 30rpx;
 			z-index: 99;
 			.scanNum {
-			
 				line-height: 104rpx;
 				text-align: center;
 				color: #585858;
@@ -575,6 +619,7 @@
 				}
 				.inStorageBtn {
 					width: 200rpx;
+					height: 80rpx;
 					margin: 0;
 				}
 				.custom-style {

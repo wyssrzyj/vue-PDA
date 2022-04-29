@@ -4,33 +4,30 @@
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
 			<view class="tip_text"><text>{{storageValue ? '请扫描PCS码!': '请扫描库位码'}}</text></view>
-			<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
-			<!-- <input class="uni-input scanInput" placeholder-style="font-size: 32rpx" confirm-type="search"   :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled/> -->
 		</view>
-		<view class="storageLocation" v-if="storageValue">
-			<text class="storageTitle">当前库位：<text style="color: #666666; font-size: 36rpx;">{{storageValue? storageValue: '请扫描库位码'}}</text></text>
-			<!-- <input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请扫描库位码" disabled/> -->
+		<view class="storageLocation">
+			<text class="storageTitle">当前库位：<text style="color: #666666; font-size: 36rpx;">{{storageValue}}</text></text>
 		</view>
-		<view class="pannelContent">
+		<view class="pannelContent" >
 			 <uni-swipe-action >
-				 <uni-swipe-action-item style="width: 375px;" :right-options="options1" @click="deleteMember($event,item)"  @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
-				 	<view :class="[index == 0 ? 'selectLine': '' , 'touch-list', 'list-touch']"
+				 <uni-swipe-action-item style="width: 750rpx;border: none;" :right-options="options1" @click="deleteMember($event,item)"  @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
+				 	<view :class="[index == 0 ? 'selectLine-in': '' , 'touch-list', 'list-touch']"
 				 		class="swipe-action u-border-top u-border-bottom">
 				 		<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
 				 		<view class="item_content">
 				 			<view class="storageCode">{{ item.proNum }}</view>
 				 			<view class="colorCode_item">
-				 				<text class="label_style">颜色尺码：</text>
-				 				<text class="value_style" decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeName }}</text>
+				 				<text :class="[index == 0 ? 'first-item' :'label_style']">颜色尺码：</text>
+				 				<text :class="[index == 0 ? '.first-item-value' :'value_style']" decode="true" space="true">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeName }}</text>
 				 			</view>
 				 			<view class="storageContent">
 				 				<view>
-				 					<text class="label_style">扎号：</text>
-				 					<text class="value_style">{{ item.packageNum }}</text>
+				 					<text :class="[index == 0 ? 'first-item' :'label_style']">扎号：</text>
+				 					<text :class="[index == 0 ? '.first-item-value' :'value_style']">{{ item.packageNum }}</text>
 				 				</view>
 				 				<view class="storageNum">
-				 					<text class="label_style">数量：</text>
-				 					<text class="value_style">{{ item.inputNumber }}</text>
+				 					<text :class="[index == 0 ? 'first-item' :'label_style']">数量：</text>
+				 					<text :class="[index == 0 ? '.first-item-value' :'value_style']">{{ item.inputNumber }}</text>
 				 				</view>
 				 			</view>
 				 		</view>
@@ -45,18 +42,12 @@
 		<u-action-sheet :actions="deletelist" :show="showModal" @select="handleEmpty" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showModal=false"></u-action-sheet>
 		<view class="bottomLocation">
 			<view class="btnLocation">
-				<!-- <view class="commonBtn moreBtn" >
-					<u--text id="more_Btn"  type="info"  @click="handleMore"  text="信息"></u--text>
-				</view> -->
 				<view class="moreBtn">
 					<u--text style="padding-right: 10rpx;"  size="32" text="更多" :color="'#333333'" lineHeight="104" @tap="handleMore"></u--text>
 					<view class="iconfont icon-gengduo icon_style"></view>
 				</view>
-				<!-- <view class="commonBtn moreBtn" id="moreBtn" @tap="handleMore">更多</view> -->
 				<view class="scanNum"><text style="padding-right: 20px;">已扫描行数：{{ inStorageArr.length }} </text>
 				<u-button class="inStorageBtn" type="primary" :class="!inStorageArr.length > 0 ?'custom-style' : ''" @tap="handleInStorage" :disabled="!inStorageArr.length > 0" text="入库"></u-button></view>
-				<!-- <view class="commonBtn inStorageBtn" @tap="handleInStorage" v-if="inStorageArr.length > 0">入库</view> -->
-				<!-- <view class="commonBtn noInStorageBtn" v-else>入库</view> -->
 			</view>
 		</view>
 		<!-- <u-popup :show="showModal" @close="showModal = false" :overlayOpacity="0">
@@ -131,7 +122,8 @@
 				storageValue: '',
 				wareHouseLocation: '',
 				typeMode: '1',
-				inStorageArr: [],
+				inStorageArr: [
+				],
 				startX: '',
 				deletelist:[{name:'清空',color:'#FC361D'}],
 				options1: [{
@@ -333,6 +325,9 @@
 	background-color: #fff;
 	border: 1px solid #f5f5f5;
 }
+.u-border-bottom {
+	border: none !important;
+}
 	.u-page {
 	        padding: 0;
 	    }
@@ -359,14 +354,6 @@
 		width: 100%;
 		.location {
 			position: relative;
-			// margin: 20rpx;
-			.scanInput {
-				height: 80rpx;
-				border: 1px solid #767676;
-				background-color: #FFF;
-				padding: 0 10rpx;
-				text-align: center;
-			}
 			.tip_text {
 				background-color: #E4F4FF;
 				width: 100%;
@@ -389,31 +376,26 @@
 				color: #333333;
 				font-weight: bold;
 			}
-			.storageInput {
-				width: 76%;
-				height: 80rpx;
-				display: inline-block;
-				border: 1rpx solid #212121;
-				background-color: #F2F2F2;
-				padding: 0 10rpx;
-			}
 		}
 		.pannelContent {
 			height: calc(100vh - 350rpx);
 			overflow: auto;
-			.selectLine {
-				width: 375px;
-				background-color: #fffFFF;
+			.selectLine-in {
+				width: 750rpx;
+				background-color: #E4F4FF !important;
+				color: #0C99F2;
+				// background-color: #fffFFF;
 				 
 			}
 			.storageItem {
 				margin: 20rpx 0;
-				width: 375px;
+				width: 750rpx;
 				overflow: hidden;
 				.touch-list{
-					width: 375px;
+					width: 750rpx;
 					padding: 30rpx 26rpx;
 					overflow: hidden;
+					background-color: #ffffff;
 				}
 				.list-touch{
 					// position: relative;
@@ -439,7 +421,16 @@
 							color:  #333333;
 							font-weight: 700;
 						}
+						.first-item {
+							font-weight: 700;
+							color: #0C99F2;
+						}
+						.first-item-value {
+							font-weight: 400;
+							color: #0C99F2;
+						}
 						.value_style {
+							font-weight: 400;
 							color:  #666666;
 						}
 						.storageCode {
@@ -496,7 +487,6 @@
 			padding: 0 30rpx;
 			
 			.scanNum {
-				// height: 75rpx;
 				line-height: 104rpx;
 				text-align: center;
 				color: #585858;
@@ -524,10 +514,8 @@
 				}
 				.inStorageBtn {
 					width: 200rpx;
+					height: 80rpx;
 					margin: 0;
-					// line-height: 52px;
-					// background-color: #4a70f5;
-					// cursor: pointer;
 				}
 				.custom-style {
 					color: #999999;
