@@ -1,5 +1,6 @@
 <template>
 	<view class="mainContent" @tap="handleClick">
+		<!-- <button class="button" type="primary" @click="toggle('center')"><text class="button-text">居中</text></button> -->
 			<view class="scanInput">请扫描PCS码!</view>
 			<view class="storageLocationItem">
 				<view class="storageLocation">
@@ -73,33 +74,40 @@
 			<view class="errorImage"></view>
 			<view style="margin: 0 20rpx 0 80rpx;">{{ showErrorMessage }}</view>
 		</view>
-		<view class="productNumModel" v-if="showProductNumModel" id="productNumModel">
-			<view class="delCx">
-				查询
-			</view>
-			<view class="del" @click="closeProduct">
-				<view class="del-1"></view>
-				<view class="del-2"></view>
-			</view>
-			<view class="productNumSelect">
-				<input placeholder-style="font-size: 28rpx" v-model="productForm.proNum" confirm-type="search" placeholder="产品款号" class="productNumInput"/>
-				<input placeholder-style="font-size: 28rpx" v-model="productForm.clientNum" confirm-type="search" placeholder="客户款号" class="productNumInput"/>
-				<view class="queryBtn" @tap="queryProduct">查询</view>
-			</view>
-			<view class="productTable">
-				<view class="miniHeight-table">
-					<view class="tableColumn firstLine" >
-						<view class="td firstTd">产品款号</view>
-						<view class="td">客户款号</view>
-					</view>
-					<view class="tableColumn" v-for="(item,index) in productData" @tap="getProductNum(item)" :key="index" :class="item.active?'active':''">
-						<view class="td firstTd" :class="item.active?'active':''">{{item.proNum}}</view>
-						<view class="td" :class="item.active?'active':''">{{item.clientNum}}</view>
+		<!-- 普通弹窗 -->
+		<uni-popup ref="popup">
+			<view class="productNumModel"  id="productNumModel" >
+				<view class="delCx">
+					查询
+				</view>
+				<view class="del" @click="closeProduct">
+					<view class="del-1"></view>
+					<view class="del-2"></view>
+				</view>
+				<view class="productNumSelect">
+					<input placeholder-style="font-size: 28rpx" v-model="productForm.proNum" confirm-type="search" placeholder="产品款号" class="productNumInput"/>
+					<input placeholder-style="font-size: 28rpx" v-model="productForm.clientNum" confirm-type="search" placeholder="客户款号" class="productNumInput"/>
+					<view class="queryBtn" @tap="queryProduct">查询</view>
+				</view>
+				<view class="productTable">
+					<view class="miniHeight-table">
+						<view class="tableColumn firstLine" >
+							<view class="td firstTd">产品款号</view>
+							<view class="td">客户款号</view>
+						</view>
+						<view class="tableColumn" v-for="(item,index) in productData" @tap="getProductNum(item)" :key="index" :class="item.active?'active':''">
+							<view class="td firstTd" :class="item.active?'active':''">{{item.proNum}}</view>
+							<view class="td" :class="item.active?'active':''">{{item.clientNum}}</view>
+						</view>
 					</view>
 				</view>
 			</view>
-		</view>
-		<view class="productNumModel" v-if="showSupplierModel" id="supplierModel">
+		</uni-popup>
+		<uni-popup ref="popup1">
+		<view class="productNumModel"  id="supplierModel">
+			<view class="delCx">
+				查询
+			</view>
 			<view class="del" @tap="closeSupplier">
 				<view class="del-1"></view>
 				<view class="del-2"></view>
@@ -119,6 +127,7 @@
 				</view>
 			</view>
 		</view>
+		</uni-popup>
 		<scan-code></scan-code>
 	</view>
 </template>
@@ -172,8 +181,6 @@ export default{
 			outStorageArr: [],
 			alreadyOutStorageArr: [],
 			startX: '',
-			showProductNumModel:false,
-			showSupplierModel:false,
 			productData:[],
 			supplierData:[],
 			productForm:{
@@ -202,12 +209,13 @@ export default{
 				 }
 			}],
 			deletelist:[{name:'清空',color:'#FC361D'}],
-			showMore:false
+			showMore:false,
+			type:'center'
 		}
 	},
 	computed: mapState(['is_b_link']),
 	methods:{
-		 onClick(e,i){   //删除按钮
+		onClick(e,i){   //删除按钮
 			if(e.content.text==='删除'){
 				i.isSelectScan=false
 				this.alreadyOutStorageArr = this.alreadyOutStorageArr.filter(item =>item.id !== i.id)
@@ -223,16 +231,16 @@ export default{
 		},
 		//事件委托全局按钮
 		async handleClick(e){
-			 if(e.target.id==="proBtn" && !this.showProductNumModel){
+			 if(e.target.id==="proBtn"){
 				//产品查询
-				this.showProductNumModel=true
+				this.$refs.popup.open('center');
 					const res=await Api.productQuery()
 					this.productData=res.data
-			}else if(e.target.id==="supplierBtn" && !this.showSupplierModel){
+			}else if(e.target.id==="supplierBtn"){
 				//查询供应商
 				if(this.productNum!==""){
-					this.showSupplierModel=true
-					this.showProductNumModel=false
+					this.$refs.popup.close()
+					this.$refs.popup1.open('center')
 					const res=await Api.supplierQuery({proNum:this.productNum})
 					this.supplierData=res.data
 				}else{
@@ -255,7 +263,7 @@ export default{
 		},
 		//
 		closeProduct(){ //关闭产品选择
-			this.showProductNumModel=false
+			this.$refs.popup.close()
 		},
 		// 获取产品款号
 		getProductNum(item){
@@ -266,11 +274,11 @@ export default{
 			item.active=true
 			this.productNum=item.proNum
 			setTimeout(()=>{
-				this.showProductNumModel=false
+				this.$refs.popup.close()
 			},100)
 		},
 		closeSupplier(){    //关闭供应商弹窗
-			this.showSupplierModel=false
+			this.$refs.popup1.close()
 		},
 		//搜索供应商
 		async querySupplier(){
@@ -285,7 +293,7 @@ export default{
 			const res=await Api.pickingDet({proNum:this.productNum,outProcessSupplier:item.id})
 			this.outStorageArr=res.data.map((item)=>{return{...item,arrowFlag:false,isSelectScan:false,show:false}})
 			setTimeout(()=>{
-				this.showSupplierModel=false
+				this.$refs.popup1.close()
 			},100)
 		},
 		//扫描PCS码
@@ -326,7 +334,6 @@ export default{
 				proNum: this.productNum,
 				outProcessSupplier:""+this.supplierId
 			}).then(res => {
-				console.log(res)
 				if (res.code === 0) {
 					const find=this.outStorageArr.find((item)=>{
 						return item.packageCode==res.data.packageCode
@@ -1031,10 +1038,10 @@ export default{
 	//产品款号弹出框
 	.productNumModel{
 		width:600rpx;
-		position: absolute;
-		top: 107rpx;
-		left: 72rpx;
-		z-index: 99;
+		// position: absolute;
+		// top: 107rpx;
+		// left: 72rpx;
+		// z-index: 99;
 		padding-bottom: 66rpx;
 		border-radius: 16rpx;
 		background-color: #fff;
