@@ -13,32 +13,34 @@
 		</view>
 		<view class="pannelContent">
 			<uni-swipe-action>
-				<uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" @change="swipeChange($event, index)" :name="item.id"  v-for="(item, index) in inStorageArr" :key="item.id" class="AllStorage">
-					<view :class="index == 0 ? 'selectLine': ''" class="storageWrap">
-						<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
-						<view class="storageItem">
-							<view class="storageCode">{{ item.proNum }}</view>
-							<view class="storageColorCode">
-								<text class="label">颜色尺码：</text>
-								<text decode="true" space="true" class="value">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
+				<view class="AllStorage" v-for="(item, index) in inStorageArr" :key="item.id">
+					<uni-swipe-action-item :right-options="options1" @click="deleteMember($event,item)" @change="swipeChange($event, index)" :name="item.id"   >
+						<view :class="index == 0 ? 'selectLine': ''" class="storageWrap">
+							<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
+							<view class="storageItem">
+								<view class="storageCode">{{ item.proNum }}</view>
+								<view class="storageColorCode">
+									<text class="label">颜色尺码：</text>
+									<text decode="true" space="true" class="value">{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
+								</view>
+								<view class="storageContent">
+									<view>
+										<text class="label">扎号：</text>
+										<text class="value">{{ item.packageNum }}</text>
+									</view>
+									<view class="storageNum">
+										<text class="label">数量：</text>
+										<text class="value">{{ item.outputNumber }}</text>
+									</view>
+								</view>
 							</view>
-							<view class="storageContent">
-								<view>
-									<text class="label">扎号：</text>
-									<text class="value">{{ item.packageNum }}</text>
-								</view>
-								<view class="storageNum">
-									<text class="label">数量：</text>
-									<text class="value">{{ item.outputNumber }}</text>
-								</view>
+							<view class="storageArrow">
+								<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag"></image>
+								<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
 							</view>
 						</view>
-						<view class="storageArrow">
-							<image class="arrowImage" src="../../static/cutWarehouse/leftArrow.png" mode="aspectFit" v-if="!item.arrowFlag"></image>
-							<image class="arrowImage" src="../../static/cutWarehouse/rightArrow.png" mode="aspectFit" v-else></image>
-						</view>
-					</view>
-				 </uni-swipe-action-item>
+					 </uni-swipe-action-item>
+				</view>
 			</uni-swipe-action>
 		</view>
 		<u-action-sheet :actions="deletelist" :show="showMore" @select="handleEmpty" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showMore=false"></u-action-sheet>
@@ -332,15 +334,15 @@
 			height: calc(100vh - 308rpx);
 			overflow: auto;
 			background-color: ;
-			// .AllStorage{
-			// 	margin-top: 20rpx;
-			// }
+			.AllStorage{
+				margin-top: 20rpx;
+			}
 			.storageWrap{
 				display: flex;
 				height: 208rpx;
 				padding: 30rpx 0rpx;
 				overflow: hidden;
-				margin-top: 20rpx;
+				// margin-top: 20rpx;
 				background-color: #FFFFFF;
 				position: relative;
 			}

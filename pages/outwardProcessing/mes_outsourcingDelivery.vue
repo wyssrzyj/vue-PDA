@@ -22,8 +22,9 @@
 		</view>
 		<view class="pannelContent">
 			<uni-swipe-action>
+			<view v-for="(item, index) in outStorageArr" :key="item.id" class="AllStorage">
 			<uni-swipe-action-item :right-options="options" @click="onClick($event,item)" @change="swipeChange($event, index)"
-				:name="item.id" v-for="(item, index) in outStorageArr" :key="item.id" :disabled="!item.isSelectScan" class="AllStorage">
+				  :disabled="!item.isSelectScan" >
 				<view :class="item.isSelectScan ? 'selectLine': ''" class="storageWrap">
 					<text class="serialNumber">{{ index + 1 }}.</text>
 					<view class="storageItem">
@@ -55,6 +56,7 @@
 					</view>
 				</view>
 			</uni-swipe-action-item>
+			</view>
 			</uni-swipe-action>
 		</view>
 		<u-action-sheet :actions="deletelist" :show="showMore" @select="handleEmpty" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showMore=false"></u-action-sheet>
@@ -907,18 +909,18 @@ export default{
 		font-size: 30rpx;
 		line-height: 42rpx;
 	}
+	
 	//外发加工裁片样式
 	.pannelContent {
 		height: calc(100vh - 386rpx);
 		overflow: auto;
-			// .AllStorage{
-			// 	margin-top: 20rpx;
-			// }
+			.AllStorage{
+				margin-top: 20rpx;
+			}
 			.storageWrap{
 				display: flex;
 				height: 260rpx;
 				padding: 30rpx 0rpx;
-				margin-top: 20rpx;
 				overflow: hidden;
 				background-color: #FFFFFF;
 			}
@@ -965,8 +967,8 @@ export default{
 				}
 				.t-icon-a-bianzu4{
 					position: absolute;
-					top: -5rpx;
-					right: -48rpx;
+					top: 20rpx;
+					right: -50rpx;
 					width: 137rpx;
 					height: 70rpx;
 				}
