@@ -58,38 +58,38 @@
 			<view class="storage-item">
 				<text class="storage-item-left">铺布层数</text>
 				<view class="storage-item-right">
-					<input class="input" placeholder-style="font-size:14px;color:#999999" v-model="modelData.spreadClothNumberPlies" placeholder="请输入铺布层数" @input="onClothNumberPlies"></input>
+					<input class="input" placeholder-style="font-size:17px;color:#666666" v-model="modelData.spreadClothNumberPlies" placeholder="请输入铺布层数" @input="onClothNumberPlies"></input>
 				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left">段长</text>
 				<view class="storage-item-right">
-					<input class="input" placeholder-style="font-size:14px;color:#999999" v-model="modelData.fragmentExtent" placeholder="请输入段长" @input="onFragmentExtent"></input>
+					<input class="input" placeholder-style="font-size:17px;color:#666666" v-model="modelData.fragmentExtent" placeholder="请输入段长" @input="onFragmentExtent"></input>
 				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left">铺布日期</text>
 				<view class="storage-item-right" @tap="onSelectDate">
-					<input class="input" placeholder-style="font-size:14px;color:#999999" style="margin-right: 15rpx;" v-model="modelData.spreadClothDate" placeholder="请选择铺布日期"></input>
+					<input class="input" placeholder-style="font-size:17px;color:#666666" style="margin-right: 15rpx;" v-model="modelData.spreadClothDate" placeholder="请选择铺布日期"></input>
 					<text class="iconfont icon-youjiantou"></text>
 				</view>
 			</view> 
 			<view class="storage-item">
 				<text class="storage-item-left">铺布数量</text>
 				<view class="storage-item-right">
-					<input class="input" placeholder-style="font-size:14px;color:#999999" v-model="modelData.spreadClothQuantity" placeholder="请输入铺布数量" @input="onClothQuantity"></input>
+					<input class="input" placeholder-style="font-size:17px;color:#666666" v-model="modelData.spreadClothQuantity" placeholder="请输入铺布数量" @input="onClothQuantity"></input>
 				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left">剩余数量</text>
 				<view class="storage-item-right">
-					<input class="input" placeholder-style="font-size:14px;color:#999999" v-model="modelData.spreadClothLeftQuantity" placeholder="请输入剩余数量" @input="onClothLeftQuantity"></u-input>
+					<input class="input" placeholder-style="font-size:17px;color:#666666" v-model="modelData.spreadClothLeftQuantity" placeholder="请输入剩余数量" @input="onClothLeftQuantity"></u-input>
 				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left">缺料数量</text>
 				<view class="storage-item-right">
-					<input class="input" placeholder-style="font-size:14px;color:#999999" v-model="modelData.spreadClothLackQuantity" placeholder="请输入缺料数量"></u-input>
+					<input class="input" placeholder-style="font-size:17px;color:#666666" v-model="modelData.spreadClothLackQuantity" placeholder="请输入缺料数量"></u-input>
 				</view>
 			</view>
 		</view>
@@ -557,7 +557,7 @@ export default {
 .message{
 	padding: 0 30rpx 15rpx 30rpx;
 	.label{
-		font-size: 30rpx;
+		font-size: 32rpx;
 		line-height: 40rpx;
 		font-weight: 700;
 		margin-top: 12rpx;
@@ -662,7 +662,8 @@ export default {
 		  }
 		  .button{
 			  width: 60rpx;
-			  height: 40rpx;
+			  height: 50rpx;
+			  line-height: 50rpx;
 			  background-color: #ffdfe1;
 			  color: #f87179;
 		  }

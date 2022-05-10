@@ -59,7 +59,7 @@
 		display: flex;
 		justify-content: space-between;
 		margin: 0 30rpx;
-		font-size: 32rpx;
+		font-size: 34rpx;
 		line-height: 100rpx;
 		border-bottom: 1px solid #EAEAEA;
 	}
@@ -69,13 +69,14 @@
 			}
 .storage > .storage-item > .storage-item-right{
 			display: flex;
-			color: #999999;
+			color: #666666;
 			}
 .storage > .storage-item > .storage-item-right > .info{
 				margin-right: 15rpx;
 				}
 .storage > .storage-item > .storage-item-right > .input{
 				height: 100rpx;
+				font-size: 34rpx;
 				text-align: right;
 				color: #666666;
 				margin-right: 15rpx;
@@ -115,7 +116,7 @@
 	border-top: 1px solid #EAEAEA;
 	display: flex;
 	justify-content: space-between;
-	font-size: 32rpx;
+	font-size: 34rpx;
 	padding: 0 30rpx;
 	box-sizing: border-box;
 }

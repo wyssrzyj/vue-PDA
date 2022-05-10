@@ -419,14 +419,14 @@
 				background-color: #FFFFFF;
 				overflow: hidden;
 				.serialNumber{
-					font-size: 18px;
+					font-size: 36rpx;
 					font-weight: bold;
 					color: #333333;
 					line-height: 214rpx;
 					margin-right: 30rpx;
 				}
 				.storageInfo{
-					font-size: 32rpx;
+					font-size: 34rpx;
 					color: #333333;
 					.storageCode{
 						line-height: 80rpx;
