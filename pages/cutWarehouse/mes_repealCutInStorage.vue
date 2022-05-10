@@ -87,9 +87,9 @@
 				<view class="reasonContent">
 					<view class="storage">
 						<view class="storage-item">
-							<text class="storage-item-left"><text class="requier">*</text>撤销入库原因</text>
+							<text class="storage-item-left"><text style="color:red">*</text>撤销入库原因</text>
 							<view class="storage-item-right" @click="show = true">
-								<text class="info">{{selectArr[selectIndex] ? selectArr[selectIndex] : '请选择' }}</text>
+								<text class="info">{{reaplReason || '请选择' }}</text>
 								<text class="iconfont icon-youjiantou"></text>
 							</view>
 						</view>
@@ -100,7 +100,7 @@
 								<text class="info">{{ username }}</text>
 							</view>
 						</view>
-						<view class="storage-item">
+						<view class="storage-item lastItem">
 							<text class="storage-item-left">操作时间</text>
 							<view class="storage-item-right">
 								<text class="info">{{ date }}</text>
@@ -135,7 +135,7 @@
 						<view>操作时间：{{ date }}</view>
 					</view>
 				</view> -->
-				<view class="btnLocation">
+				<view class="btnBottomWrap">
 					<view class="cancelBtn" @tap="handleCancel">取消</view>
 					<view class="confirmBtn" @tap="handleConfirm">确定</view>
 				</view>
@@ -147,7 +147,7 @@
 				<text>{{selectArr[selectIndex]}}</text>
 			</view>
 		</picker> -->
-		<u-picker :show="show" :columns="selectArr" @confirm="handleConfirm" @cancel="handleCancelPick" @change="bindPickerChange" ></u-picker>
+		<u-picker :show="show" :columns="[selectArr]" @confirm="handlePickerConfirm" @cancel="handleCancelPick" itemHeight="90"></u-picker>
 	</view>
 </template>
 
@@ -205,7 +205,7 @@
 				inStorageArr: [
 				],
 				startX: '',
-				selectIndex: 0,
+				// selectIndex: 0,
 				selectArr: [],
 				username: '',
 				deletelist:[{name:'清空',color:'#FC361D'}],
@@ -215,7 +215,8 @@
 					 style: {
 					 	backgroundColor: '#cc3300',
 					 }
-				}]
+				}],
+				reaplReason:""
 			}
 		},
 		methods:{
@@ -352,14 +353,18 @@
 				this.showModal = false
 				this.storageValue = ''
 			},
-			handleCancelPick(){		
+			handleCancelPick(){
 				this.show=false
 			},
 
-			bindPickerChange(e){   //下拉框选择
-				this.selectIndex = e.detail.value
+			// bindPickerChange(e){   //下拉框选择
+			// 	this.selectIndex = e
+			// 	console.log(e)
+			// },
+			handlePickerConfirm(e){
+				this.reaplReason=e.value[0]
+				this.show=false
 			},
-
 			handleCancel(){
 				// 隐藏下拉弹框
 				this.showReasonMask = false
@@ -402,6 +407,7 @@
 						}, 2000)
 					}
 				})
+				this.show=false
 			}
 		},
 		mounted(){
@@ -431,6 +437,16 @@
 </script>
 
 <style lang="less" scoped>
+	/deep/.u-picker__view__column__item{
+		font-family: PingFangSC-Regular !important;
+		font-size: 15px !important;
+		color: #666666 !important;
+		text-align: center !important;
+		font-weight: normal !important;
+	}
+	/deep/.u-toolbar{
+		border-bottom: 1px solid #ccc;
+	}
 	.mainContent {
 		position: relative;
 		background-color: #F3F3F3;
@@ -438,15 +454,6 @@
 			border: none !important;
 		}
 		.location {
-			// position: relative;
-			// margin: 20rpx;
-			// .scanCodeBox {
-			// 	position: absolute;
-			// 	left: 2rpx;
-			// 	top: 2rpx;
-			// 	width: 60rpx;
-			// 	height: 60rpx;
-			// }
 			.tip_text {
 				background-color: #E4F4FF;
 				width: 100%;
@@ -634,41 +641,6 @@
 			}
 		}
 		
-		
-		// .bottomLocation {
-		// 	width: 100%;
-		// 	background-color: #fafafa;
-		// 	border-top: 1rpx solid #dcdcdc;
-		// 	position: fixed;
-		// 	left: 0;
-		// 	bottom: 0;
-		// 	padding: 15rpx 30rpx 30rpx;
-		// 	.scanNum {
-		// 		height: 75rpx;
-		// 		line-height: 75rpx;
-		// 		text-align: right;
-		// 		color: #4a70f5;
-		// 		font-size: 30rpx;
-		// 		font-weight: bold;
-		// 	}
-		// 	.btnLocation {
-		// 		display: flex;
-		// 		flex-direction: row;
-		// 		justify-content: space-between;
-		// 		.moreBtn {
-		// 			background-color: #fca147;
-		// 			cursor: pointer;
-		// 		}
-		// 		.inStorageBtn {
-		// 			background-color: #4a70f5;
-		// 			cursor: pointer;
-		// 		}
-		// 		.noInStorageBtn {
-		// 			background-color: #cccccc;
-		// 			cursor: not-allowed;
-		// 		}
-		// 	}
-		// }
 		.commonBtn {
 			display: inline-block;
 			text-align: center;
@@ -691,7 +663,7 @@
 			border: 1rpx solid #0C99F2;
 			color: #0C99F2;
 			border-radius: 40rpx;
-			margin: 40rpx 20rpx 40rpx 30rpx;
+			// margin: 40rpx 20rpx 40rpx 30rpx;
 			cursor: pointer;
 		}
 		.confirmBtn {
@@ -703,7 +675,7 @@
 			border: 1rpx solid #0C99F2;
 			color: #fff;
 			border-radius: 40rpx;
-			margin: 40rpx 30rpx 40rpx 20rpx;
+			// margin: 40rpx 30rpx 40rpx 20rpx;
 			cursor: pointer;
 		}
 		.remindPopup {
@@ -789,6 +761,7 @@
 						
 						border-bottom: 1px #EAEAEA solid;
 					}
+					.lastItem{border-bottom: 1px solid #EAEAEA;;}
 					.reasonInside {
 						// margin: 20rpx 0;
 						.reasonText {
@@ -815,6 +788,12 @@
 						}
 					}
 				}
+			.btnBottomWrap{
+				display: flex;
+				justify-content: space-evenly;
+				align-items: center;
+				padding-top: 40rpx;
+			}
 			}
 		}
 	}
