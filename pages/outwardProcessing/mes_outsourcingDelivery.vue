@@ -967,7 +967,7 @@ export default{
 				}
 				.t-icon-a-bianzu4{
 					position: absolute;
-					top: 20rpx;
+					top: -1rpx;
 					right: -50rpx;
 					width: 137rpx;
 					height: 70rpx;
@@ -1119,8 +1119,9 @@ export default{
 				.td{
 					flex: 1;
 					text-align: center;
-					line-height: 88rpx;
+					// line-height: 88rpx;
 					font-family: PingFangSC-Regular;
+					overflow: hidden;
 					font-size: 16px;
 					color: #585858;
 					letter-spacing: 0;
