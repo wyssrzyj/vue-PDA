@@ -166,7 +166,7 @@
 			</view> -->
 		<!-- </view> -->
 		<u-action-sheet :actions="list" :show="showMore" @select="selectClick" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showMore=false"></u-action-sheet>
-		<view class="bottom">
+		<view class="bottomTab">
 			<view class="bottom-left" id="moreBtn" @click="showMore = true">更多 <view class="iconfont icon-gengduo"></view></view>
 			<view class="bottom-right">
 				<view class="btn btnActive" @click="onSubmit" v-if="isSubmit">提交</view>
