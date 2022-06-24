@@ -6,11 +6,11 @@
 		<form @submit="formSubmit" class="form-box">
 			<view class="cu-form-group input-ba">
 				<image src="../../static/login/username@3x.png" class="icon-login" />
-				<input class="input-box" placeholder="请输入账号" name="username" value=""/>
+				<input class="input-box" placeholder="请输入账号" name="username" value="admin"/>
 			</view>
 			<view class="cu-form-group margin-lr-xl input-ba">
 				<image src="../../static/login/password.png" class="icon-login" />
-				<input class="input-box" type="password" placeholder="请输入密码" name="password" value="" />
+				<input class="input-box" type="password" placeholder="请输入密码" name="password" value="admin" />
 			</view>
 			<view class="padding flex flex-direction margin-top-xl">
 				<button class="cu-btn bg-blue lg btn-login" form-type="submit">登录</button>
@@ -38,7 +38,6 @@ export default {
 	},
 	// name: 'login',
 	onLoad() {
-		// console.log('onLoad');
 	},
 	onShow() {
 		// uni.setNavigationBarTitle({
@@ -73,13 +72,10 @@ export default {
 								url: '/pages/cutWarehouse/mes_cutWarehouse'
 							})
 							Api.pdaNav({}).then(res => {
-								// console.log(res,'---------res')
 							})
 							Api.getPermissions().then(res => {
 								// $store.commit('set_is_b_link', true)
 								this.$store.commit('setPermissions', res.data)
-								console.log(this.$store)
-								console.log(res,'---------res')
 							})
 							// uni.switchTab({
 							// 	url:'/pages/cutWarehouse/cutWarehouse'

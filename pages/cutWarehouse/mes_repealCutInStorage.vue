@@ -359,7 +359,6 @@
 
 			// bindPickerChange(e){   //下拉框选择
 			// 	this.selectIndex = e
-			// 	console.log(e)
 			// },
 			handlePickerConfirm(e){
 				this.reaplReason=e.value[0]
@@ -419,7 +418,6 @@
 					this.selectArr = res.data.dictList.map(item => {
 						return item.dictLabel
 					})
-					console.log(this.selectArr,'-------this.selectArr')
 					// 操作人
 					this.username = res.data.username
 					// 操作时间

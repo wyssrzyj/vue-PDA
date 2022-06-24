@@ -60,7 +60,7 @@
 			</uni-swipe-action>
 		</view>
 		<u-action-sheet :actions="deletelist" :show="showMore" @select="handleEmpty" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showMore=false"></u-action-sheet>
-		<view class="bottom">
+		<view class="bottomTab">
 			<view class="bottom-left" @tap="showMore=true" id="moreBtn">更多 <text class="iconfont icon-gengduo"></text></view>
 			<view class="bottom-right">
 				<view class="count">已选：{{ alreadyOutStorageArr.length }}/{{ outStorageArr.length }},数量{{alreadyCount}}</view>
@@ -976,7 +976,7 @@ export default{
 			
 			
 	}
-	.bottom{
+	.bottomTab{
 		#moreBtn{
 			font-size: 32rpx;
 		}

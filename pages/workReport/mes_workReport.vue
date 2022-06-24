@@ -4,7 +4,7 @@
 			<!-- <view class="location"> -->
 				<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" disabled/> -->
 			<!-- </view> -->
-			<view class="scanInput">请扫描PCS码!</view>
+			<view class="scanInput">请扫描包条码!</view>
 			<view class="storage">
 				<view class="storage-item">
 					<text class="storage-item-left"><text class="requier">*</text>报工工段</text>
@@ -45,7 +45,7 @@
 			<view class="storageItem" v-for="(item,index) in outStorageArr" :key="index" :class="index == 0?'selectStorage':''">
 				<text class="serialNumber">{{ index + 1 }}.</text>
 				<view class="storageInfo">
-					<text class="storageCode">{{ item.packageCode }}</text>
+					<text class="storageCode">{{ item.proNum }}</text>
 					<view class="storageColor">
 						<text>颜色尺码：</text>
 						<text>{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
@@ -86,7 +86,7 @@
 		</view>
 		<!-- 更多组件 -->
 		<u-action-sheet :actions="list" :show="showMore" @select="selectClick" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showMore=false"></u-action-sheet>
-		<view class="bottom">
+		<view class="bottomTab">
 			<view class="bottom-left" @click="showMore = true" id="moreBtn">更多 <view class="iconfont icon-gengduo"></view></view>
 			<view class="bottom-right">
 				<view class="count">已扫描行数：{{outStorageArr.length?outStorageArr.length:'0'}}</view>
@@ -131,21 +131,13 @@
 			selectCodeMultiple,
 			scanCode
 		},
-		// name: 'cutOutStorage',
 		onLoad() {
 		},
 		onShow() {
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
 			uni.$on('scancodedate', (data) => {
-				// if(this.sewingTaskRecord) {
-				// 	console.log("扫描PCS码")
 				// 扫描PCS码
 				this.handleScanPCS(data.code)
-				// }else {
-				// 	console.log("扫描缝制任务单号")
-				// 	// 扫描缝制任务单号
-				// 	this.handleScanTask(data.code)
-				// }
 			})
 		},
 		mounted(){
@@ -195,27 +187,6 @@
 				this.supplierName=this.checkedList.map(item=>item.name).join(",")
 				this.showM = false
 			},
-			// handleScanCodeBox(){
-			// 	uni.scanCode({
-			// 		onlyFromCamera: true,
-			// 		success: res => {
-			// 			console.log(res.result)
-			// 			//这里即拿到了扫描出的数据
-			// 			// if(this.storageValue) {
-			// 				console.log("扫描扫描PCS码")
-			// 				// 扫描PCS码
-			// 				this.handleScanPCS(res.result)
-			// 			// }else {
-			// 				// console.log("扫描扫描库位")
-			// 				// 扫描库位
-			// 				// this.handleScanStorage(res.result)
-			// 			// }
-			// 		},
-			// 		fail: err => {
-			// 		    // 需要注意的是小程序扫码不需要申请相机权限
-			// 		}
-			// 	});
-			// },
 			async handleConfirm(e){	//报工工段确认
 				if(this.productNum!==e.value[0]){
 					this.supplierName=""
@@ -263,47 +234,87 @@
 				// 数组去重
 				this.outStorageArr = this.outStorageArr.reverse()
 			},
+			
+			// 报工页面前端逻辑
+			// 报工分为组码报工和pcs码报工，新增组码报工，不能不同的报工类型，不同的生产单，
+			// 相同组码编号累加，不同组码编号相加
 			handleScanPCS(pcs){ // 扫描PCS码
 				this.outStorageArr = this.outStorageArr.reverse()
 				Api.productionReportingPCS({
 					pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
-					console.log(res)
 					if (res.code === 0) {
 						if(this.outStorageArr.length===0){
 							this.scanPCSEncapsulation.call(this,res)
 						}else{
-							const Find=this.outStorageArr.find((item)=>item.produceOrderId===res.data.produceOrderId)
-							if(Find){ //同一生产单不能重复扫描
-								const newFind=this.outStorageArr.find((item)=>item.packageCode===res.data.packageCode)
-								if(!newFind){
-									const find=this.outStorageArr.find(item=>item.snNum===res.data.snNum)
-									if(find){ //同一个PCS码不能重复扫描
-										this.showErrorMessage = 'PCS码已被扫描'
+							const pcsTypeFind=this.outStorageArr.find(item=>item.pcsType==res.data.pcsType)
+							if(pcsTypeFind){
+								//PCS码报工
+								if(res.data.pcsType==0){
+									const Find=this.outStorageArr.find((item)=>item.produceOrderId===res.data.produceOrderId)
+									if(Find){ //同一生产单不能重复扫描
+										const newFind=this.outStorageArr.find((item)=>item.packageCode===res.data.packageCode)
+										if(!newFind){ //同一扎包不能重复扫描
+											const find=this.outStorageArr.find(item=>item.snNum===res.data.snNum)
+											if(find){ //同一个PCS码不能重复扫描
+												this.showErrorMessage = 'PCS码已被扫描'
+												this.showErrorPop = true
+												let timer = setTimeout(() => {
+													clearTimeout(timer)
+													this.showErrorPop = false
+												}, 2000)
+											}else{
+												this.scanPCSEncapsulation.call(this,res)
+											}
+										}else{
+											this.showErrorMessage = '同一扎单不能重复扫描！'
+											this.showErrorPop = true
+											let timer = setTimeout(() => {
+												clearTimeout(timer)
+												this.showErrorPop = false
+											}, 2000)
+										}
+									}else{
+										this.showErrorMessage = 'PCS码不属于该生产单！'
 										this.showErrorPop = true
 										let timer = setTimeout(() => {
 											clearTimeout(timer)
 											this.showErrorPop = false
 										}, 2000)
-									}else{
-										this.scanPCSEncapsulation.call(this,res)
 									}
-								}else{
-									this.showErrorMessage = '同一扎单不能重复扫描！'
-									this.showErrorPop = true
-									let timer = setTimeout(() => {
-										clearTimeout(timer)
-										this.showErrorPop = false
-									}, 2000)
+								//组码报工
+								}else if(res.data.pcsType==1){
+									//组码报工
+									const produceOrderFind=this.outStorageArr.find((item)=>item.produceOrderId===res.data.produceOrderId)
+									if(produceOrderFind){ //组码扫描必须同一生产单下
+										const codeGroup=this.outStorageArr.find(item=>item.snNum==res.data.snNum)
+										if(codeGroup){ //同一组码编号数量相加
+											codeGroup.count+=res.data.count
+											this.outStorageArr = this.outStorageArr.reverse()
+											const index=this.outStorageArr.findIndex(item=>item.snNum===codeGroup.snNum)
+											const obj=this.outStorageArr.splice(index,1)
+											this.outStorageArr.unshift(...obj)
+										}else{  //不同组码编号添加记录
+											this.scanPCSEncapsulation.call(this,res)
+										}
+									}else{
+										this.showErrorMessage = '组码编号不属于该生产单！'
+										this.showErrorPop = true
+										let timer = setTimeout(() => {
+											clearTimeout(timer)
+											this.showErrorPop = false
+										}, 2000)
+									}
 								}
 							}else{
-								this.showErrorMessage = 'PCS码不属于该生产单！'
+								this.showErrorMessage = '请扫描同一类型的PCS码'
 								this.showErrorPop = true
 								let timer = setTimeout(() => {
 									clearTimeout(timer)
 									this.showErrorPop = false
 								}, 2000)
 							}
+							
 						}
 					}
 				})
@@ -320,7 +331,24 @@
 			},
 
 			handleOutStorage(){ // 出库
-
+				if(!this.productNum){
+					this.showErrorMessage = '请选择报工工段'
+					this.showErrorPop = true
+					let timer = setTimeout(() => {
+						clearTimeout(timer)
+						this.showErrorPop = false
+					}, 2000)
+					return;
+				}
+				if(!this.supplierName){
+					this.showErrorMessage = '请选择报工工序'
+					this.showErrorPop = true
+					let timer = setTimeout(() => {
+						clearTimeout(timer)
+						this.showErrorPop = false
+					}, 2000)
+					return;
+				}
 				let mesEngineeringManagementDTOS=this.outStorageArr.map(item=>{
 					return {...item,section:+findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
 				});
@@ -334,7 +362,6 @@
 						this.coutryList=[]
 						this.columns=[]
 						this.checkedList=[]
-						this.coutryList=[]
 						this.showSuccessMessage = '报工成功！'
 						this.showSuccessPop = true
 						let timer = setTimeout(() => {

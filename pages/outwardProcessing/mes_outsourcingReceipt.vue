@@ -191,12 +191,10 @@
 					// locationCode:this.storageValue,
 					pcsNum,
 				}).then(res => {
-					console.log(res)
 					if (res.code === 0) {
 						const Find=this.copyInStorageArr.find((item)=>{
 							return item.packageCode==res.data.packageCode
 						})
-						console.log(Find)
 						if(!Find){
 							uni.showToast({
 								title: '扫描PCS码成功！',
@@ -209,7 +207,6 @@
 							this.inStorageArr = arrayToHeavy(this.inStorageArr)
 
 							this.inStorageArr = this.inStorageArr.reverse()
-							console.log(this.inStorageArr)
 						}else{
 							this.showErrorPop = true
 							this.showErrorMessage = '该PCS码已扫描！'
