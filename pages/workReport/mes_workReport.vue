@@ -207,7 +207,7 @@
 			//封装函数
 			scanPCSEncapsulation(res){
 				uni.showToast({
-					title: '扫描PCS码成功！',
+					title: '扫描包条码成功！',
 					icon: 'none',
 					duration: 3000
 				})
@@ -257,7 +257,7 @@
 										if(!newFind){ //同一扎包不能重复扫描
 											const find=this.outStorageArr.find(item=>item.snNum===res.data.snNum)
 											if(find){ //同一个PCS码不能重复扫描
-												this.showErrorMessage = 'PCS码已被扫描'
+												this.showErrorMessage = '包条码已被扫描'
 												this.showErrorPop = true
 												let timer = setTimeout(() => {
 													clearTimeout(timer)
@@ -275,7 +275,7 @@
 											}, 2000)
 										}
 									}else{
-										this.showErrorMessage = 'PCS码不属于该生产单！'
+										this.showErrorMessage = '包条码不属于该生产单！'
 										this.showErrorPop = true
 										let timer = setTimeout(() => {
 											clearTimeout(timer)
@@ -307,7 +307,7 @@
 									}
 								}
 							}else{
-								this.showErrorMessage = '请扫描同一类型的PCS码'
+								this.showErrorMessage = '请扫描同一类型的包条码'
 								this.showErrorPop = true
 								let timer = setTimeout(() => {
 									clearTimeout(timer)
