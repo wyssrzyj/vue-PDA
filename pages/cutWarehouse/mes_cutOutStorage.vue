@@ -235,7 +235,7 @@
 						const Find=this.inStorageArr.find(item=>item.id===res.data.subpackageId)
 						if(!Find){
 							uni.showToast({
-									title: '扫描PCS码成功！',
+									title: '扫描包条码成功！',
 									icon: 'none',
 									duration: 3000
 								})
@@ -252,7 +252,7 @@
 							
 								this.inStorageArr = this.inStorageArr.reverse()
 							}else {
-								this.showErrorMessage = 'PCS码无效！'
+								this.showErrorMessage = '包条码无效！'
 								this.showErrorPop = true
 								let timer = setTimeout(() => {
 									clearTimeout(timer)

@@ -1,7 +1,7 @@
 <template>
 	<view class="mainContent" @tap="handleClick">
 		<!-- <button class="button" type="primary" @click="toggle('center')"><text class="button-text">居中</text></button> -->
-			<view class="scanInput">请扫描PCS码!</view>
+			<view class="scanInput">请扫描包条码!</view>
 			<view class="storageLocationItem">
 				<view class="storageLocation">
 					<text style="color: red;">*</text><text class="storageTitle">产品款号</text>
@@ -346,7 +346,7 @@ export default{
 								})
 								if(!Find){
 									uni.showToast({
-										title: '扫描PCS码成功！',
+										title: '扫描包条码成功！',
 										icon: 'none',
 										duration: 3000
 									})
@@ -366,7 +366,7 @@ export default{
 										}
 									})
 								}else{
-									this.showErrorMessage = '该PCS码已扫描！'
+									this.showErrorMessage = '该包条码已扫描！'
 									this.showErrorPop = true
 									let timer = setTimeout(() => {
 										clearTimeout(timer)
@@ -375,7 +375,7 @@ export default{
 								}
 								
 							}else {
-								this.showErrorMessage = "该PCS码不属于当前列表！"
+								this.showErrorMessage = "该包条码不属于当前列表！"
 								this.showErrorPop = true
 								let timer = setTimeout(() => {
 									clearTimeout(timer)

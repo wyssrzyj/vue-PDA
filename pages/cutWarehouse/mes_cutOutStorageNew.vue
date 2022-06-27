@@ -1,7 +1,7 @@
 <template>
 	<view class="mainContent" @click="closeModal">
 		<view class="location">
-			<view class="tip_text"><text>{{sewingTaskRecord ? '请扫描PCS码!': '请扫描缝制任务单号码'}}</text></view>
+			<view class="tip_text"><text>{{sewingTaskRecord ? '请扫描包条码!': '请扫描缝制任务单号码'}}</text></view>
 			<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search"
 				:placeholder="sewingTaskRecord? '请扫描PCS码': '请扫描缝制任务单号码'"  disabled /> -->
 		</view>
@@ -280,7 +280,7 @@
 				}).then(res => {
 					if (res.code === 0) {
 						uni.showToast({
-							title: '扫描PCS码成功！',
+							title: '扫描包条码成功！',
 							icon: 'none',
 							duration: 3000
 						})

@@ -4,7 +4,7 @@
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<!-- <view class="location"> -->
 			<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled  @click="handleScanCodeBox"/> -->
-			<view class="scanInput" >{{storageValue? '请扫描PCS码！': '请扫描库位码！'}}</view>
+			<view class="scanInput" >{{storageValue? '请扫描包条码！': '请扫描库位码！'}}</view>
 		<!-- </view> -->
 		<view class="locationPrompt">
 			<text>库位：</text>
@@ -197,7 +197,7 @@
 						})
 						if(!Find){
 							uni.showToast({
-								title: '扫描PCS码成功！',
+								title: '扫描包条码成功！',
 								icon: 'none',
 								duration: 3000
 							})
@@ -209,7 +209,7 @@
 							this.inStorageArr = this.inStorageArr.reverse()
 						}else{
 							this.showErrorPop = true
-							this.showErrorMessage = '该PCS码已扫描！'
+							this.showErrorMessage = '该包条码已扫描！'
 							let timer=setTimeout(() => {
 								clearTimeout(timer)
 								this.showErrorPop = false
