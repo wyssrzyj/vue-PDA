@@ -104,7 +104,6 @@ export const findKey=(obj, value, compare = (a, b) => a === b)=> {
 }
 
 export const checkPermission = (permission,key) =>{
-	console.log(key,permission.includes(key))
 	return permission.includes(key)
 }
 

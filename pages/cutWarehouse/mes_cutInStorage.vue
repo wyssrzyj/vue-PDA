@@ -1,15 +1,13 @@
 <template>
 	<view class="mainContent" @click="closeModal">
-		<!-- <view class="commonBtn" @tap="handleScanStorage" style="background-color: #fca147;">扫描库位</view> -->
-		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
-			<view class="tip_text"><text>{{storageValue ? '请扫描PCS码!': '请扫描库位码'}}</text></view>
+			<view class="tip_text"><text>{{storageValue ? '请扫描包条码!': '请扫描库位码'}}</text></view>
 		</view>
 		<view class="storageLocation">
 			<text class="storageTitle">当前库位：<text style="color: #666666; font-size: 36rpx;">{{storageValue}}</text></text>
 		</view>
 		<view class="pannelContent" >
-			 <uni-swipe-action >
+			 <uni-swipe-action>
 				 <uni-swipe-action-item style="width: 750rpx;border: none;" :right-options="options1" @click="deleteMember($event,item)"  @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
 				 	<view :class="[index == 0 ? 'selectLine-in': '' , 'touch-list', 'list-touch']"
 				 		class="swipe-action u-border-top u-border-bottom">
@@ -50,16 +48,6 @@
 				<u-button class="inStorageBtn" type="primary" :class="!inStorageArr.length > 0 ?'custom-style' : ''" @tap="handleInStorage" :disabled="!inStorageArr.length > 0" text="入库"></u-button></view>
 			</view>
 		</view>
-		<!-- <u-popup :show="showModal" @close="showModal = false" :overlayOpacity="0">
-			<view class="btnModal-cut">
-				<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
-				<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
-			</view>
-		</u-popup> -->
-		<!-- <view class="btnModal" v-if="showModal">
-			<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
-			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
-		</view> -->
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
 			<view style="margin: 0 20rpx 0 90rpx;">{{ showSuccessMessage }}</view>
@@ -76,21 +64,17 @@
 	import { arrayToHeavy, toasting,useDebounce } from '../../utils/index.js'
 	import  Api from '../../service/api'
 	import scanCode from "../../components/scan/scan.vue"
-	
-	// import uSwipeAction1 from "@/components/u-swipe-action/u-swipe-action.vue"
 
 	export default{
-		// name: 'cutInStorage',
 		onLoad() {
 			// console.log('onLoad');
 		},
 		onShow() {
-			// console.log('onShow');
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
 			uni.$on('scancodedate', (data) => {
 				console.log(data)
 				if(this.storageValue) {
-					console.log("扫描PCS码")
+					console.log("扫描包条码")
 					// 扫描PCS码
 					this.handleScanPCS(data.code)
 				}else {
@@ -207,7 +191,7 @@
 						const Find=this.inStorageArr.find(item=>item.id===res.data.subpackageId)
 						if(!Find){
 							uni.showToast({
-									title: '扫描PCS码成功！',
+									title: '扫描包条码成功！',
 									icon: 'none',
 									duration: 3000
 								})
@@ -233,7 +217,7 @@
 							
 								this.inStorageArr = this.inStorageArr.reverse()
 							}else {
-								this.showErrorMessage = 'PCS码无效！'
+								this.showErrorMessage = '包条码无效！'
 								this.showErrorPop = true
 								let timer = setTimeout(() => {
 									clearTimeout(timer)
@@ -252,13 +236,10 @@
 			},
 
 			handleMore(){ // 更多
-			console.log(this.showModal,'11111111111111111')
 				this.showModal = !this.showModal
-				console.log(this.showModal, !this.showModal)
 			},
 
 			closeModal(e){//点击页面其他地方关闭清空按钮
-			console.log(e,'2222222222222',this.showModal)
 				if(e.target.id!="moreBtn" && this.showModal){
 					// this.showModal=false
 				}
@@ -384,8 +365,6 @@
 				width: 750rpx;
 				background-color: #E4F4FF !important;
 				color: #0C99F2;
-				// background-color: #fffFFF;
-				 
 			}
 			.storageItem {
 				margin: 20rpx 0;
@@ -398,7 +377,6 @@
 					background-color: #ffffff;
 				}
 				.list-touch{
-					// position: relative;
 					width: 100%;
 					z-index: 5;
 					font-size: 32rpx;
@@ -409,11 +387,8 @@
 					justify-content: flex-start;
 					align-items: center;
 					.serialNumber {
-						// left: 20rpx;
-						// top: 55rpx;
 						padding-right: 40rpx;
 						font-weight: bold;
-						// font-size: 35rpx;
 					}
 					.item_content {
 						width: 70%;
@@ -533,9 +508,6 @@
 			.modalImage {
 				width: 300rpx;
 				height: 166rpx;
-				// background-color: url('../../static/cutWarehouse/chuku.png')
-				// background-color: rgba();
-				// color: red;
 			}
 		}
 		.commonBtn {

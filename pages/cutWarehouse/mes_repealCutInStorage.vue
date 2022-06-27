@@ -3,7 +3,7 @@
 		<!-- <view class="commonBtn" @tap="handleScanStorage" style="background-color: #fca147;">扫描库位</view> -->
 		<!-- <view class="commonBtn" @tap="handleScanPCS" style="background-color: #4a70f5;">扫描PCS码</view> -->
 		<view class="location">
-			<view class="tip_text"><text>{{storageValue ? '请扫描PCS码!': '请扫描库位码'}}</text></view>
+			<view class="tip_text"><text>{{storageValue ? '请扫描包条码!': '请扫描库位码'}}</text></view>
 			<!-- <image class="scanCodeBox" src="../../static/cutWarehouse/scanCodeBox.png" mode="aspectFit" @tap="handleScanCodeBox"></image> -->
 			<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx"  confirm-type="search" :placeholder="storageValue? '请扫描PCS码': '请扫描库位码'" disabled/> -->
 		</view>
@@ -285,7 +285,7 @@
 						const Find=this.inStorageArr.find(item=>item.id===res.data.subpackageId)
 						if(!Find){
 							uni.showToast({
-								title: '扫描PCS码成功！',
+								title: '扫描包条码成功！',
 								icon: 'none',
 								duration: 3000
 							})
@@ -311,7 +311,7 @@
 							
 							this.inStorageArr = this.inStorageArr.reverse()
 						}else{
-							this.showErrorMessage = 'PCS码无效！'
+							this.showErrorMessage = '包条码无效！'
 							this.showErrorPop = true
 							let timer = setTimeout(() => {
 								clearTimeout(timer)
@@ -359,7 +359,6 @@
 
 			// bindPickerChange(e){   //下拉框选择
 			// 	this.selectIndex = e
-			// 	console.log(e)
 			// },
 			handlePickerConfirm(e){
 				this.reaplReason=e.value[0]
@@ -371,6 +370,15 @@
 			},
 
 			handleConfirm(){  //确认撤销出库
+				if(!this.reaplReason){
+					this.showErrorMessage = '请选择撤销入库原因！'
+					this.showErrorPop = true
+					let timer = setTimeout(() => {
+						clearTimeout(timer)
+						this.showErrorPop = false
+					}, 2000)
+					return;
+				}
 				let listArr = this.inStorageArr.map((item, index) => {
 					return {
 						index: this.inStorageArr.length - index,
@@ -419,7 +427,6 @@
 					this.selectArr = res.data.dictList.map(item => {
 						return item.dictLabel
 					})
-					console.log(this.selectArr,'-------this.selectArr')
 					// 操作人
 					this.username = res.data.username
 					// 操作时间
