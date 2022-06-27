@@ -370,6 +370,15 @@
 			},
 
 			handleConfirm(){  //确认撤销出库
+				if(!this.reaplReason){
+					this.showErrorMessage = '请选择撤销入库原因！'
+					this.showErrorPop = true
+					let timer = setTimeout(() => {
+						clearTimeout(timer)
+						this.showErrorPop = false
+					}, 2000)
+					return;
+				}
 				let listArr = this.inStorageArr.map((item, index) => {
 					return {
 						index: this.inStorageArr.length - index,

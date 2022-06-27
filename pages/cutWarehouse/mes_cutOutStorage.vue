@@ -232,7 +232,7 @@
 					productOrderNum:this.productionOederNumObj.productOrderNum
 				}).then(res => {
 					if (res.code === 0) {
-						const Find=this.inStorageArr.find(item=>item.id===res.data.subpackageId)
+						const Find=this.inStorageArr.find(item=>item.subpackageId===res.data.subpackageId)
 						if(!Find){
 							uni.showToast({
 									title: '扫描包条码成功！',
@@ -241,7 +241,7 @@
 								})
 								this.inStorageArr.push(
 									{
-									id:res.data.subpackageId || "",
+									// id:res.data.subpackageId || "",
 									...res.data,
 									arrowFlag: false,
 									}
@@ -252,7 +252,7 @@
 							
 								this.inStorageArr = this.inStorageArr.reverse()
 							}else {
-								this.showErrorMessage = '包条码无效！'
+								this.showErrorMessage = '该条码已存在！'
 								this.showErrorPop = true
 								let timer = setTimeout(() => {
 									clearTimeout(timer)
