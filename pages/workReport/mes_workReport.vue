@@ -23,7 +23,7 @@
 				<view class="storage-item">
 					<text class="storage-item-left">当前员工</text>
 					<view class="storage-item-right">
-						<text class="info">{{employeeName?employeeName:''}}</text>
+						<text class="info">{{employeeName?employeeName:'未绑定'}}</text>
 					</view>
 				</view>
 			</view>
