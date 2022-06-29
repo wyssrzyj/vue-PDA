@@ -235,7 +235,7 @@
 						const Find=this.inStorageArr.find(item=>item.subpackageId===res.data.subpackageId)
 						if(!Find){
 							uni.showToast({
-									title: '扫描包条码成功！',
+									title: '扫描扎包条码成功！',
 									icon: 'none',
 									duration: 3000
 								})

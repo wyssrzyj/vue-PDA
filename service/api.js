@@ -1,16 +1,16 @@
 
 import { requestApi } from './request.js';
 
-// const API_ADDRESS = 'http://172.26.1.38:8081' // 周扬ip
+// const API_ADDRESS = 'http://10.18.56.96:8081'// 周扬ip
 // const API_ADDRESS = 'http://192.168.1.100:8081' // 蔡鹏志ip
 // const API_ADDRESS = 'http://192.168.213.49:8081' // 周志建ip
 // const API_ADDRESS = 'http://172.26.1.38:8081' // 周志建ip
 // const API_ADDRESS = 'http://172.26.0.56:8081' // 盛宝利线上地址
 // const API_ADDRESS = 'http://192.168.68.58:8081' // 国庆
-// const API_ADDRESS = 'http://192.168.99.140:8081'//测试
-// const API_ADDRESS = 'http://192.168.1.5/proxyApi'//盛宝丽
+// let API_ADDRESS = 'http://192.168.31.89:8081'//测试
+// let API_ADDRESS = 'http://192.168.31.89:8081'//盛宝丽
+let API_ADDRESS = 'http://10.18.34.6:8081'
 
-let API_ADDRESS = ""
 export const changeApi=(api)=>{
 	API_ADDRESS = `http://${api}`
 	console.log("当前环境:"+API_ADDRESS)
@@ -121,6 +121,27 @@ const Api = {
 	// 提交铺布数据
 	saveData(reqData) {
 	  return requestApi(`${API_ADDRESS}/mes/messpreadcloth/saveData`, 'POST', reqData)
+	},
+	
+	// 裁片出库
+	//查询生产单号
+	// queryProductionNum(reqData){
+	//   return requestApi(`${API_ADDRESS}/mes/mespiecesmarket/outWarehouseProduce`, 'GET', reqData)
+	// },
+	queryProductionNum(reqData){
+	  return requestApi(`${API_ADDRESS}/mes/mespiecesmarket/outWarehouseProduce`, 'GET', reqData)
+	},
+	//查询出库班组
+	queryIssueTeam(reqData){
+	  return requestApi(`${API_ADDRESS}/mes/mesteammanager/list`, 'GET', reqData)
+	},
+	//扫描包条码
+	scanPackageBarcode(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mespiecesmarket/getPiecesByPCSNum2`, 'GET', reqData)
+	},
+	//裁片出库
+	cuttingStockOut(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mespiecesmarket/outOfStock2`, 'POST', reqData)
 	},
 }
 

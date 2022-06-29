@@ -114,13 +114,12 @@ export const checkPermission = (permission,key) =>{
  * @param wait
  * @returns
  */
-export const useDebounce=(func, wait=1000)=> {    
+export const useDebounce=(func, wait=1500)=> {
 　　　if (typeof func !== 'function') {
 　　　　throw new TypeError('need a function arguments')
 　　　}
 　　　let timeid = null;
      let result;
- 
 　　　return function() {
 　　　　let context = this;
 　　　　let args = arguments;

@@ -1,10 +1,7 @@
 <template>
 	<view class="mainContent">
 		<view class="borderBottom">
-			<!-- <view class="location"> -->
-				<!-- <input class="uni-input scanInput" placeholder-style="font-size: 34rpx" confirm-type="search" placeholder="请扫描PCS码" disabled/> -->
-			<!-- </view> -->
-			<view class="scanInput">请扫描包条码!</view>
+			<view class="scanInput">请扫描扎包条码!</view>
 			<view class="storage">
 				<view class="storage-item">
 					<text class="storage-item-left"><text class="requier">*</text>报工工段</text>
@@ -28,18 +25,6 @@
 				</view>
 			</view>
 			<u-picker :show="show" :visibleItemCount="4" :itemHeight="92" :columns="columns" @confirm="handleConfirm" @cancel="handleCancel"></u-picker>
-<!-- 			<view class="storageLocation">
-				<text class="storageTitle">报工工段：</text>
-				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="productNum" confirm-type="search" @click="show = true" disabled/>
-			</view>
-			<view class="storageLocation">
-				<text class="storageTitle">报工工序：</text>
-				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="supplierName" confirm-type="search" @click="showMultiple" disabled/>
-			</view>
-			<view class="storageLocation">
-				<text class="storageTitle">当前员工：</text>
-				<input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="employeeName" confirm-type="search" disabled/>
-			</view> -->
 		</view>
 		<view class="pannelContent">
 			<view class="storageItem" v-for="(item,index) in outStorageArr" :key="index" :class="index == 0?'selectStorage':''">
@@ -57,32 +42,11 @@
 						</view>
 						<view class="count">
 							<text>数量：</text>
-							<!-- <text>{{ item.count }}</text> -->
 							<input v-model="item.count"/>
 						</view>
 					</view>
 				</view>
 			</view>
-<!-- 			<view class="storageItem selectStorage">
-				<text class="serialNumber">1.</text>
-				<view class="storageInfo">
-					<text class="storageCode">123234345345</text>
-					<view class="storageColor">
-						<text>颜色尺码：</text>
-						<text>{{ 1 }}&emsp;{{ 2 }}&emsp;{{ 3 }}</text>
-					</view>
-					<view class="storageContent">
-						<view class="number">
-							<text>扎号：</text>
-							<text>{{ 123456 }}</text>
-						</view>
-						<view class="count">
-							<text>数量：</text>
-							<input value="123"/>
-						</view>
-					</view>
-				</view>
-			</view> -->
 		</view>
 		<!-- 更多组件 -->
 		<u-action-sheet :actions="list" :show="showMore" @select="selectClick" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showMore=false"></u-action-sheet>
@@ -94,18 +58,6 @@
 				<view class="btn btnDisable" v-else >报工</view>
 			</view>
 		</view>
-<!-- 		<view class="bottomLocation">
-			<view class="scanNum"><view><text>已扫描行数：</text><text class="scannedAllNum">{{outStorageArr.length}}</text></view></view>
-			<view class="btnLocation">
-				<view class="commonBtn moreBtn" @tap="handleMore" id="moreBtn">更多</view>
-				<view class="commonBtn inStorageBtn" @tap="handleOutStorage" v-if="outStorageArr.length > 0 ">报工</view>
-				<view class="commonBtn noInStorageBtn" v-else>报工</view>
-			</view>
-		</view> -->
-<!-- 		<view class="btnModal" v-if="showModal" id="btnModal">
-			<image class="modalImage" src="../../static/cutWarehouse/modalImage.png" mode="aspectFit"></image>
-			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
-		</view> -->
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
 			<view style="margin-left: 20rpx;">{{ showSuccessMessage }}</view>
@@ -207,7 +159,7 @@
 			//封装函数
 			scanPCSEncapsulation(res){
 				uni.showToast({
-					title: '扫描包条码成功！',
+					title: '扫描扎包条码成功！',
 					icon: 'none',
 					duration: 3000
 				})
@@ -243,6 +195,7 @@
 				Api.productionReportingPCS({
 					pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
+					console.log(res)
 					if (res.code === 0) {
 						if(this.outStorageArr.length===0){
 							this.scanPCSEncapsulation.call(this,res)
@@ -257,7 +210,7 @@
 										if(!newFind){ //同一扎包不能重复扫描
 											const find=this.outStorageArr.find(item=>item.snNum===res.data.snNum)
 											if(find){ //同一个PCS码不能重复扫描
-												this.showErrorMessage = '包条码已被扫描'
+												this.showErrorMessage = '扎包条码已被扫描'
 												this.showErrorPop = true
 												let timer = setTimeout(() => {
 													clearTimeout(timer)
@@ -275,7 +228,7 @@
 											}, 2000)
 										}
 									}else{
-										this.showErrorMessage = '包条码不属于该生产单！'
+										this.showErrorMessage = '扎包条码不属于该生产单！'
 										this.showErrorPop = true
 										let timer = setTimeout(() => {
 											clearTimeout(timer)
@@ -307,7 +260,7 @@
 									}
 								}
 							}else{
-								this.showErrorMessage = '请扫描同一类型的包条码'
+								this.showErrorMessage = '请扫描同一类型的扎包条码'
 								this.showErrorPop = true
 								let timer = setTimeout(() => {
 									clearTimeout(timer)
@@ -316,6 +269,13 @@
 							}
 							
 						}
+					}else{
+						this.showErrorMessage = res.msg
+						this.showErrorPop = true
+						let timer = setTimeout(() => {
+							clearTimeout(timer)
+							this.showErrorPop = false
+						}, 2000)
 					}
 				})
 			},
@@ -329,9 +289,9 @@
 					this.supplierName=""
 				}
 			},
-
+			
 			handleOutStorage(){ // 出库
-				if(!this.productNum){
+				if(!this.productNum){ //工段必填
 					this.showErrorMessage = '请选择报工工段'
 					this.showErrorPop = true
 					let timer = setTimeout(() => {
@@ -340,8 +300,18 @@
 					}, 2000)
 					return;
 				}
-				if(!this.supplierName){
+				if(!this.supplierName){ //工序必填
 					this.showErrorMessage = '请选择报工工序'
+					this.showErrorPop = true
+					let timer = setTimeout(() => {
+						clearTimeout(timer)
+						this.showErrorPop = false
+					}, 2000)
+					return;
+				}
+				const find=this.outStorageArr.find(item=>item.count=='')
+				if(find){
+					this.showErrorMessage = '报工数量不能为空！'
 					this.showErrorPop = true
 					let timer = setTimeout(() => {
 						clearTimeout(timer)
@@ -389,13 +359,6 @@
 	}
 	.iconfont{
 		font-size: 12rpx;
-	}
-	@mixin delSty {
-		position:absolute;
-		top:10rpx;
-		width: 26rpx;
-		height: 2px;
-		background-color: #afafaf;
 	}
 	::v-deep .u-toolbar[data-v-6d25fc6f]{
 		border-bottom: 1px solid  #EAEAEA!important;

@@ -1,7 +1,7 @@
 <template>
 	<view class="mainContent" @click="closeModal">
 		<view class="location">
-			<view class="tip_text"><text>{{storageValue ? '请扫描包条码!': '请扫描库位码'}}</text></view>
+			<view class="tip_text"><text>{{storageValue ? '请扫描扎包条码!': '请扫描库位码'}}</text></view>
 		</view>
 		<view class="storageLocation">
 			<text class="storageTitle">当前库位：<text style="color: #666666; font-size: 36rpx;">{{storageValue}}</text></text>
@@ -74,7 +74,7 @@
 			uni.$on('scancodedate', (data) => {
 				console.log(data)
 				if(this.storageValue) {
-					console.log("扫描包条码")
+					console.log("扫描扎包条码")
 					// 扫描PCS码
 					this.handleScanPCS(data.code)
 				}else {
@@ -191,7 +191,7 @@
 						const Find=this.inStorageArr.find(item=>item.id===res.data.subpackageId)
 						if(!Find){
 							uni.showToast({
-									title: '扫描包条码成功！',
+									title: '扫描扎包条码成功！',
 									icon: 'none',
 									duration: 3000
 								})
@@ -217,7 +217,7 @@
 							
 								this.inStorageArr = this.inStorageArr.reverse()
 							}else {
-								this.showErrorMessage = '包条码无效！'
+								this.showErrorMessage = '扎包条码无效！'
 								this.showErrorPop = true
 								let timer = setTimeout(() => {
 									clearTimeout(timer)

@@ -19,8 +19,8 @@
 						<picker-view v-if="visible" :value="pickerValue" indicator-style="height:150rpx;" @change="bindChange">
 							<picker-view-column>
 								<view class="item" v-for="(item,index) in pickerList" :key="index" @click="sureSelect()">
-									<view>{{`生产单号:${item.productOrderNum}`}}</view>
-									<view>{{`产品款号:${item.proNum}`}}</view>
+									<view style="width: 750rpx">{{`生产单号:${item.productOrderNum}`}}</view>
+									<view style="width: 750rpx;">{{`产品款号:${item.proNum}`}}</view>
 								</view>
 							</picker-view-column>
 						</picker-view>
