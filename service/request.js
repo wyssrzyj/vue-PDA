@@ -9,7 +9,7 @@ export const requestApi = async (url, method, options = {}) => {
       method: method ? method : "GET",
       header: {
         // 'content-type':'application/x-www-form-urlencoded',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
         "X-AjaxPro-Method": "ShowList",
         'Access-Control-Allow-Origin': '*',
         'Origin-Terminal': 'PDA',

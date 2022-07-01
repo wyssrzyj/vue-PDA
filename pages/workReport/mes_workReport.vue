@@ -42,7 +42,7 @@
 						</view>
 						<view class="count">
 							<text>数量：</text>
-							<input v-model="item.count"/>
+							<input v-model="item.count" type="number" @input="handleInput($event,item)"/>
 						</view>
 					</view>
 				</view>
@@ -156,6 +156,12 @@
 			handleCancel(){		//报工工段取消
 				this.show=false
 			},
+			handleInput(e,item){
+				e.target.value = e.target.value.split('.')[0].replace(/^[^\d]|[.]/g, '')
+				this.$nextTick(() => {
+					item.count= Number(e.target.value)
+				})
+			},
 			//封装函数
 			scanPCSEncapsulation(res){
 				uni.showToast({
@@ -186,16 +192,15 @@
 				// 数组去重
 				this.outStorageArr = this.outStorageArr.reverse()
 			},
-			
 			// 报工页面前端逻辑
 			// 报工分为组码报工和pcs码报工，新增组码报工，不能不同的报工类型，不同的生产单，
 			// 相同组码编号累加，不同组码编号相加
 			handleScanPCS(pcs){ // 扫描PCS码
 				this.outStorageArr = this.outStorageArr.reverse()
+				// PD20220630195145651-XK*111-叉L-1
 				Api.productionReportingPCS({
-					pcs, // 'PD20211118073139826-0-00153638'
+					pcs:pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
-					console.log(res)
 					if (res.code === 0) {
 						if(this.outStorageArr.length===0){
 							this.scanPCSEncapsulation.call(this,res)

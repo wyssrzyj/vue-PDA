@@ -64,6 +64,7 @@ export default {
 						username: username,
 						password: password,
 					}).then(res => {
+						console.log(res)
 						if (res.code === 0) {
 							toasting('登录成功')
 							uni.removeStorageSync('token')

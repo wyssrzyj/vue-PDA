@@ -72,14 +72,14 @@
 		onShow() {
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
 			uni.$on('scancodedate', (data) => {
-				console.log(data)
+				// console.log(data)
 				if(this.storageValue) {
-					console.log("扫描扎包条码")
+					// console.log("扫描扎包条码")
 					// 扫描PCS码
 					this.handleScanPCS(data.code)
 				}else {
 					// 扫描库位
-					console.log('扫描库位码')
+					// console.log('扫描库位码')
 					try{
 						data=JSON.parse(data.code)
 						this.handleScanStorage(data.code,data.factoryManagerName)
@@ -119,29 +119,6 @@
 			}
 		},
 		methods:{
-			// handleScanCodeBox(){
-			// 	uni.scanCode({
-			// 		onlyFromCamera: true,
-			// 		success: res => {
-			// 			console.log(res.result)
-			// 			//这里即拿到了扫描出的数据
-			// 			if(this.storageValue) {
-			// 				console.log("扫描扫描PCS码")
-			// 				// 扫描PCS码
-			// 				this.handleScanPCS(res.result)
-			// 			}else {
-			// 				console.log("扫描扫描库位")
-			// 				// 扫描库位
-			// 				let data=JSON.parse(res.result)
-			// 				console.log(data.code,data.warehouseFileName)
-			// 				this.handleScanStorage(data.code,data.warehouseFileName)
-			// 			}
-			// 		},
-			// 		fail: err => {
-			// 		    // 需要注意的是小程序扫码不需要申请相机权限
-			// 		}
-			// 	});
-			// },
 			//滑动箭头变化
 			swipeChange(e,index){
 					if(e=='right'){
@@ -264,7 +241,6 @@
 						warehouseLocationId: this.wareHouseLocation
 					}
 				})
-
 				Api.addPiecesMarket({
 					list: listArr
 				}).then(res => {
