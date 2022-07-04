@@ -314,16 +314,6 @@
 					}, 2000)
 					return;
 				}
-				const find=this.outStorageArr.find(item=>item.count=='')
-				if(find){
-					this.showErrorMessage = '报工数量不能为空！'
-					this.showErrorPop = true
-					let timer = setTimeout(() => {
-						clearTimeout(timer)
-						this.showErrorPop = false
-					}, 2000)
-					return;
-				}
 				let mesEngineeringManagementDTOS=this.outStorageArr.map(item=>{
 					return {...item,section:+findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
 				});
