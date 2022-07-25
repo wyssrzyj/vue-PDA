@@ -1,6 +1,9 @@
 <template>
 	<view class="tabBox">
-		<view class="tabBoxItem">
+		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:mespiecesmarket:cutInStorage')||
+		checkPermission($store.state.permissions,'mes:mespiecesmarket:repealCutInStorage')||
+		checkPermission($store.state.permissions,'mes:mespiecesmarket:cutOutStorage')
+		">
 			<view class="text">
 				本厂出入
 			</view>
@@ -13,11 +16,11 @@
 				</view>
 			</view>
 		</view>
-		<view class="tabBoxItem">
+		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:mespiecesmarket:outsourcingReceipt')||checkPermission($store.state.permissions,'mes:mespiecesmarket:outsourcingDelivery')">
 			<view class="text">
 				外发加工出入
 			</view>
-			<view class="factoryAccess outboundProcessing">
+			<view class="factoryAccess outboundProcessing" >
 			<view v-for="(item, index) in outwardProcessingList" :key="index"  @tap="toList(item)">
 				<view class="factoryAccessItem " v-if="checkPermission($store.state.permissions,item.permissions)">
 					<image :src="item.src" class="image"></image>
@@ -26,26 +29,26 @@
 			</view>
 			</view>
 		</view>
-		<view class="tabBoxItem">
+		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:mesengineeringmanagement:workReport')">
 			<view class="text">
 				产量报工
 			</view>
 			<view class="factoryAccess workReport">
 			<view v-for="(item, index) in workReportList" :key="index"  @tap="toList(item)">
-				<view class="factoryAccessItem " v-if="checkPermission($store.state.permissions,item.permissions)">
+				<view class="factoryAccessItem " >
 					<image :src="item.src" class="image"></image>
 					<text class="boxItemTitle">{{ item.title }}</text>
 				</view>
 			</view>
 			</view>
 		</view>
-		<view class="tabBoxItem" >
+		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:messpreadcloth:blanketDataCollect')">
 			<view class="text">
 				铺布数据采集
 			</view>
-			<view class="factoryAccess blanket">
+			<view class="factoryAccess blanket" >
 				<view v-for="(item, index) in blanketDataList" :key="index" @tap="toList(item)" >
-					<view class="factoryAccessItem" v-if="checkPermission($store.state.permissions,item.permissions)">
+					<view class="factoryAccessItem" >
 						<image :src="item.src" class="image"></image>
 						<text class="titleItem">{{ item.title }}</text>
 					</view>

@@ -144,7 +144,7 @@
 					this.supplierName=""
 				}
 				this.productNum=e.value[0]
-				const res=await Api.productionReportingGetProcess({
+				const res=await Api.productionReportingGetProcess({ //获取工序
 					productId:this.productId,
 					section:findKey(this.workshopObj,this.productNum)
 				})
@@ -314,22 +314,13 @@
 					}, 2000)
 					return;
 				}
-				const find=this.outStorageArr.find(item=>item.count=='')
-				if(find){
-					this.showErrorMessage = '报工数量不能为空！'
-					this.showErrorPop = true
-					let timer = setTimeout(() => {
-						clearTimeout(timer)
-						this.showErrorPop = false
-					}, 2000)
-					return;
-				}
 				let mesEngineeringManagementDTOS=this.outStorageArr.map(item=>{
-					return {...item,section:+findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
+					return {...item,section:findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
 				});
 				Api.productionReporting({
 					mesEngineeringManagementDTOS,
 				}).then(res => {
+					console.log(mesEngineeringManagementDTOS)
 					if (res.code === 0) {
 						this.outStorageArr=[]
 						this.productNum = ''
