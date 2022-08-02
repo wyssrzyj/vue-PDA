@@ -6,18 +6,22 @@
 		<form @submit="formSubmit" class="form-box">
 			<view class="cu-form-group input-ba">
 				<image src="../../static/login/username@3x.png" class="icon-login" />
-				<input class="input-box" placeholder="请输入账号" name="username" value=""/>
+				<input class="input-box" placeholder="请输入账号" name="username" v-model="username"/>
 			</view>
 			<view class="cu-form-group margin-lr-xl input-ba">
 				<image src="../../static/login/password.png" class="icon-login" />
-				<input class="input-box" type="password" placeholder="请输入密码" name="password" value="" />
+				<input class="input-box" type="password" placeholder="请输入密码" name="password" v-model="password" />
+			</view>
+			<view style="padding-left: 50rpx;">
+				<checkbox-group @change="changeRemember">
+					<label>
+						<checkbox value="true" checked="true" style="padding-right: 10px;" />记住密码
+					</label>
+				</checkbox-group>
 			</view>
 			<view class="padding flex flex-direction margin-top-xl">
 				<button class="cu-btn bg-blue lg btn-login" form-type="submit">登录</button>
 			</view>
-			<!-- <view class="padding flex flex-direction" v-if="type!=='dd'">
-				<view class="text-blue lg text-center" @tap="register">注册</view>
-			</view> -->
 		</form>
 		
 		<!-- 选择环境弹窗 -->
@@ -26,29 +30,38 @@
 </template>
 
 <script>
-// import { defineComponent, ref, reactive, toRefs, onMounted } from 'vue';
 import { toasting } from '../../utils/index.js'
 import Api from '../../service/api'
 import selectApi from './select-api.vue'
 import {Store} from 'vuex'; 
 
 export default {
+	data(){
+		return {
+			username:"",
+			password:"",
+			remember:true
+		}
+	},
 	components:{
 		'select-api':selectApi
 	},
-	// name: 'login',
 	onLoad() {
+		// 判断本地是否有账号密码，自动填充
+		if(uni.getStorageSync('username')) this.username = uni.getStorageSync('username')
+		if(uni.getStorageSync('password')) this.password = uni.getStorageSync('password')
 	},
 	onShow() {
-		// uni.setNavigationBarTitle({
-		// 	title: '登录'
-		// })
 		uni.removeStorageSync("token")
 	},
 	onNavigationBarButtonTap(){
 		this.$refs.select.showSelect = !this.$refs.select.showSelect
 	},
 	methods:{
+		// 是否记住密码
+		changeRemember(e){
+			e.detail.value.length === 0 ? this.remember = false : this.remember = true
+		},
 		formSubmit(e){
 				try {
 					const { username, password } = e.detail.value
@@ -68,6 +81,13 @@ export default {
 							toasting('登录成功')
 							uni.removeStorageSync('token')
 							uni.setStorageSync('token', res.data.token)
+							if (this.remember) {
+								uni.setStorageSync('username', this.username)
+								uni.setStorageSync('password', this.password)
+							} else {
+								uni.removeStorageSync('username')
+								uni.removeStorageSync('password')
+							}
 							uni.navigateTo({
 								url: '/pages/cutWarehouse/mes_cutWarehouse'
 							})
@@ -89,48 +109,19 @@ export default {
 				}
 			}
 	}
-	// setup() {
-	// 	const formSubmit = (e) => {
-	// 		try {
-	// 			const { username, password } = e.detail.value
-	// 			if(!username){
-	// 				toasting('请输入用户名')
-	// 				return
-	// 			}else if(!password){
-	// 				toasting('请输入密码')
-	// 				return
-	// 			}
-				
-	// 			Api.login({
-	// 				username: username,
-	// 				password: password,
-	// 			}).then(res => {
-	// 				if (res.code === 0) {
-	// 					toasting('登录成功')
-	// 					uni.removeStorageSync('token')
-	// 					uni.setStorageSync('token', res.data.token)
-	// 					uni.navigateTo({
-	// 						url: '/pages/cutWarehouse/cutWarehouse'
-	// 					})
-	// 					// uni.switchTab({
-	// 					// 	url:'/pages/cutWarehouse/cutWarehouse'
-	// 					// })
-	// 				}
-	// 			})
-	// 		} catch (error) {
-	// 			console.log(error)
-	// 		}
-	// 	}
-		
-	// 	return {
-	// 		formSubmit
-	// 	}
-	// }
 }
 </script>
 
 
 <style lang="scss" scoped>
+::v-deep uni-checkbox .uni-checkbox-input {
+	border-radius: 5px;
+}
+::v-deep uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked {
+	border: 1px solid #007aff;
+	background: #007aff;
+	color: #fff !important;
+}
 .container {
 	width: 100%;
 	display: flex;
