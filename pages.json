@@ -91,6 +91,7 @@
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#0C99F2",
 		"backgroundColor": "#FFFFFF",
-		"enablePullDownRefresh": false// 是否开启下拉刷新
+		"enablePullDownRefresh": false,// 是否开启下拉刷新,
+		"pageOrientation":"auto"
 	}
 }

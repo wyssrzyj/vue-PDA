@@ -59,8 +59,7 @@ export default {
 						toasting('请输入密码')
 						return
 					}
-					
-					Api.login({
+					Api.login({  
 						username: username,
 						password: password,
 					}).then(res => {

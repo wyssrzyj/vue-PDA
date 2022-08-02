@@ -61,8 +61,11 @@
 		margin: 0 30rpx;
 		font-size: 34rpx;
 		line-height: 100rpx;
-		border-bottom: 1px solid #EAEAEA;
+		border-top: 1px solid #EAEAEA;
 	}
+.storage > .storage-item:first-child{
+	border-top: none;
+}
 .storage > .storage-item .storage-item-left{
 			font-weight: bold;
 			color: #333333;

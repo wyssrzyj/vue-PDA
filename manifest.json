@@ -1,6 +1,6 @@
 {
     "name" : "杰克PDA系统",
-    "appid" : "__UNI__D9B0C60",
+    "appid" : "__UNI__E4910FA",
     "description" : "mes的pda",
     "versionName" : "1.0.3",
     "versionCode" : 3,
@@ -87,6 +87,36 @@
                         "spotlight@2x" : "unpackage/res/icons/80x80.png",
                         "spotlight@3x" : "unpackage/res/icons/120x120.png"
                     }
+                }
+            }
+        },
+        "nativePlugins" : {
+            "My-ScanCode" : {
+                "__plugin_info__" : {
+                    "name" : "MyScanCode",
+                    "description" : "扫码",
+                    "platforms" : "Android",
+                    "url" : "",
+                    "android_package_name" : "",
+                    "ios_bundle_id" : "",
+                    "isCloud" : false,
+                    "bought" : -1,
+                    "pid" : "",
+                    "parameters" : {}
+                }
+            },
+            "longyoung-KeyEventListen" : {
+                "__plugin_info__" : {
+                    "name" : "【longyoung】蓝牙usb外接键盘扫描枪监听获取输入内容【万能】 - [试用版，仅用于自定义调试基座]",
+                    "description" : "【万能监听】外接键盘扫描枪监听，有疑问，关注公众号「longyoung」后台发消息提问。",
+                    "platforms" : "Android",
+                    "url" : "https://ext.dcloud.net.cn/plugin?id=1744",
+                    "android_package_name" : "",
+                    "ios_bundle_id" : "",
+                    "isCloud" : true,
+                    "bought" : 0,
+                    "pid" : "1744",
+                    "parameters" : {}
                 }
             }
         }

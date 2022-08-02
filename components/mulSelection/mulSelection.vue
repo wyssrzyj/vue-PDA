@@ -10,7 +10,7 @@
 				<scroll-view class="search_content" scroll-y>
 					<view>
 						<checkbox-group @change="checkboxChange">
-							<label class="option_item" v-for="(item, index) in options" :key="index">
+							<label class="option_item" v-for="(item, index) in options" :key="index" style="overflow: hidden;">
 								<view>
 									<checkbox :value="item[value]" :checked="item.checked" style="transform:scale(0.8)"/>
 								</view>

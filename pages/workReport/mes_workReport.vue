@@ -13,12 +13,15 @@
 				<view class="storage-item">
 					<text class="storage-item-left"><text class="requier">*</text>报工工序</text>
 					<view class="storage-item-right" @click="showMultiple">
-						<text class="info">{{supplierName?supplierName:'请选择报工工序'}}</text>
+						<text class="info">请选择报工工序</text>
 						<text class="iconfont icon-youjiantou"></text>
 					</view>
 				</view>
+				<ul>
+					<li v-for="item in checkedList" :key="item.name">{{item.value}}</li>
+				</ul>
 				<view class="storage-item">
-					<text class="storage-item-left">当前员工</text>
+					<text class="storage-item-left" style="margin-left: 10px;">当前员工</text>
 					<view class="storage-item-right">
 						<text class="info">{{employeeName?employeeName:'未绑定'}}</text>
 					</view>
@@ -122,7 +125,7 @@
 				workshopObj:{},
 				// 更多组件
 				showMore:false,
-				list:[{name:'清空',color:'#FC361D'}]
+				list:[{name:'清空',color:'#FC361D'}],
 			}
 		},
 		methods:{
@@ -142,6 +145,7 @@
 			async handleConfirm(e){	//报工工段确认
 				if(this.productNum!==e.value[0]){
 					this.supplierName=""
+					this.checkedList=[]
 				}
 				this.productNum=e.value[0]
 				const res=await Api.productionReportingGetProcess({ //获取工序
@@ -292,6 +296,7 @@
 					this.coutryList=[]
 					this.productNum = ''
 					this.supplierName=""
+					this.checkedList=[]
 				}
 			},
 			
@@ -320,11 +325,11 @@
 				Api.productionReporting({
 					mesEngineeringManagementDTOS,
 				}).then(res => {
-					console.log(mesEngineeringManagementDTOS)
 					if (res.code === 0) {
 						this.outStorageArr=[]
 						this.productNum = ''
 						this.supplierName=""
+						this.checkedList=[]
 						this.coutryList=[]
 						this.columns=[]
 						this.checkedList=[]
@@ -365,7 +370,6 @@
 		.borderBottom{
 			padding-bottom: 10rpx;
 		}
-
 		//查询按钮样式
 		.queryBtn{
 			background-color: $theme-color;
@@ -387,7 +391,17 @@
 				display: inline-block;
 			}
 		}
-		
+		li{
+			height: 45rpx;
+			line-height: 45rpx;
+			font-size: 32rpx;
+			margin: 0rpx 15rpx;
+			padding: 10rpx 0rpx;
+			overflow: hidden;
+			text-overflow:ellipsis;
+			white-space: nowrap;
+			width: 550rpx;
+		}
 		.pannelContent {
 			height: calc(100vh - 474rpx);
 			overflow: auto;
