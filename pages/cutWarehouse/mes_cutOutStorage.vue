@@ -94,9 +94,206 @@
 	import scanCode from "../../components/scan/scan.vue"
 	import mpv from '@/components/mulSelectionSearch/mulSelectionSearch.vue'
 	import mpv1 from "@/components/mulSelectionSearchTeam/mulSelectionSearch.vue"
+	const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
+	var timer;
+	var preKeyCode = '';
+	var allKeyCodeTemp = '';
+	var KEY_MAP = {
+		"KEYCODE_GRAVE": {
+			"normalChar": "`",
+			"shiftChar": "~"
+		},
+		"KEYCODE_0": {
+			"normalChar": "0",
+			"shiftChar": ")"
+		},
+		"KEYCODE_1": {
+			"normalChar": "1",
+			"shiftChar": "!"
+		},
+		"KEYCODE_2": {
+			"normalChar": "2",
+			"shiftChar": "@"
+		},
+		"KEYCODE_3": {
+			"normalChar": "3",
+			"shiftChar": "#"
+		},
+		"KEYCODE_4": {
+			"normalChar": "4",
+			"shiftChar": "$"
+		},
+		"KEYCODE_5": {
+			"normalChar": "5",
+			"shiftChar": "%"
+		},
+		"KEYCODE_6": {
+			"normalChar": "6",
+			"shiftChar": "^"
+		},
+		"KEYCODE_7": {
+			"normalChar": "7",
+			"shiftChar": "&"
+		},
+		"KEYCODE_8": {
+			"normalChar": "8",
+			"shiftChar": "*"
+		},
+		"KEYCODE_9": {
+			"normalChar": "9",
+			"shiftChar": "("
+		},
+		"KEYCODE_MINUS": {
+			"normalChar": "-",
+			"shiftChar": "_"
+		},
+		"KEYCODE_EQUALS": {
+			"normalChar": "=",
+			"shiftChar": "+"
+		},
+		"KEYCODE_LEFT_BRACKET": {
+			"normalChar": "[",
+			"shiftChar": "{"
+		},
+		"KEYCODE_RIGHT_BRACKET": {
+			"normalChar": "]",
+			"shiftChar": "}"
+		},
+		"KEYCODE_BACKSLASH": {
+			"normalChar": "\\",
+			"shiftChar": "|"
+		},
+		"KEYCODE_SEMICOLON": {
+			"normalChar": ";",
+			"shiftChar": ":"
+		},
+		"KEYCODE_APOSTROPHE": {
+			"normalChar": "'",
+			"shiftChar": "\""
+		},
+		"KEYCODE_COMMA": {
+			"normalChar": ",",
+			"shiftChar": "<"
+		},
+		"KEYCODE_PERIOD": {
+			"normalChar": ".",
+			"shiftChar": ">"
+		},
+		"KEYCODE_SLASH": {
+			"normalChar": "/",
+			"shiftChar": "?"
+		},
+		"KEYCODE_A": {
+			"normalChar": "a",
+			"shiftChar": "A"
+		},
+		"KEYCODE_B": {
+			"normalChar": "b",
+			"shiftChar": "B"
+		},
+		"KEYCODE_C": {
+			"normalChar": "c",
+			"shiftChar": "C"
+		},
+		"KEYCODE_D": {
+			"normalChar": "d",
+			"shiftChar": "D"
+		},
+		"KEYCODE_E": {
+			"normalChar": "e",
+			"shiftChar": "E"
+		},
+		"KEYCODE_F": {
+			"normalChar": "f",
+			"shiftChar": "F"
+		},
+		"KEYCODE_G": {
+			"normalChar": "g",
+			"shiftChar": "G"
+		},
+		"KEYCODE_H": {
+			"normalChar": "h",
+			"shiftChar": "H"
+		},
+		"KEYCODE_I": {
+			"normalChar": "i",
+			"shiftChar": "I"
+		},
+		"KEYCODE_J": {
+			"normalChar": "j",
+			"shiftChar": "J"
+		},
+		"KEYCODE_K": {
+			"normalChar": "k",
+			"shiftChar": "K"
+		},
+		"KEYCODE_L": {
+			"normalChar": "l",
+			"shiftChar": "L"
+		},
+		"KEYCODE_M": {
+			"normalChar": "m",
+			"shiftChar": "M"
+		},
+		"KEYCODE_N": {
+			"normalChar": "n",
+			"shiftChar": "N"
+		},
+		"KEYCODE_O": {
+			"normalChar": "o",
+			"shiftChar": "O"
+		},
+		"KEYCODE_P": {
+			"normalChar": "p",
+			"shiftChar": "P"
+		},
+		"KEYCODE_Q": {
+			"normalChar": "q",
+			"shiftChar": "Q"
+		},
+		"KEYCODE_R": {
+			"normalChar": "r",
+			"shiftChar": "R"
+		},
+		"KEYCODE_S": {
+			"normalChar": "s",
+			"shiftChar": "S"
+		},
+		"KEYCODE_T": {
+			"normalChar": "t",
+			"shiftChar": "T"
+		},
+		"KEYCODE_U": {
+			"normalChar": "u",
+			"shiftChar": "U"
+		},
+		"KEYCODE_V": {
+			"normalChar": "v",
+			"shiftChar": "V"
+		},
+		"KEYCODE_W": {
+			"normalChar": "w",
+			"shiftChar": "W"
+		},
+		"KEYCODE_X": {
+			"normalChar": "x",
+			"shiftChar": "X"
+		},
+		"KEYCODE_Y": {
+			"normalChar": "y",
+			"shiftChar": "Y"
+		},
+		"KEYCODE_Z": {
+			"normalChar": "z",
+			"shiftChar": "Z"
+		}
+	};
 	export default{
 		onLoad() {
-			
+			this.setOnKeyEventListener();
+		},
+		onUnload(){
+			this.disableAllOnKeyEventListener(); //取消所有监听
 		},
 		onShow() {
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
@@ -160,10 +357,71 @@
 				outboundTeamList:[],//出库班组数据列表
 				disableKey:'售罄',//禁用关键词
 				disableTips:'抱歉，此水果已售罄，请重新选择！',//禁用提示
-				oldProductOrderNumObj:{} //旧的生产单号
+				oldProductOrderNumObj:{} ,//旧的生产单号,
+				tag: "1", //不必理会，固定 1 就好,
 			}
 		},
 		methods:{
+			setOnKeyEventListener() {
+				let that = this;
+				// longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen');//引用插件
+				//设置监听，可设置多个，回调按 tag 区分哪个监听返回。
+				longyoungKeyEventListen.setOnKeyEventListenerLy({
+					tag: that.tag //不必理会，固定 1 就好
+				}, result => {
+					if (!result.keyCode) {
+						that.resultStr += '\n' + JSON.stringify(result) + '\n';
+					}
+					if (result && result.return_code == 'SUCCESS') {
+						if (result.return_type == 'dataBack') { //return_type=dataBack是返回数据标识，返回的数据在此获取
+			
+							//页面只显示1和a，供查看数据结构
+							if (result.keyCode == 'KEYCODE_1' || result.keyCode == 'KEYCODE_A') {
+								that.resultStr += '\n' + JSON.stringify(result) + '\n';
+							}
+							that.handleData(result);
+						}
+					}
+				});
+			},
+			handleData(result) {
+				let that = this;
+				if (result.return_type == 'dataBack') {
+					if (result.action == 'ACTION_UP') { //只取弹起事件
+						let keyCode = result.keyCode;
+						if (keyCode == 'KEYCODE_ENTER') { //扫码结束
+							that.resultStrFinal = allKeyCodeTemp; //最终拼接的字符串赋值
+							allKeyCodeTemp = '';
+							preKeyCode = '';
+							this.handleScanPCS(that.resultStrFinal)
+						} else if (keyCode == 'KEYCODE_SHIFT_LEFT' || keyCode == 'KEYCODE_SHIFT_RIGHT') { //转换键
+							preKeyCode = 'KEYCODE_SHIFT_RIGHT';
+						} else {
+							if (preKeyCode == 'KEYCODE_SHIFT_RIGHT') { //转换键，拿大写
+								if (keyCode && KEY_MAP[keyCode]) {
+									allKeyCodeTemp += KEY_MAP[keyCode].shiftChar;
+								}
+							} else {
+								if (keyCode && KEY_MAP[keyCode]) {
+									allKeyCodeTemp += KEY_MAP[keyCode].normalChar;
+								}
+							}
+							preKeyCode = '';
+						}
+			
+					}
+				}
+			},
+			disableAllOnKeyEventListener() {
+				let that = this;
+				//取消所有监听
+				longyoungKeyEventListen.disableAllOnKeyEventListenerLy({}, result => {
+					that.resultStr += '\n' + JSON.stringify(result) + '\n';
+					if (result && result.return_code == 'SUCCESS') {
+						console.log("取消所有监听成功")
+					}
+				});
+			},
 			sureSelect(val){
 				if(!this.oldProductOrderNumObj.productOrderNum){
 					this.oldProductOrderNumObj=JSON.parse(JSON.stringify(val))
@@ -241,7 +499,6 @@
 								})
 								this.inStorageArr.push(
 									{
-									// id:res.data.subpackageId || "",
 									...res.data,
 									arrowFlag: false,
 									}
@@ -273,12 +530,6 @@
 			handleMore(){ // 更多
 				this.showModal = !this.showModal
 			},
-
-			// closeModal(e){//点击页面其他地方关闭清空按钮
-			// 	if(e.target.id!="moreBtn" && this.showModal){
-			// 		// this.showModal=false
-			// 	}
-			// },
 
 			handleInStorage(){ // 出库
 				if(!this.outboundTeamObj.id){
@@ -470,9 +721,6 @@
 						display: flex;
 						justify-content: flex-end;
 						.arrowImage {
-							// position: absolute;
-							// right: 55rpx;
-							// top: 55rpx;
 							width: 44rpx;
 							height: 46rpx;
 						}
@@ -509,7 +757,6 @@
 				text-align: center;
 				color: #585858;
 				font-size: 32rpx;
-				// font-weight: bold;
 				display: flex;
 				justify-content: flex-end;
 				align-items:center;
