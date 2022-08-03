@@ -313,7 +313,7 @@
 					 }
 				}],
 				tag: "1", //不必理会，固定 1 就好,
-				obj:{}
+				obj:{},
 			}
 		},
 		methods:{
@@ -360,7 +360,8 @@
 								// 扫描库位
 								try{
 									this.obj=JSON.parse(that.resultStrFinal)
-									this.handleScanStorage(this.obj.code,this.obj.factoryManagerName)
+									// this.handleScanStorage(this.obj.code,this.obj.factoryManagerName)
+									this.handleScanStorage(this.obj.code)
 								}catch(error){
 									this.showErrorMessage = '请扫描正确的库位码！'
 									this.showErrorPop = true
@@ -413,10 +414,10 @@
 					this.inStorageArr = this.inStorageArr.filter(item =>item.id !== i.id)
 				}
 			},
-			handleScanStorage(locationCode,factoryManagerName){ // 扫描库位
+			handleScanStorage(locationCode){ // 扫描库位
 				Api.getLocation({
 					locationCode,	// 'A-01'
-					factoryManagerName
+					// factoryManagerName
 				}).then(res => {
 					if (res.code === 0) {
 						uni.showToast({
@@ -684,9 +685,6 @@
 						display: flex;
 						justify-content: flex-end;
 						.arrowImage {
-							// position: absolute;
-							// right: 55rpx;
-							// top: 55rpx;
 							width: 44rpx;
 							height: 46rpx;
 						}
@@ -723,7 +721,6 @@
 				text-align: center;
 				color: #585858;
 				font-size: 32rpx;
-				// font-weight: bold;
 				display: flex;
 				justify-content: flex-end;
 				align-items:center;
