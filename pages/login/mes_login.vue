@@ -132,7 +132,7 @@ export default {
 	.logoBox{
 		width: 466rpx;
 		height: 58rpx;
-		margin-top: 286rpx;
+		margin-top: 150rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -164,7 +164,7 @@ export default {
 			height: 100rpx;
 			font-size: 36rpx;
 			border-radius: 59rpx;
-			margin-top: 100rpx;
+			margin-top: 40rpx;
 			background-color: #0C99F2;
 		}
 	}
