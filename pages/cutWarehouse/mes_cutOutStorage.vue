@@ -63,20 +63,20 @@
 		<view class="bottomLocation">
 			<view class="btnLocation">
 				<view class="moreBtn">
-					<u--text style="padding-right: 10rpx;"  size="32" text="更多" :color="'#333333'" lineHeight="104" @tap="handleMore"></u--text>
+					<u--text style="padding-right: 15rpx;"  size="48" text="更多" :color="'#333333'" lineHeight="156" @tap="handleMore"></u--text>
 					<view class="iconfont icon-gengduo icon_style"></view>
 				</view>
-				<view class="scanNum"><text style="padding-right: 20px;">已扫描行数：{{ inStorageArr.length }} </text>
+				<view class="scanNum"><text style="padding-right: 30px;">已扫描行数：{{ inStorageArr.length }} </text>
 				<u-button class="inStorageBtn" type="primary" :class="!inStorageArr.length > 0 ?'custom-style' : ''" @tap="handleInStorage" :disabled="!inStorageArr.length > 0" text="出库"></u-button></view>
 			</view>
 		</view>
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
-			<view style="margin: 0 20rpx 0 90rpx;">{{ showSuccessMessage }}</view>
+			<view style="margin: 0 30rpx 0 135rpx;">{{ showSuccessMessage }}</view>
 		</view>
 		<view class="errorPopup remindPopup" v-if="showErrorPop">
 			<view class="errorImage"></view>
-			<view style="margin: 0 20rpx 0 80rpx;">{{ showErrorMessage }}</view>
+			<view style="margin: 0 30rpx 0 120rpx;">{{ showErrorMessage }}</view>
 		</view>
 		<scan-code></scan-code>
 		<view>
@@ -585,9 +585,9 @@
 <style lang="less" scoped>
 .content-box {
 	flex: 1;
-	height: 44px;
-	line-height: 44px;
-	padding: 0 15px;
+	height: 66px;
+	line-height: 66px;
+	padding: 0 22.5px;
 	position: relative;
 	background-color: #fff;
 	border: 1px solid #f5f5f5;
@@ -600,17 +600,17 @@
 	    }
 	
 	    .u-demo-block__title {
-	        padding: 10px 0 2px 15px;
+	        padding: 15px 0 3px 22.5px;
 	    }
 	
 	    .swipe-action {
 	        &__content {
-	             padding: 25rpx 0;
+	             padding: 37.5rpx 0;
 	    
 	            &__text {
-	                 font-size: 15px;
+	                 font-size: 22.5px;
 	                 color: black;
-	                 padding-left: 30rpx;
+	                 padding-left: 45rpx;
 	             }
 	        }
 	    }
@@ -621,7 +621,7 @@
 		width: 100%;
 		.requier{
 			color: red;
-			margin-right: 10rpx;
+			margin-right: 15rpx;
 		}
 		.location {
 			position: relative;
@@ -629,16 +629,16 @@
 				background-color: #E4F4FF;
 				width: 100%;
 				font-family: PingFang-SC-Bold;
-				font-size: 18px;
+				font-size: 27px;
 				color: #0C99F2;
-				padding: 13px 14px;
+				padding: 20px 21px;
 				font-weight: 700;
 			}
 		}
 		.storageTop{
 			display: flex;
 			width: 100%;
-			padding-bottom: 8rpx;
+			padding-bottom: 12rpx;
 			justify-content: space-between;
 			font-weight: bold;
 			
@@ -653,7 +653,7 @@
 			}
 		}
 		.pannelContent {
-			height: calc(100vh - 350rpx);
+			height: calc(100vh - 525rpx);
 			overflow: auto;
 			.selectLine-in {
 				width: 750rpx;
@@ -661,19 +661,19 @@
 				color: #0C99F2;
 			}
 			.storageItem {
-				margin: 20rpx 0;
+				margin: 30rpx 0;
 				width: 750rpx;
 				overflow: hidden;
 				.touch-list{
 					width: 750rpx;
-					padding: 30rpx 26rpx;
+					padding: 45rpx 39rpx;
 					overflow: hidden;
 					background-color: #ffffff;
 				}
 				.list-touch{
 					width: 100%;
 					z-index: 5;
-					font-size: 32rpx;
+					font-size: 48rpx;
 					transition: left 0.2s ease-in-out;
 					white-space: nowrap;
 					text-overflow: ellipsis;
@@ -681,7 +681,7 @@
 					justify-content: flex-start;
 					align-items: center;
 					.serialNumber {
-						padding-right: 40rpx;
+						padding-right: 60rpx;
 						font-weight: bold;
 					}
 					.item_content {
@@ -704,10 +704,10 @@
 						}
 						.storageCode {
 							font-weight: bold;
-							padding-bottom: 16rpx;
+							padding-bottom: 24rpx;
 						}
 						.colorCode_item {
-							padding-bottom: 8rpx;
+							padding-bottom: 12rpx;
 						}
 						.storageContent {
 							display: flex;
@@ -721,22 +721,22 @@
 						display: flex;
 						justify-content: flex-end;
 						.arrowImage {
-							width: 44rpx;
-							height: 46rpx;
+							width: 66rpx;
+							height: 69rpx;
 						}
 					}
 				}
 				.list-delete{
 					right: 0;
 					float: left;
-					width: 100rpx;
-					height: 155rpx;
-					line-height: 155rpx;
-					padding: 5rpx 16rpx;
+					width: 150rpx;
+					height: 232.5rpx;
+					line-height: 232.5rpx;
+					padding: 8rpx 24rpx;
 					background-color: #EA5863;
-					border-radius: 0 20rpx 20rpx 0;
+					border-radius: 0 30rpx 30rpx 0;
 					color: #fff;
-					font-size: 35rpx;
+					font-size: 52.5rpx;
 					font-weight: lighter;
 					text-align: center;
 				}
@@ -744,19 +744,19 @@
 		}
 		.bottomLocation {
 			width: 100%;
-			height: 104rpx;
+			height: 156rpx;
 			background-color: #fafafa;
 			border-top: 1rpx solid #dcdcdc;
 			position: fixed;
 			left: 0;
 			bottom: 0;
-			padding: 0 30rpx;
+			padding: 0 45rpx;
 			
 			.scanNum {
-				line-height: 104rpx;
+				line-height: 156rpx;
 				text-align: center;
 				color: #585858;
-				font-size: 32rpx;
+				font-size: 48rpx;
 				display: flex;
 				justify-content: flex-end;
 				align-items:center;
@@ -772,14 +772,14 @@
 					align-items: center;
 					cursor: pointer;
 					.icon_style {
-						font-size: 20rpx;
+						font-size: 30rpx;
 						color: #999999;
 						
 					}
 				}
 				.inStorageBtn {
-					width: 200rpx;
-					height: 80rpx;
+					width: 300rpx;
+					height: 120rpx;
 					margin: 0;
 				}
 				.custom-style {
@@ -792,35 +792,35 @@
 		}
 		.btnModal-cut {
 			position: absolute;
-			left: 30rpx;
-			bottom: 37px;
+			left: 45rpx;
+			bottom: 56px;
 			z-index: 90;
 			.modalImage {
-				width: 300rpx;
-				height: 166rpx;
+				width: 450rpx;
+				height: 249rpx;
 			}
 		}
 		.commonBtn {
 			display: inline-block;
 			text-align: center;
 			color: #fff;
-			padding: 20rpx 55rpx;
-			border-radius: 15rpx;
+			padding: 30rpx 82.5rpx;
+			border-radius: 22.5rpx;
 		}
 		.emptyBtn {
 			background-color: #FC361D;
 			position: absolute;
-			left: 65rpx;
-			top: 35rpx
+			left: 97.5rpx;
+			top: 52.5rpx
 		}
 		.remindPopup {
 			color: #666;
-			font-size: 30rpx;
+			font-size: 45rpx;
 			font-weight: bold;
-			border-radius: 10rpx;
-			height: 80rpx;
+			border-radius: 15rpx;
+			height: 120rpx;
 			text-align: center;
-			line-height: 80rpx;
+			line-height: 120rpx;
 			position: absolute;
 			left: 50%;
 			top: 50%;
@@ -834,11 +834,11 @@
 			.successImage {
 				display: inline-block;
 				background: url('../../static/cutWarehouse/success.png') no-repeat;
-				width: 50rpx;
-				height: 50rpx;
+				width: 75rpx;
+				height: 75rpx;
 				position: absolute;
-				left: 20rpx;
-				top: 10rpx;
+				left: 30rpx;
+				top: 15rpx;
 			}
 		}
 		.errorPopup {
@@ -847,11 +847,11 @@
 			.errorImage {
 				display: inline-block;
 				background: url('../../static/cutWarehouse/error.png') no-repeat;
-				width: 40rpx;
-				height: 40rpx;
+				width: 60rpx;
+				height: 60rpx;
 				position: absolute;
-				left: 20rpx;
-				top: 20rpx;
+				left: 30rpx;
+				top: 30rpx;
 			}
 		}
 	}

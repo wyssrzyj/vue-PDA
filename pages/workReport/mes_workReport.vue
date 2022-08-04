@@ -18,10 +18,10 @@
 					</view>
 				</view>
 				<ul>
-					<li v-for="item in checkedList" :key="item.name"><text style="font-weight: 800; padding: 0 20rpx;">·</text>{{item.value}}</li>
+					<li v-for="item in checkedList" :key="item.name"><text style="font-weight: 800; padding: 0 30rpx;">·</text>{{item.value}}</li>
 				</ul>
 				<view class="storage-item">
-					<text class="storage-item-left" style="margin-left: 10px;">当前员工</text>
+					<text class="storage-item-left" style="margin-left: 15px;">当前员工</text>
 					<view class="storage-item-right">
 						<text class="info">{{employeeName?employeeName:'未绑定'}}</text>
 					</view>
@@ -63,11 +63,11 @@
 		</view>
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
-			<view style="margin-left: 20rpx;">{{ showSuccessMessage }}</view>
+			<view style="margin-left: 30rpx;">{{ showSuccessMessage }}</view>
 		</view>
 		<view class="errorPopup remindPopup" v-if="showErrorPop">
 			<view class="errorImage"></view>
-			<view style="margin-left: 20rpx;">{{ showErrorMessage }}</view>
+			<view style="margin-left: 30rpx;">{{ showErrorMessage }}</view>
 		</view>
 		<select-code-multiple :visible="showM" :checkedValue="checkedList" :optionList="coutryList"
 			@confirm="getCodeMu"></select-code-multiple>
@@ -612,12 +612,21 @@
 		background-color: #FC361D!important;
 		color: #007AFF;
 	}
+	::v-deep .u-toolbar__wrapper__confirm{
+		font-size: 36rpx;
+	}
+	::v-deep .u-toolbar__wrapper__cancel{
+		font-size: 36rpx;
+	}
+	::v-deep .uni-picker-view-wrapper{
+		font-size: 36rpx;
+	}
 	.requier{
 		color: red;
-		margin-right: 10rpx;
+		margin-right: 15rpx;
 	}
 	.iconfont{
-		font-size: 12rpx;
+		font-size: 18rpx;
 	}
 	::v-deep .u-toolbar[data-v-6d25fc6f]{
 		border-bottom: 1px solid  #EAEAEA!important;
@@ -626,72 +635,71 @@
 		position: relative;
 		background-color: #F3F3F3;
 		.borderBottom{
-			padding-bottom: 10rpx;
+			padding-bottom: 15rpx;
 		}
 		//查询按钮样式
 		.queryBtn{
 			background-color: $theme-color;
-			width: 130rpx;
-			border-radius: 8rpx;
-			margin: 0 10rpx;
+			width: 195rpx;
+			border-radius: 12rpx;
+			margin: 0 15rpx;
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			height: 60rpx;
+			height: 90rpx;
 			color: white;
 			font-weight: 600;
 			cursor: pointer;
 		}
 		.radioLocation {
 			text-align: right;
-			margin-right: 20rpx;
+			margin-right: 30rpx;
 			.checkboxStyle {
 				display: inline-block;
 			}
 		}
 		li{
-			height: 45rpx;
-			line-height: 45rpx;
-			font-size: 32rpx;
-			margin: 0rpx 15rpx;
-			padding: 10rpx 0rpx;
+			height: 67.5rpx;
+			line-height: 67.5rpx;
+			font-size: 48rpx;
+			margin: 0rpx 22.5rpx;
+			padding: 15rpx 0rpx;
 			overflow: hidden;
 			text-overflow:ellipsis;
 			white-space: nowrap;
-			width: 550rpx;
+			width: 825rpx;
 		}
 		.pannelContent {
-			height: calc(100vh - 474rpx);
-			overflow: auto;
+			margin-bottom: 156rpx;
 			width: 100%;
 			.first_item {
 				color: #0C99F2;
 			
 			}
 			.storageItem {
-				height: 214rpx;
+				height: 321rpx;
 				width: 100%;
 				display: flex;
-				margin: 10rpx 0;
-				padding: 0 30rpx ;
+				margin: 15rpx 0;
+				padding: 0 45rpx ;
 				background-color: #FFFFFF;
 				overflow: hidden;
 				.serialNumber{
-					font-size: 36rpx;
+					font-size: 54rpx;
 					font-weight: bold;
 					color: #333333;
-					line-height: 214rpx;
-					margin-right: 30rpx;
+					line-height: 321rpx;
+					margin-right: 45rpx;
 				}
 				.storageInfo{
-					font-size: 34rpx;
+					font-size: 51rpx;
 					color: #333333;
 					.storageCode{
-						line-height: 80rpx;
+						line-height: 120rpx;
 						font-weight: bold;
 					}
 					.storageColor{
-						margin-bottom: 20rpx;
+						margin-bottom: 30rpx;
 						text:first-child{
 							font-weight: bold;
 						}
@@ -703,7 +711,7 @@
 						display: flex;
 						justify-content: space-between;
 						.number{
-							width: 320rpx;
+							width: 480rpx;
 							text:first-child{
 								font-weight: bold;
 							}
@@ -712,17 +720,17 @@
 							}
 						}
 						.count{
-							width: 360rpx;
+							width: 540rpx;
 							display: flex;
 							text:first-child{
 								font-weight: bold;
-								width: 120rpx;
+								width: 180rpx;
 							}
 							input{
-								width: 140rpx;
-								height: 52rpx;
+								width: 210rpx;
+								height: 78rpx;
 								border: 1px solid #0C99F2;
-								border-radius: 4rpx;
+								border-radius: 6rpx;
 								text-align: center;
 							}
 						}
@@ -745,41 +753,41 @@
 		
 		.btnModal {
 			position: absolute;
-			left: 30rpx;
-			bottom: 10rpx;
+			left: 45rpx;
+			bottom: 15rpx;
 			z-index: 10;
 			.modalImage {
-				width: 300rpx;
-				height:166rpx;
+				width: 450rpx;
+				height:249rpx;
 			}
 		}
 		.commonBtn {
 			display: inline-block;
 			text-align: center;
 			color: #fff;
-			padding: 20rpx 55rpx;
-			border-radius: 15rpx;
+			padding: 30rpx 82.5rpx;
+			border-radius: 22.5rpx;
 		}
 		.emptyBtn {
 			background-color: #FC361D;
 			position: absolute;
-			left: 65rpx;
-			top: 35rpx
+			left: 97.5rpx;
+			top: 52.5rpx
 		}
 		.remindPopup {
 			color: #666;
-			font-size: 30rpx;
+			font-size: 45rpx;
 			font-weight: bold;
-			border-radius: 10rpx;
-			width: 530rpx;
-			height: 80rpx;
+			border-radius: 15rpx;
+			width: 795rpx;
+			height: 120rpx;
 			text-align: center;
-			line-height: 80rpx;
+			line-height: 120rpx;
 			position: absolute;
 			left: 50%;
 			top: 50%;
-			margin-left: -265rpx;
-			margin-top: -40rpx;
+			margin-left: -397.5rpx;
+			margin-top: -60rpx;
 			z-index: 999;
 		}
 		.successPopup {
@@ -788,11 +796,11 @@
 			.successImage {
 				display: inline-block;
 				background: url('../../static/cutWarehouse/success.png') no-repeat;
-				width: 50rpx;
-				height: 50rpx;
+				width: 75rpx;
+				height: 75rpx;
 				position: absolute;
-				left: 40rpx;
-				top: 10rpx;
+				left: 60rpx;
+				top: 15rpx;
 			}
 		}
 		.errorPopup {
@@ -801,11 +809,11 @@
 			.errorImage {
 				display: inline-block;
 				background: url('../../static/cutWarehouse/error.png') no-repeat;
-				width: 40rpx;
-				height: 40rpx;
+				width: 60rpx;
+				height: 60rpx;
 				position: absolute;
-				left: 40rpx;
-				top: 20rpx;
+				left: 60rpx;
+				top: 30rpx;
 			}
 		}
 	}

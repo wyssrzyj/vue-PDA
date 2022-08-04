@@ -742,7 +742,6 @@
 					width: 300rpx;
 					height: 120rpx;
 					margin: 0;
-					font-size: 96rpx;
 				}
 				.custom-style {
 					color: #999999;
