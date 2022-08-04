@@ -79,15 +79,15 @@
 				}
 			}
 			return {
-				defaultVal
-				,title: ''
-				,debug:true
-				,pickerValue:[]
-				,visible: true
-				,pickerList:[]
-				,searchKey:''
-				,isChoose:true
-				,chooseVal:''
+				defaultVal,
+				title: '',
+				debug:true,
+				pickerValue:[],
+				visible: true,
+				pickerList:[],
+				searchKey:'',
+				isChoose:true,
+				chooseVal:''
 			}
 		}
 		,mounted() {//初始化

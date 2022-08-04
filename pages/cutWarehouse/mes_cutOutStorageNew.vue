@@ -14,7 +14,6 @@
 					<checkbox value="" :checked="!isSelectCheckbox" style="transform: scale(0.8)" />
 					<view class="checkboxStyle">展示全部</view>
 				</view>
-				
 			</checkbox-group>
 		</view>
 		<view class="pannelContent">
@@ -92,23 +91,20 @@
 			<view style="margin: 0 20rpx 0 80rpx;">{{ showErrorMessage }}</view>
 		</view>
 		<scan-code></scan-code>
-		
-		
 		<u-modal :show="show"  :title="title" :showCancelButton="true" confirmColor="#476bf9" confirmText="确定" @confirm="handleConfirm" @cancel="handleCancel">
-					<view class="slot-content">
-						<rich-text :nodes="content"></rich-text>
-					</view>
+			<view class="slot-content">
+				<rich-text :nodes="content"></rich-text>
+			</view>
 		</u-modal>
 		<u-modal :show="showM"  :title="title" confirmColor="#476bf9" confirmText="确定" @confirm="handleConfirmM">
-				<view class="slot-content">
-					<rich-text :nodes="contentM"></rich-text>
-				</view>
+			<view class="slot-content">
+				<rich-text :nodes="contentM"></rich-text>
+			</view>
 		</u-modal>
 	</view>
 </template>
 
 <script>
-	// import { defineComponent, ref, reactive, toRefs } from 'vue';
 	import {
 		arrayToHeavy,
 		toasting,
@@ -311,16 +307,13 @@
 		}
 	};
 	export default {
-		// name: 'cutOutStorage',
 		onLoad() {
-			// console.log('onLoad');
 			this.setOnKeyEventListener();
 		},
 		onUnload(){
 			this.disableAllOnKeyEventListener(); //取消所有监听
 		},
 		onShow() {
-			// console.log('onShow');
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器  
 			uni.$on('scancodedate', (data) => {
 				if (this.sewingTaskRecord) {
@@ -377,10 +370,7 @@
 					warehouseLocationId: "1",
 					}
 				],
-				alreadyOutStorageArr: [
-				
-					
-				],
+				alreadyOutStorageArr: [],
 				startX: '',
 				options1: [{
 					text: '删除',
@@ -430,10 +420,6 @@
 							that.resultStrFinal = allKeyCodeTemp; //最终拼接的字符串赋值
 							allKeyCodeTemp = '';
 							preKeyCode = '';
-							// uni.showToast({
-							// 	title: that.resultStrFinal,
-							// 	icon:'none'
-							// });
 							if (this.sewingTaskRecord) {
 								console.log("扫描PCS码")
 								// 扫描PCS码
@@ -646,8 +632,6 @@
 				this.showModal = false
 				this.sewingTaskRecord = ''
 			},
-
-
 			outStorageMethods(bool) {   //全选工具类函数
 				for (let i = 0; i < this.outStorageArr.length; i++) {
 					for (let j = 0; j < this.alreadyOutStorageArr.length; j++) {
@@ -678,8 +662,6 @@
 			border: none !important;
 		}
 		.location {
-			// position: relative;
-			// margin: 20rpx;
 			.tip_text {
 				background-color: #E4F4FF;
 				width: 100%;
@@ -689,7 +671,6 @@
 				padding: 13px 14px;
 				font-weight: 700;
 			}
-
 		.u-swipe-action-item__right__button__wrapper {
 			background-color: #cc3300 !important;
 		}
@@ -713,13 +694,11 @@
 			}
 		}
 		.scanInput {
-				// width: 88%;
 				height: 80rpx;
 				border: 1px solid #767676;
 				background-color: #FFF;
 				padding: 0 10rpx;
 				text-align: center;
-				// margin-left: 70rpx;
 			}
 		}
 		.storageLocation {
@@ -727,12 +706,10 @@
 			display: flex;
 			font-size: 36rpx;
 			justify-content: flex-start;
-			// height: 100rpx;
 			padding: 26rpx 30rpx;
 			background-color: #ffffff;
 			align-items: center;
 			.storageTitle {
-				// font-size: 25rpx;
 				color: #333333;
 				font-weight: bold;
 			}
@@ -747,7 +724,6 @@
 		}
 		.radioLocation {
 			text-align: left;
-			// margin-right: 20rpx;
 			margin-top: 30rpx;
 
 			.checkboxStyle {
@@ -866,7 +842,6 @@
 				text-align: center;
 				color: #585858;
 				font-size: 32rpx;
-				// font-weight: bold;
 				display: flex;
 				justify-content: flex-end;
 				align-items:center;
@@ -884,7 +859,6 @@
 					.icon_style {
 						font-size: 20rpx;
 						color: #999999;
-						
 					}
 				}
 				.inStorageBtn {
@@ -910,8 +884,6 @@
 				width: 300rpx;
 				height: 166rpx;
 				background-color: url('../../static/cutWarehouse/chuku.png')
-				// background-color: rgba();
-				// color: red;
 			}
 		}
 
@@ -934,7 +906,6 @@
 			font-size: 30rpx;
 			font-weight: bold;
 			border-radius: 10rpx;
-			// width: 500rpx;
 			height: 80rpx;
 			text-align: center;
 			line-height: 80rpx;
@@ -959,7 +930,6 @@
 				top: 10rpx;
 			}
 		}
-
 		.errorPopup {
 			background-color: #FFF2F1;
 			border: 1px solid #FDA4A0;

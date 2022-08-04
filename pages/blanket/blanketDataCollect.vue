@@ -1,17 +1,6 @@
 <template>
 	<view class="mainContent">
 		<u-toast ref="uToast"></u-toast>
-		
-		<!-- <view class="search"> -->
-			<!-- <u-input v-model="scanValue" placeholder="请扫描布条码" prefixIcon="search" prefixIconStyle="font-size: 22px;color: #909399" clearable :disabled="isSearch"> -->
-<!-- 				<template slot="suffix">
-					<u-icon name="scan" size="80"></u-icon>
-				</template> -->
-			<!-- </u-input> -->
-<!-- 			<u-input  v-model="clothCodeValue" placeholder="请扫描布条码" disabled>	
-				<u-text text="布条码:" slot="prefix" size="40" margin="0 10rpx 0 0" type="tips"></u-text>
-			</u-input>
-		</view> -->
 		<view class="scanInput">请扫描布条码!</view>
 		<view class="storage" style="margin-bottom: 20rpx;">
 			<view class="storage-item">
@@ -34,22 +23,6 @@
 				<view class="label">数量单位：<text class="numInfo">米</text></view>
 			</view>
 		</view>
-		
-<!-- 		<view class="content">
-			<view class="titleContent">
-				<text class="title">收货数据</text>
-				<text class="unit">数量单位：米</text>
-			</view>
-			<u-cell-group>
-				<u-cell :value="materialColor" label="物料代码、颜色:"  center size="large"></u-cell>
-				<u-cell :value="larghezza" label="幅宽(cm):"  center size="large"></u-cell>
-				<u-cell :value="weight" label="克重(g/㎡):"  center size="large"></u-cell>
-				<u-cell :value="sendQty" label="库存数量:"  center size="large"></u-cell>
-				<u-cell :value="materialQtyPd" label="单耗:"  center size="large"></u-cell>
-			</u-cell-group>
-		</view> -->
-		
-		
 		<!-- 铺布数据 -->
 		<view class="storage" style="margin-bottom: 20rpx;">
 			<view class="storage-item sorageTitle">
@@ -93,36 +66,6 @@
 				</view>
 			</view>
 		</view>
-		
-		<!-- <view class="content" style="margin-top: 10px;"> -->
-<!-- 			<view class="titleContent">
-				<text class="title">铺布数据</text>
-			</view> -->
-<!-- 			<u-form labelPosition="left" labelWidth="180" labelAlign="right" :model="modelData">
-				<u-form-item label="铺布层数:" prop="spreadClothNumberPlies" borderBottom>
-					<u-input v-model="modelData.spreadClothNumberPlies" placeholder="请输入铺布层数" inputAlign="right" border="none" @change="onClothNumberPlies" clearable></u-input>
-				</u-form-item>
-				<u-form-item label="段长:" prop="fragmentExtent" borderBottom>
-					<u-input v-model="modelData.fragmentExtent" placeholder="请输入段长" inputAlign="right" border="none" @change="onFragmentExtent" clearable></u-input>
-				</u-form-item>
-				<u-form-item label="铺布日期:" prop="spreadClothDate" borderBottom>
-					<u-input class="dateInput" v-model="modelData.spreadClothDate" placeholder="请选择铺布日期" inputAlign="right" border="none" clearable>
-						<template slot="suffix">
-							<u-icon name="calendar" size="80" @tap="onSelectDate" style="margin-right: -400rpx;"></u-icon>
-						</template>
-					</u-input>
-				</u-form-item>
-				<u-form-item label="铺布数量:" prop="spreadClothQuantity" borderBottom>
-					<u-input v-model="modelData.spreadClothQuantity" placeholder="请输入铺布数量" inputAlign="right" border="none" @change="onClothQuantity" clearable></u-input>
-				</u-form-item>
-				<u-form-item label="剩余数量:" prop="spreadClothLeftQuantity" borderBottom>
-					<u-input v-model="modelData.spreadClothLeftQuantity" placeholder="请输入剩余数量" inputAlign="right" border="none" @change="onClothLeftQuantity" clearable></u-input>
-				</u-form-item>
-				<u-form-item label="缺料数量:" prop="spreadClothLackQuantity" borderBottom>
-					<u-input v-model="modelData.spreadClothLackQuantity" placeholder="请输入缺料数量" inputAlign="right" border="none" clearable></u-input>
-				</u-form-item>
-			</u-form> -->
-			
 			<view class="gridContent">
 				<view style="width: 140rpx;height: 64rpx;">
 					<u-button class="newBtn" size="small" color="#0C99F2" type="primary" @tap="addGrid">新增</u-button>
@@ -153,18 +96,6 @@
 					</view>
 				</scroll-view>
 			</view>
-		<!-- </view> -->
-		<!-- <view class="bottomLocation"> -->
-<!-- 			<view class="btnLocation">
-				<view class="commonBtn moreBtn" @tap="handleMore">更多</view>
-				<view class="commonBtn submitBtn" @tap="onSubmit" v-if="isSubmit">提交</view>
-				<view class="commonBtn noSubmitBtn" v-else>提交</view>
-			</view> -->
-<!-- 			<view class="btnModal" v-show="showModal">
-				<image class="modalImage" src="../../static/blanket/modalImage.png" mode="aspectFit"></image>
-				<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
-			</view> -->
-		<!-- </view> -->
 		<u-action-sheet :actions="list" :show="showMore" @select="selectClick" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showMore=false"></u-action-sheet>
 		<view class="bottomTab">
 			<view class="bottom-left" id="moreBtn" @click="showMore = true">更多 <view class="iconfont icon-gengduo"></view></view>
@@ -173,10 +104,6 @@
 				<view class="btn btnDisable" v-else >提交</view>
 			</view>
 		</view>
-<!-- 		<view class="btnModal" id="btnModal" v-show="showModal">
-			<image class="modalImage" src="../../static/blanket/modalImage.png" mode="aspectFit"></image>
-			<view class="commonBtn emptyBtn" @tap="handleEmpty">清空</view>
-		</view> -->
 		<scan-code></scan-code>
 		<!-- 日期选择组件 -->
 		<u-calendar
@@ -196,11 +123,210 @@
 <script>
 import Api from '../../service/api'
 import scanCode from '@/components/scan/scan.vue'
-
+const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
+	var timer;
+	var preKeyCode = '';
+	var allKeyCodeTemp = '';
+	var KEY_MAP = {
+		"KEYCODE_GRAVE": {
+			"normalChar": "`",
+			"shiftChar": "~"
+		},
+		"KEYCODE_0": {
+			"normalChar": "0",
+			"shiftChar": ")"
+		},
+		"KEYCODE_1": {
+			"normalChar": "1",
+			"shiftChar": "!"
+		},
+		"KEYCODE_2": {
+			"normalChar": "2",
+			"shiftChar": "@"
+		},
+		"KEYCODE_3": {
+			"normalChar": "3",
+			"shiftChar": "#"
+		},
+		"KEYCODE_4": {
+			"normalChar": "4",
+			"shiftChar": "$"
+		},
+		"KEYCODE_5": {
+			"normalChar": "5",
+			"shiftChar": "%"
+		},
+		"KEYCODE_6": {
+			"normalChar": "6",
+			"shiftChar": "^"
+		},
+		"KEYCODE_7": {
+			"normalChar": "7",
+			"shiftChar": "&"
+		},
+		"KEYCODE_8": {
+			"normalChar": "8",
+			"shiftChar": "*"
+		},
+		"KEYCODE_9": {
+			"normalChar": "9",
+			"shiftChar": "("
+		},
+		"KEYCODE_MINUS": {
+			"normalChar": "-",
+			"shiftChar": "_"
+		},
+		"KEYCODE_EQUALS": {
+			"normalChar": "=",
+			"shiftChar": "+"
+		},
+		"KEYCODE_LEFT_BRACKET": {
+			"normalChar": "[",
+			"shiftChar": "{"
+		},
+		"KEYCODE_RIGHT_BRACKET": {
+			"normalChar": "]",
+			"shiftChar": "}"
+		},
+		"KEYCODE_BACKSLASH": {
+			"normalChar": "\\",
+			"shiftChar": "|"
+		},
+		"KEYCODE_SEMICOLON": {
+			"normalChar": ";",
+			"shiftChar": ":"
+		},
+		"KEYCODE_APOSTROPHE": {
+			"normalChar": "'",
+			"shiftChar": "\""
+		},
+		"KEYCODE_COMMA": {
+			"normalChar": ",",
+			"shiftChar": "<"
+		},
+		"KEYCODE_PERIOD": {
+			"normalChar": ".",
+			"shiftChar": ">"
+		},
+		"KEYCODE_SLASH": {
+			"normalChar": "/",
+			"shiftChar": "?"
+		},
+		"KEYCODE_A": {
+			"normalChar": "a",
+			"shiftChar": "A"
+		},
+		"KEYCODE_B": {
+			"normalChar": "b",
+			"shiftChar": "B"
+		},
+		"KEYCODE_C": {
+			"normalChar": "c",
+			"shiftChar": "C"
+		},
+		"KEYCODE_D": {
+			"normalChar": "d",
+			"shiftChar": "D"
+		},
+		"KEYCODE_E": {
+			"normalChar": "e",
+			"shiftChar": "E"
+		},
+		"KEYCODE_F": {
+			"normalChar": "f",
+			"shiftChar": "F"
+		},
+		"KEYCODE_G": {
+			"normalChar": "g",
+			"shiftChar": "G"
+		},
+		"KEYCODE_H": {
+			"normalChar": "h",
+			"shiftChar": "H"
+		},
+		"KEYCODE_I": {
+			"normalChar": "i",
+			"shiftChar": "I"
+		},
+		"KEYCODE_J": {
+			"normalChar": "j",
+			"shiftChar": "J"
+		},
+		"KEYCODE_K": {
+			"normalChar": "k",
+			"shiftChar": "K"
+		},
+		"KEYCODE_L": {
+			"normalChar": "l",
+			"shiftChar": "L"
+		},
+		"KEYCODE_M": {
+			"normalChar": "m",
+			"shiftChar": "M"
+		},
+		"KEYCODE_N": {
+			"normalChar": "n",
+			"shiftChar": "N"
+		},
+		"KEYCODE_O": {
+			"normalChar": "o",
+			"shiftChar": "O"
+		},
+		"KEYCODE_P": {
+			"normalChar": "p",
+			"shiftChar": "P"
+		},
+		"KEYCODE_Q": {
+			"normalChar": "q",
+			"shiftChar": "Q"
+		},
+		"KEYCODE_R": {
+			"normalChar": "r",
+			"shiftChar": "R"
+		},
+		"KEYCODE_S": {
+			"normalChar": "s",
+			"shiftChar": "S"
+		},
+		"KEYCODE_T": {
+			"normalChar": "t",
+			"shiftChar": "T"
+		},
+		"KEYCODE_U": {
+			"normalChar": "u",
+			"shiftChar": "U"
+		},
+		"KEYCODE_V": {
+			"normalChar": "v",
+			"shiftChar": "V"
+		},
+		"KEYCODE_W": {
+			"normalChar": "w",
+			"shiftChar": "W"
+		},
+		"KEYCODE_X": {
+			"normalChar": "x",
+			"shiftChar": "X"
+		},
+		"KEYCODE_Y": {
+			"normalChar": "y",
+			"shiftChar": "Y"
+		},
+		"KEYCODE_Z": {
+			"normalChar": "z",
+			"shiftChar": "Z"
+		}
+	};
 export default {
 	name: 'blanketDataCollect',
 	components:{
 		scanCode
+	},
+	onLoad() {
+		this.setOnKeyEventListener();
+	},
+	onUnload(){
+		this.disableAllOnKeyEventListener(); //取消所有监听
 	},
 	onShow() {
 		uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器  
@@ -238,7 +364,8 @@ export default {
 				spreadClothLackQuantity: '' // 缺料数量
 			},
 			errorFlag:true,
-			errorMsg:""
+			errorMsg:"",
+			tag: "1", //不必理会，固定 1 就好,
 		}
 	},
 	mounted() {
@@ -266,10 +393,71 @@ export default {
 		// 		}
 		// 	});
 		// },
+		setOnKeyEventListener() {
+			let that = this;
+			// longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen');//引用插件
+			//设置监听，可设置多个，回调按 tag 区分哪个监听返回。
+			longyoungKeyEventListen.setOnKeyEventListenerLy({
+				tag: that.tag //不必理会，固定 1 就好
+			}, result => {
+				if (!result.keyCode) {
+					that.resultStr += '\n' + JSON.stringify(result) + '\n';
+				}
+				if (result && result.return_code == 'SUCCESS') {
+					if (result.return_type == 'dataBack') { //return_type=dataBack是返回数据标识，返回的数据在此获取
 		
+						//页面只显示1和a，供查看数据结构
+						if (result.keyCode == 'KEYCODE_1' || result.keyCode == 'KEYCODE_A') {
+							that.resultStr += '\n' + JSON.stringify(result) + '\n';
+						}
+						that.handleData(result);
+					}
+				}
+			});
+		},
+		handleData(result) {
+			let that = this;
+			if (result.return_type == 'dataBack') {
+				if (result.action == 'ACTION_UP') { //只取弹起事件
+					let keyCode = result.keyCode;
+					if (keyCode == 'KEYCODE_ENTER') { //扫码结束
+						that.resultStrFinal = allKeyCodeTemp; //最终拼接的字符串赋值
+						allKeyCodeTemp = '';
+						preKeyCode = '';
+						this.clothCodeValue = that.resultStrFinal
+						this.handleScanReceiveCode(that.resultStrFinal)
+						this.handleScanClothCode(that.resultStrFinal)
+					} else if (keyCode == 'KEYCODE_SHIFT_LEFT' || keyCode == 'KEYCODE_SHIFT_RIGHT') { //转换键
+						preKeyCode = 'KEYCODE_SHIFT_RIGHT';
+					} else {
+						if (preKeyCode == 'KEYCODE_SHIFT_RIGHT') { //转换键，拿大写
+							if (keyCode && KEY_MAP[keyCode]) {
+								allKeyCodeTemp += KEY_MAP[keyCode].shiftChar;
+							}
+						} else {
+							if (keyCode && KEY_MAP[keyCode]) {
+								allKeyCodeTemp += KEY_MAP[keyCode].normalChar;
+							}
+						}
+						preKeyCode = '';
+					}
+		
+				}
+			}
+		},
+		disableAllOnKeyEventListener() {
+			let that = this;
+			//取消所有监听
+			longyoungKeyEventListen.disableAllOnKeyEventListenerLy({}, result => {
+				that.resultStr += '\n' + JSON.stringify(result) + '\n';
+				if (result && result.return_code == 'SUCCESS') {
+					console.log("取消所有监听成功")
+				}
+			});
+		},
 		handleScanReceiveCode(clothBarCode) { // 扫描布条码带出收货数据
 			Api.getReceiveData({
-				clothBarCode: clothBarCode 
+				clothBarCode: clothBarCode
 			}).then(res => {
 				if (res.code == 0) {
 					this.isSearch = true

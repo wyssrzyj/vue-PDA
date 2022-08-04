@@ -85,41 +85,41 @@ export default{
 
 <style lang="scss" scoped>
 .tabBox {
-	padding: 36rpx 30rpx 0 30rpx;
+	padding: 54rpx 45rpx 0 45rpx;
 	background-color: #FFFFFF;
 	.tabBoxItem{
-		height: 340rpx;
+		height: 510rpx;
 		.text{
-			font-size: 36rpx;
-			margin-bottom: 30rpx;
+			font-size: 54rpx;
+			margin-bottom: 45rpx;
 			font-weight: 600;
 		}
 		.factoryAccess{
 			display: flex;
-			justify-content: space-between;
+			justify-content: flex-start;
 			.factoryAccessItem{
-				width: 200rpx;
-				height: 200rpx;
+				width: 300rpx;
+				height: 300rpx;
 				background-color: #ecf7fc;
-				border-radius: 28rpx;
+				border-radius: 35rpx;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				flex-direction: column;
 				font-weight: 600;
-				font-size: 30rpx;
-				margin-right: 30rpx;
+				font-size: 45rpx;
+				margin-right: 45rpx;
 				.image{
-					width: 90rpx;
-					height: 90rpx;
-					margin-bottom: 15rpx;
+					width: 135rpx;
+					height: 135rpx;
+					margin-bottom: 22.5rpx;
 				}
 				.boxItemTitle{
 					font-family: AlibabaPuHuiTiM;
-					font-size: 30rpx;
+					font-size: 45rpx;
 					color: #333333;
 					text-align: center;
-					line-height: 16px;
+					line-height: 24px;
 				}
 			}
 		}
