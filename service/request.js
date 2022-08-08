@@ -59,3 +59,32 @@ export const requestApi = async (url, method, options = {}) => {
     })
   })
 }
+
+// 上传文件
+export const upload = (url, options = {}) => {
+	// resolve 正常响应，reject异常响应
+	return new Promise((resolve, reject) => {
+		uni.showLoading({
+		  title: '上传中...'
+		})
+		uni.uploadFile({
+		    url:url + `?token=${uni.getStorageSync('token')}`,// 服务器 url
+		    filePath: options.filePath, // 要上传文件资源的路径。
+		    name: options.name || 'file', // File 对象对应 key
+			formData: options.data || {}, //额外的 form data 
+			timeout: 8000, // 8秒超时时间，单位ms
+			success: (res) => {
+				if(res.statusCode === 200) {
+					resolve(JSON.parse(res.data))
+				}else {
+					reject(res)
+				}
+				uni.hideLoading()
+			},
+			fail: (err) => {
+				message.toast('请求接口失败','error')
+				reject(err)
+			},
+		})
+	}) 
+}

@@ -1,5 +1,5 @@
 
-import { requestApi } from './request.js';
+import { requestApi, upload } from './request.js';
 
 // const API_ADDRESS = 'http://10.18.56.96:8081'// 周扬ip
 // const API_ADDRESS = 'http://192.168.1.100:8081' // 蔡鹏志ip
@@ -142,6 +142,26 @@ const Api = {
 	//裁片出库
 	cuttingStockOut(reqData){
 		return requestApi(`${API_ADDRESS}/mes/mespiecesmarket/outOfStock2`, 'POST', reqData)
+	},
+	//质检获取数据
+	mesqualityInspection(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesqualityinspection/scanningGroupCode`, 'GET', reqData)
+	},
+	//质检新增自定义标签
+	updateTag(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesdefectsgruop/addCustom`, 'GET', reqData)
+	},
+	//质检删除自定义标签
+	deleteTag(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesdefectsgruop/delectCustom`, 'GET', reqData)
+	},
+	//质检上传文件
+	uploadFile(reqData){
+		return upload(`${API_ADDRESS}/mes/oss/upload`, reqData)
+	},
+	//质检提交
+	submitMesqualit(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesqualityinspection/submitPad`, 'POST', reqData)
 	},
 }
 

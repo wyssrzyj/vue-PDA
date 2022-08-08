@@ -48,3 +48,11 @@ export const blanketDataList = [
 		link: '/pages/blanket/blanketDataCollect'
 	}
 ]
+export const qualityTestingDataList = [
+	{
+		title: '质检',
+		// permissions: 'mes:messpreadcloth:blanketDataCollect',
+		src: '../../static/blanket/blanket.png',
+		link: '/pages/qualityTesting/mes-qualityTesting'
+	}
+]

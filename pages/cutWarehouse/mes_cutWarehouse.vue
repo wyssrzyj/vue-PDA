@@ -55,11 +55,24 @@
 				</view>
 			</view>
 		</view>
+		<view class="tabBoxItem">
+			<view class="text">
+				质检
+			</view>
+			<view class="factoryAccess blanket" >
+				<view v-for="(item, index) in qualityTestingDataList" :key="index" @tap="toList(item)" >
+					<view class="factoryAccessItem" >
+						<image :src="item.src" class="image"></image>
+						<text class="titleItem">{{ item.title }}</text>
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
-import { cutWarehouseList, outwardProcessingList,blanketDataList,workReportList,ch } from '../../utils/common.js';
+import { cutWarehouseList, outwardProcessingList,blanketDataList,workReportList,qualityTestingDataList } from '../../utils/common.js';
 import { checkPermission } from '../../utils/index.js'
 
 export default{
@@ -70,6 +83,7 @@ export default{
 			outwardProcessingList,
 			blanketDataList,
 			workReportList,
+			qualityTestingDataList,
 			checkPermission
 		}
 	},

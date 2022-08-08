@@ -84,6 +84,14 @@
 				"navigationBarTitleText": "撤销裁片入库",
 				"backgroundColor": "#FFFFFF"
 			}
+		},
+		{
+		    "path" : "pages/qualityTesting/mes-qualityTesting",
+			"style": {
+				"app-plus":{
+					"titleNView":false
+				}
+			} 
 		}
 	],
 	"globalStyle": {
