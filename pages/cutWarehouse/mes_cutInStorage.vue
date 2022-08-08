@@ -46,7 +46,9 @@
 				</view>
 				<view class="scanNum">
 					<text style="padding-right: 30px;">已扫描行数：{{ inStorageArr.length }} </text>
-					<u-button class="inStorageBtn" type="primary" :class="!inStorageArr.length > 0 ?'custom-style' : ''" @tap="handleInStorage" :disabled="!inStorageArr.length > 0" text="入库"></u-button>
+					<!-- <u-button class="inStorageBtn" type="primary" :class="!inStorageArr.length > 0 ?'custom-style' : ''" @tap="handleInStorage" :disabled="!inStorageArr.length > 0" text="入库"></u-button> -->
+					<view class="inStorageBtn btnActive" @click="handleInStorage" v-if="inStorageArr.length > 0">入库</view>
+					<view class="inStorageBtn btnDisable" v-else >入库</view>
 				</view>
 			</view>
 		</view>
@@ -66,203 +68,13 @@
 	import { arrayToHeavy, toasting,useDebounce } from '../../utils/index.js'
 	import  Api from '../../service/api'
 	import scanCode from "../../components/scan/scan.vue"
+	import {KEY_MAP} from "../../constant/index.js"
 	const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
 	var timer;
 	var preKeyCode = '';
 	var allKeyCodeTemp = '';
-	var KEY_MAP = {
-		"KEYCODE_GRAVE": {
-			"normalChar": "`",
-			"shiftChar": "~"
-		},
-		"KEYCODE_0": {
-			"normalChar": "0",
-			"shiftChar": ")"
-		},
-		"KEYCODE_1": {
-			"normalChar": "1",
-			"shiftChar": "!"
-		},
-		"KEYCODE_2": {
-			"normalChar": "2",
-			"shiftChar": "@"
-		},
-		"KEYCODE_3": {
-			"normalChar": "3",
-			"shiftChar": "#"
-		},
-		"KEYCODE_4": {
-			"normalChar": "4",
-			"shiftChar": "$"
-		},
-		"KEYCODE_5": {
-			"normalChar": "5",
-			"shiftChar": "%"
-		},
-		"KEYCODE_6": {
-			"normalChar": "6",
-			"shiftChar": "^"
-		},
-		"KEYCODE_7": {
-			"normalChar": "7",
-			"shiftChar": "&"
-		},
-		"KEYCODE_8": {
-			"normalChar": "8",
-			"shiftChar": "*"
-		},
-		"KEYCODE_9": {
-			"normalChar": "9",
-			"shiftChar": "("
-		},
-		"KEYCODE_MINUS": {
-			"normalChar": "-",
-			"shiftChar": "_"
-		},
-		"KEYCODE_EQUALS": {
-			"normalChar": "=",
-			"shiftChar": "+"
-		},
-		"KEYCODE_LEFT_BRACKET": {
-			"normalChar": "[",
-			"shiftChar": "{"
-		},
-		"KEYCODE_RIGHT_BRACKET": {
-			"normalChar": "]",
-			"shiftChar": "}"
-		},
-		"KEYCODE_BACKSLASH": {
-			"normalChar": "\\",
-			"shiftChar": "|"
-		},
-		"KEYCODE_SEMICOLON": {
-			"normalChar": ";",
-			"shiftChar": ":"
-		},
-		"KEYCODE_APOSTROPHE": {
-			"normalChar": "'",
-			"shiftChar": "\""
-		},
-		"KEYCODE_COMMA": {
-			"normalChar": ",",
-			"shiftChar": "<"
-		},
-		"KEYCODE_PERIOD": {
-			"normalChar": ".",
-			"shiftChar": ">"
-		},
-		"KEYCODE_SLASH": {
-			"normalChar": "/",
-			"shiftChar": "?"
-		},
-		"KEYCODE_A": {
-			"normalChar": "a",
-			"shiftChar": "A"
-		},
-		"KEYCODE_B": {
-			"normalChar": "b",
-			"shiftChar": "B"
-		},
-		"KEYCODE_C": {
-			"normalChar": "c",
-			"shiftChar": "C"
-		},
-		"KEYCODE_D": {
-			"normalChar": "d",
-			"shiftChar": "D"
-		},
-		"KEYCODE_E": {
-			"normalChar": "e",
-			"shiftChar": "E"
-		},
-		"KEYCODE_F": {
-			"normalChar": "f",
-			"shiftChar": "F"
-		},
-		"KEYCODE_G": {
-			"normalChar": "g",
-			"shiftChar": "G"
-		},
-		"KEYCODE_H": {
-			"normalChar": "h",
-			"shiftChar": "H"
-		},
-		"KEYCODE_I": {
-			"normalChar": "i",
-			"shiftChar": "I"
-		},
-		"KEYCODE_J": {
-			"normalChar": "j",
-			"shiftChar": "J"
-		},
-		"KEYCODE_K": {
-			"normalChar": "k",
-			"shiftChar": "K"
-		},
-		"KEYCODE_L": {
-			"normalChar": "l",
-			"shiftChar": "L"
-		},
-		"KEYCODE_M": {
-			"normalChar": "m",
-			"shiftChar": "M"
-		},
-		"KEYCODE_N": {
-			"normalChar": "n",
-			"shiftChar": "N"
-		},
-		"KEYCODE_O": {
-			"normalChar": "o",
-			"shiftChar": "O"
-		},
-		"KEYCODE_P": {
-			"normalChar": "p",
-			"shiftChar": "P"
-		},
-		"KEYCODE_Q": {
-			"normalChar": "q",
-			"shiftChar": "Q"
-		},
-		"KEYCODE_R": {
-			"normalChar": "r",
-			"shiftChar": "R"
-		},
-		"KEYCODE_S": {
-			"normalChar": "s",
-			"shiftChar": "S"
-		},
-		"KEYCODE_T": {
-			"normalChar": "t",
-			"shiftChar": "T"
-		},
-		"KEYCODE_U": {
-			"normalChar": "u",
-			"shiftChar": "U"
-		},
-		"KEYCODE_V": {
-			"normalChar": "v",
-			"shiftChar": "V"
-		},
-		"KEYCODE_W": {
-			"normalChar": "w",
-			"shiftChar": "W"
-		},
-		"KEYCODE_X": {
-			"normalChar": "x",
-			"shiftChar": "X"
-		},
-		"KEYCODE_Y": {
-			"normalChar": "y",
-			"shiftChar": "Y"
-		},
-		"KEYCODE_Z": {
-			"normalChar": "z",
-			"shiftChar": "Z"
-		}
-	};
 	export default{
 		onLoad() {
-			// console.log('onLoad');
 			this.setOnKeyEventListener();
 		},
 		onUnload(){
@@ -352,11 +164,11 @@
 							preKeyCode = '';
 							if(this.storageValue) {
 								// 扫描PCS码
-								this.handleScanPCS(that.resultStrFinal)
+								this.handleScanPCS(decodeURI(that.resultStrFinal))
 							}else {
 								// 扫描库位
 								try{
-									this.obj=JSON.parse(that.resultStrFinal)
+									this.obj=JSON.parse(decodeURI(that.resultStrFinal))
 									// this.handleScanStorage(this.obj.code,this.obj.factoryManagerName)
 									this.handleScanStorage(this.obj.code)
 								}catch(error){
@@ -712,16 +524,6 @@
 			left: 0;
 			bottom: 0;
 			padding: 0 45rpx;
-			
-			.scanNum {
-				line-height: 156rpx;
-				text-align: center;
-				color: #585858;
-				font-size: 48rpx;
-				display: flex;
-				justify-content: flex-end;
-				align-items:center;
-			}
 			.btnLocation {
 				display: flex;
 				flex-direction: row;
@@ -735,20 +537,17 @@
 					.icon_style {
 						font-size: 30rpx;
 						color: #999999;
-						
 					}
 				}
-				.inStorageBtn {
-					width: 300rpx;
-					height: 120rpx;
-					margin: 0;
+				.scanNum {
+					line-height: 156rpx;
+					text-align: center;
+					color: #585858;
+					font-size: 48rpx;
+					display: flex;
+					justify-content: flex-end;
+					align-items:center;
 				}
-				.custom-style {
-					color: #999999;
-					background-color: #E0E0E0;
-					border-color: #E0E0E0;
-				}
-	
 			}
 		}
 		.btnModal-cut {

@@ -7,8 +7,8 @@
 			"path": "pages/login/mes_login",
 			"style": {
 				"navigationBarTitleText": "登录",
-				"backgroundColor": "#FFFFFF",
-				"app-plus":{
+				"backgroundColor": "#FFFFFF"
+				, "app-plus":{
 					"titleNView":{
 						"buttons":[//按钮
 							{

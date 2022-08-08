@@ -165,43 +165,43 @@
 		position: fixed;
 		bottom: 0;
 		width: 100%;
-		height: 460rpx;
+		height: 690rpx;
 		background-color: #FFFFFF;
 		z-index: 300;
 	}
 
 	.top {
 		width: 100%;
-		height: 92rpx;
+		height: 138rpx;
 		display: flex;
 		justify-content: space-between;
 		border-bottom: 1px solid #EAEAEA;
-		line-height: 92rpx;
-		font-size: 30rpx;
+		line-height: 138rpx;
+		font-size: 45rpx;
 		text-align: center;
 		.top_left{
-			width: 120rpx;
+			width: 180rpx;
 			color: #666666;
 		}
 		.top_right {
-			width: 120rpx;
+			width: 180rpx;
 			color: #0C99F2;
 		}
 	}
 
 	.search_content {
-		height: 368rpx;
+		height: 552rpx;
 		width: 100%;
 		.option_item {
-			height: 92rpx;
-			line-height: 92rpx;
+			height: 138rpx;
+			line-height: 138rpx;
 			font-size: 32rpx;
 			color: #666666;
 			border-bottom: 1px solid #EAEAEA;
 			display: flex;
-			padding-left: 90rpx;
+			padding-left: 135rpx;
 			view:first-child{
-				margin-right: 30rpx;
+				margin-right: 45rpx;
 			}
 
 		}

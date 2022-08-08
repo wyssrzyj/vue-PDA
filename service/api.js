@@ -9,7 +9,7 @@ import { requestApi } from './request.js';
 // const API_ADDRESS = 'http://192.168.68.58:8081' // 国庆
 // let API_ADDRESS = 'http://192.168.31.89:8081'//测试
 // let API_ADDRESS = 'http://192.168.31.89:8081'//盛宝丽
-let API_ADDRESS = 'http://10.18.34.6:8081'
+let API_ADDRESS = 'http://192.168.0.235:8081'
 
 export const changeApi=(api)=>{
 	API_ADDRESS = `http://${api}`

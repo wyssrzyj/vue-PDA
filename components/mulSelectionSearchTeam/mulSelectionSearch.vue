@@ -10,7 +10,7 @@
 								<button plain="true" style="margin-top: 20rpx;border-style:none;" @click="cancelChange()"><text class="button-text">取消</text></button>
 						    </uni-col> -->
 						    <uni-col :span="24">
-						        <uni-search-bar style="margin-top: 15rpx;font-size: 3em;" :value="searchKey" radius="0" placeholder="搜索" clearButton="none" cancelButton="none" @input="search"/>
+						        <uni-search-bar style="margin-top: 22.5rpx;font-size: 4.5em;" :value="searchKey" radius="0" placeholder="搜索" clearButton="none" cancelButton="none" @input="search"/>
 						    </uni-col>
 							<!-- <uni-col :span="6">
 								<button plain="true" style="margin-top: 20rpx;border-style:none;" @click="sureSelect()"><text class="button-text">确定</text></button>
@@ -194,20 +194,20 @@
  
 <style lang="less" scoped>
 	.uni-popup{
-		height: 800rpx !important;
+		height: 1200rpx !important;
 	} 
 	.bottom{
-		height: 800rpx !important;
+		height: 1200rpx !important;
 	}
     picker-view {
         width: 100%;
-        height: 400rpx;
+        height: 600rpx;
     }
 	picker-view-column{
 		.item {
-			font-size: 35rpx;
+			font-size: 52.5rpx;
 			font-weight: blod;
-		    line-height: 100rpx;
+		    line-height: 150rpx;
 		    text-align: center;
 		}
 	}

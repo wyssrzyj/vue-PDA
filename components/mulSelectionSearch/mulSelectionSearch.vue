@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="mulSelectionSearch">
 		<view>
 			<!-- 普通弹窗 -->
 			<uni-popup ref="popup" background-color="#fff" @change="change" class="updatePopup">
@@ -10,17 +10,17 @@
 								<button plain="true" style="margin-top: 20rpx;border-style:none;" @click="cancelChange()"><text class="button-text">取消</text></button>
 						    </uni-col> -->
 						    <uni-col :span="24">
-						        <uni-search-bar style="margin-top: 15rpx;font-size: 3em;" :value="searchKey" radius="0" placeholder="搜索" clearButton="none" cancelButton="none" @input="search"/>
+						        <uni-search-bar style="margin-top: 22.5rpx;font-size: 4.5em;" :value="searchKey" radius="0" placeholder="搜索" clearButton="none" cancelButton="none" @input="search"/>
 						    </uni-col>
 							<!-- <uni-col :span="6">
 								<button plain="true" style="margin-top: 20rpx;border-style:none;" @click="sureSelect()"><text class="button-text">确定</text></button>
 							</uni-col> -->
 						</uni-row>
-						<picker-view v-if="visible" :value="pickerValue" indicator-style="height:150rpx;" @change="bindChange">
+						<picker-view v-if="visible" :value="pickerValue" indicator-style="height:225rpx;" @change="bindChange">
 							<picker-view-column>
 								<view class="item" v-for="(item,index) in pickerList" :key="index" @click="sureSelect()">
-									<view style="width: 750rpx">{{`生产单号:${item.productOrderNum}`}}</view>
-									<view style="width: 750rpx;">{{`产品款号:${item.proNum}`}}</view>
+									<view style="width: 1125rpx">{{`生产单号:${item.productOrderNum}`}}</view>
+									<view style="width: 1125rpx;">{{`产品款号:${item.proNum}`}}</view>
 								</view>
 							</picker-view-column>
 						</picker-view>
@@ -196,18 +196,26 @@
 	}
 </script>
  
-<style lang="less" scoped>
-    picker-view {
-        width: 100%;
-        height: 700rpx;
-    }
-	picker-view-column{
-		.item {
-			font-size: 35rpx;
-			font-weight: blod;
-		    line-height: 75rpx;
-		    text-align: left;
-			padding: 0 130rpx;
+<style lang="less">
+	.mulSelectionSearch{
+		/deep/ .uni-searchbar__box{
+			height: 100rpx;
+		}
+		/deep/ .uni-searchbar__text-placeholder{
+			font-size: 36rpx
+		}
+		picker-view {
+		    width: 100%;
+		    height: 700rpx;
+		}
+		picker-view-column{
+			.item {
+				font-size: 52.5rpx;
+				font-weight: blod;
+			    line-height: 112.5rpx;
+			    text-align: left;
+				padding: 0 195rpx;
+			}
 		}
 	}
 </style>
