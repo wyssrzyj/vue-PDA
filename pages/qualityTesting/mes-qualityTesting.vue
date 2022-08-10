@@ -146,7 +146,7 @@
 	import  Api from '../../service/api'
 	import {KEY_MAP} from "../../constant/index.js"
 	import {formateDate} from "../../utils/index.js"
-	const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
+	// const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
 	var preKeyCode = '';
 	var allKeyCodeTemp = '';
 	export default {
@@ -155,7 +155,7 @@
 				timer:'',
 				nowDate:'',
 				statusHeight:'',
-				isScanCode:false,
+				isScanCode:true,
 				employeeName:'',
 				group:'',
 				mesProduceQualityVO:{},//生产单信息
@@ -165,6 +165,8 @@
 				dataForm:{
 					groupCodeId: '',
 					produceOrderId: '',
+					proSize: '',		//颜色
+					colorName: '',		//尺码
 					qualifiedNum: '',	//合格数量
 					reworkNum: '',		//返工数量
 					totalNum:'',
@@ -196,8 +198,8 @@
 			this.getUserInfo()
 			
 			// 开启扫码监听事件
-			this.setOnKeyEventListener()
-			// this.getInfo('PD20220621124716395-00FF-XS-99')
+			// this.setOnKeyEventListener()
+			this.getInfo('PD20220805105944298-08-XS-3')
 		},
 		onUnload(){
 			//取消所有监听
@@ -221,6 +223,8 @@
 				this.dataForm = {
 					groupCodeId: '',
 					produceOrderId: '',
+					proSize: '',
+					colorName: '',
 					qualifiedNum: '',
 					reworkNum: '',
 					totalNum:'',
@@ -323,6 +327,8 @@
 					
 					this.dataForm.groupCodeId = res.data.groupCodeId
 					this.dataForm.produceOrderId = res.data.produceOrderId
+					this.dataForm.proSize = res.data.mesGroupCodeDto.proSize
+					this.dataForm.colorName = res.data.mesGroupCodeDto.proColor
 					this.dataForm.qualifiedNum = res.data.qualifiedNum
 					this.dataForm.reworkNum = res.data.reworkNum
 					this.dataForm.totalNum = res.data.qualifiedNum
