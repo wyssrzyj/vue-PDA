@@ -92,6 +92,14 @@
 					"titleNView":false
 				}
 			} 
+		},
+		{
+		    "path" : "pages/qualityTesting/mes-repairList",
+			"style": {
+				"app-plus":{
+					"titleNView":false
+				}
+			} 
 		}
 	],
 	"globalStyle": {

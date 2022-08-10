@@ -143,6 +143,10 @@ const Api = {
 	cuttingStockOut(reqData){
 		return requestApi(`${API_ADDRESS}/mes/mespiecesmarket/outOfStock2`, 'POST', reqData)
 	},
+	//获取班组信息
+	groupInfo(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesqualityinspection/user`, 'GET', reqData)
+	},
 	//质检获取数据
 	mesqualityInspection(reqData){
 		return requestApi(`${API_ADDRESS}/mes/mesqualityinspection/scanningGroupCode`, 'GET', reqData)
@@ -162,6 +166,14 @@ const Api = {
 	//质检提交
 	submitMesqualit(reqData){
 		return requestApi(`${API_ADDRESS}/mes/mesqualityinspection/submitPad`, 'POST', reqData)
+	},
+	//返工获取数据
+	mesRepairInfo(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesqualityinspection/scanningReworkCode`, 'GET', reqData)
+	},
+	// 修改返工状态
+	updateRepairStatus(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesreworkinfo/updateQualityInspectionStatus`, 'GET', reqData)
 	},
 }
 

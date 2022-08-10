@@ -77,7 +77,7 @@
 							<view class="upload">
 								<scroll-view class="scroll-upload-x" scroll-x >
 									<view class="upload-image" v-for="(img,indez) in item.mesReworkFileDTOList" :key="indez">
-										<image class="img" :src="img.path" @click="previewImage(img.path,item.mesReworkFileDTOList)" />
+										<image class="img" :src="`http://${img.path}`" @click="previewImage(img.path,item.mesReworkFileDTOList)" />
 										<view class="del-top" @click="deleteImg(index,indez)">
 											<span>x</span>
 											<image src="../../static/qualityTesting/delect.png"/>
@@ -131,13 +131,13 @@
 		<view class="bottom">
 			<view>
 				<text style="margin-right: 40rpx;"><text class="lab">检验员：</text>{{employeeName?employeeName:'未绑定'}}</text>
-				<text><text class="lab">班组：</text>缝制1组</text>
+				<text><text class="lab">班组：</text>{{group}}</text>
 			</view>
-			<view>
+<!-- 			<view>
 				<text style="margin-right: 60rpx;">V 1.0.1</text>
 				<text>IP：192.168.1.88</text>
-			</view>
-			<view>2021-01-02 10:11:12</view>
+			</view> -->
+			<view>{{nowDate}}</view>
 		</view>
 	</view>
 </template>
@@ -145,16 +145,19 @@
 <script>
 	import  Api from '../../service/api'
 	import {KEY_MAP} from "../../constant/index.js"
+	import {formateDate} from "../../utils/index.js"
 	const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
-	var timer;
 	var preKeyCode = '';
 	var allKeyCodeTemp = '';
 	export default {
 		data() {
 			return {
+				timer:'',
+				nowDate:'',
 				statusHeight:'',
 				isScanCode:false,
 				employeeName:'',
+				group:'',
 				mesProduceQualityVO:{},//生产单信息
 				mesGroupCodeDto:{},		//组码信息
 				mesDefectsGruopDtoList:[],//标签数组
@@ -165,6 +168,7 @@
 					qualifiedNum: '',	//合格数量
 					reworkNum: '',		//返工数量
 					totalNum:'',
+					groupCodePrinthistId:'',
 					mesReworkInfoList:[]		//返工的单子
 				},
 				tabIndex:0,		//tab索引
@@ -172,49 +176,83 @@
 				diyTag:'',		//自定义输入框
 				// 扫码信息
 				tag: "1", //不必理会，固定 1 就好,
-				resultStr:'',
-				resultStrFinal:''
+				resultStrFinal: null
 			}
 		},
 		onLoad() {
+			// 重置数据
+			this.resetAllInfo()
+			
+			// 刷新当前时间
+			this.timer = setInterval(()=>{
+				this.nowDate = formateDate()
+			}, 1000)
+			
 			let res = uni.getSystemInfoSync()
 			// 获取状态栏高度
 			this.statusHeight = res.statusBarHeight
-			// 获取检验员
-			Api.productionGetAdmin().then(res => {
-				if(res.code=="0"){
-					this.employeeName = res.data.realName
-				}
-			})
-
+			
+			// 获取用户信息
+			this.getUserInfo()
+			
 			// 开启扫码监听事件
 			this.setOnKeyEventListener()
+			// this.getInfo('PD20220621124716395-00FF-XS-99')
 		},
 		onUnload(){
 			//取消所有监听
 			longyoungKeyEventListen.disableAllOnKeyEventListenerLy({}, result => {
-				this.resultStr += '\n' + JSON.stringify(result) + '\n';
 				if (result && result.return_code == 'SUCCESS') {
 					console.log("取消所有监听成功")
 				}
 			});
+			// 取消定时器
+			clearInterval(timer)
+			this.timer = ''
+			this.nowDate = ''
+			this.isScanCode = false
 		},
 		methods: {
+			// 重置所有信息
+			resetAllInfo(){
+				this.mesProduceQualityVO = {}
+				this.mesGroupCodeDto = {}
+				this.mesDefectsGruopDtoList = []
+				this.dataForm = {
+					groupCodeId: '',
+					produceOrderId: '',
+					qualifiedNum: '',
+					reworkNum: '',
+					totalNum:'',
+					groupCodePrinthistId:'',
+					mesReworkInfoList:[]
+				}
+				this.tabIndex = 0,
+				this.reworkIndex = 0,
+				this.diyTag = ''
+				this.resultStrFinal = null
+			},
+			// 获取检验员和班组信息
+			async getUserInfo(){
+				// 获取检验员
+				let username = await Api.productionGetAdmin()
+				if(username.code=="0"){
+					this.employeeName = username.data.realName
+				}
+				let group = await Api.groupInfo()
+				if(group.code=="0"){
+					this.group = group.data.teamName
+				}
+			},
+			//扫码监听事件
 			setOnKeyEventListener() {
 				let that = this;
 				//设置监听，可设置多个，回调按 tag 区分哪个监听返回。
 				longyoungKeyEventListen.setOnKeyEventListenerLy({
 					tag: that.tag //不必理会，固定 1 就好
 				}, result => {
-					if (!result.keyCode) {
-						that.resultStr += '\n' + JSON.stringify(result) + '\n';
-					}
 					if (result && result.return_code == 'SUCCESS') {
 						if (result.return_type == 'dataBack') { //return_type=dataBack是返回数据标识，返回的数据在此获取
-							//页面只显示1和a，供查看数据结构
-							if (result.keyCode == 'KEYCODE_1' || result.keyCode == 'KEYCODE_A') {
-								that.resultStr += '\n' + JSON.stringify(result) + '\n';
-							}
 							that.handleData(result);
 						}
 					}
@@ -229,8 +267,19 @@
 							that.resultStrFinal = allKeyCodeTemp; //最终拼接的字符串赋值
 							allKeyCodeTemp = '';
 							preKeyCode = '';
-							this.obj=JSON.parse(decodeURI(that.resultStrFinal))
-							this.getInfo(this.obj.code)
+							// 判断是否反复扫码
+							if(this.isScanCode){
+								uni.showModal({
+									title: '重复扫码，是否删替换所有组码信息？',
+									success: (result) => {
+										if (result.confirm) {
+											this.getInfo(decodeURI(that.resultStrFinal))
+										}
+									}
+								})
+							} else {
+								this.getInfo(decodeURI(that.resultStrFinal))
+							}
 						} else if (keyCode == 'KEYCODE_SHIFT_LEFT' || keyCode == 'KEYCODE_SHIFT_RIGHT') { //转换键
 							preKeyCode = 'KEYCODE_SHIFT_RIGHT';
 						} else {
@@ -261,6 +310,7 @@
 						})
 						return
 					}
+					this.resetAllInfo()
 					uni.showToast({
 						title: '扫描组码成功！',
 						icon: 'none',
@@ -276,6 +326,7 @@
 					this.dataForm.qualifiedNum = res.data.qualifiedNum
 					this.dataForm.reworkNum = res.data.reworkNum
 					this.dataForm.totalNum = res.data.qualifiedNum
+					this.dataForm.groupCodePrinthistId = res.data.groupCodePrinthistId
 				}else {
 					uni.showToast({
 						title: res.msg,
@@ -409,7 +460,7 @@
 					current: url,
 					indicator: 'number',
 					urls: mesReworkFileDTOList.map(item => {
-						return item.path
+						return `http://${item.path}`
 					})
 				})
 			},
@@ -485,22 +536,8 @@
 							icon: 'none',
 							duration: 3000
 						})
-						this.isScanCode =false
-						this.mesProduceQualityVO = {}
-						this.mesGroupCodeDto = {}
-						this.mesDefectsGruopDtoList = []
-						this.dataForm = {
-							groupCodeId: '',
-							produceOrderId: '',
-							qualifiedNum: '',
-							reworkNum: '',
-							totalNum:'',
-							mesReworkInfoList:[]
-						}
-						this.dataForm.totalNum = '',
-						this.tabIndex = 0,
-						this.reworkIndex = 0,
-						this.diyTag = ''
+						this.isScanCode = false
+						this.resetAllInfo()
 					} else {
 						uni.showToast({
 							title: res.msg,
