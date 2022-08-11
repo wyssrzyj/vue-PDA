@@ -48,7 +48,7 @@
 			</view>
 			<view class="main-function">
 				<view class="message-box">
-					<scroll-view class="scroll-view-x" scroll-x >
+					<scroll-view class="scroll-view-x" scroll-x :scroll-left="scrollQuality" >
 						<!-- 循环 -->
 						<view class="scroll-box" v-for="(item,index) in dataForm.mesReworkInfoList" :class="{'active-board': reworkIndex === index}" :key="item.ids" @click="changeRework(index)">
 							<view class="bookmark" v-if="reworkIndex === index">
@@ -61,7 +61,7 @@
 							</view>
 							<view class="close" :class="{'active-board': reworkIndex === index}" @click="deleteRework(index)">x</view>
 							<view class="same-tags">
-								<scroll-view class="scroll-tag-y1" scroll-y>
+								<scroll-view class="scroll-tag-y1" scroll-y :scroll-top="scrollTag">
 									<view class="select-tag-box">
 										<view class="select-tag" v-for="(flaw,indey) in item.defectsInfoList" :key="indey">
 											<view class="del-top" @click="deleteDefect(index,indey)">
@@ -75,7 +75,7 @@
 							</view>
 							<!-- 图片上传 -->
 							<view class="upload">
-								<scroll-view class="scroll-upload-x" scroll-x >
+								<scroll-view class="scroll-upload-x" scroll-x :scroll-left="scrollImg" >
 									<view class="upload-image" v-for="(img,indez) in item.mesReworkFileDTOList" :key="indez">
 										<image class="img" :src="`http://${img.path}`" @click="previewImage(img.path,item.mesReworkFileDTOList)" />
 										<view class="del-top" @click="deleteImg(index,indez)">
@@ -146,7 +146,7 @@
 	import  Api from '../../service/api'
 	import {KEY_MAP} from "../../constant/index.js"
 	import {formateDate} from "../../utils/index.js"
-	// const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
+	const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
 	var preKeyCode = '';
 	var allKeyCodeTemp = '';
 	export default {
@@ -155,9 +155,12 @@
 				timer:'',
 				nowDate:'',
 				statusHeight:'',
-				isScanCode:true,
+				isScanCode: false,
 				employeeName:'',
 				group:'',
+				scrollTag: 0,	//质检tag滚动距离
+				scrollImg: 0,	//图片上传滚动距离
+				scrollQuality: 0,	//质检滚动距离
 				mesProduceQualityVO:{},//生产单信息
 				mesGroupCodeDto:{},		//组码信息
 				mesDefectsGruopDtoList:[],//标签数组
@@ -198,8 +201,8 @@
 			this.getUserInfo()
 			
 			// 开启扫码监听事件
-			// this.setOnKeyEventListener()
-			this.getInfo('PD20220805105944298-08-XS-3')
+			this.setOnKeyEventListener()
+			// this.getInfo('PD20220805105944298-08-XS-3')
 		},
 		onUnload(){
 			//取消所有监听
@@ -235,6 +238,9 @@
 				this.reworkIndex = 0,
 				this.diyTag = ''
 				this.resultStrFinal = null
+				this.scrollTag = 0
+				this.scrollImg = 0
+				this.scrollQuality = 0
 			},
 			// 获取检验员和班组信息
 			async getUserInfo(){
@@ -351,6 +357,9 @@
 			},
 			decrease(){
 				if(this.dataForm.reworkNum > 0){
+					this.$nextTick(() => {
+						this.scrollQuality = this.scrollQuality === 99999 ? 99998 : 99999
+					})
 					this.deleteRework(this.dataForm.reworkNum - 1,'是否删除最后一条返工？')
 				}
 			},
@@ -363,6 +372,9 @@
 						defectsInfo:'',
 						defectsInfoList:[],
 						mesReworkFileDTOList:[]
+					})
+					this.$nextTick(() => {
+						this.scrollQuality = this.scrollQuality === 99999 ? 99998 : 99999
 					})
 				}
 			},
@@ -387,6 +399,9 @@
 					let defectsInfoList = this.dataForm.mesReworkInfoList[this.reworkIndex].defectsInfoList
 					defectsInfoList.push(tag)
 					this.dataForm.mesReworkInfoList[this.reworkIndex].defectsInfo = defectsInfoList.toString()
+					this.$nextTick(() => {
+						this.scrollTag = this.scrollTag === 99999 ? 99998 : 99999
+					})
 					return true
 				}
 			},
@@ -449,6 +464,9 @@
 								fileName: res.data.fileName,
 								path: res.data.src,
 								thumbnailPath: res.data.thumbnailPath
+							})
+							this.$nextTick(() => {
+								this.scrollImg = this.scrollImg == 99999 ? 99998 : 99999
 							})
 						} else {
 							uni.showToast({
@@ -516,31 +534,28 @@
 			},
 			// 质检提交
 			submit(){
-				// 过滤掉空的返工
-				let reworkInfoList = this.dataForm.mesReworkInfoList.filter( item => {
-					if(item.defectsInfoList.length !== 0 || item.mesReworkFileDTOList.length !== 0) {
-						return true
-					}
-				})
-				console.log(reworkInfoList,'==============')
-				if(reworkInfoList.length === 0){
-					uni.showToast({
-						title: '返工信息不能为空！',
-						icon: 'none',
-						duration: 3000
+				// 返工信息不能有空值
+				if(this.dataForm.mesReworkInfoList.length != 0){
+					let reworkInfoList = this.dataForm.mesReworkInfoList.find( item => {
+						if(item.defectsInfoList.length === 0 && item.mesReworkFileDTOList.length === 0) {
+							return true
+						}
 					})
-					return
-				} else {
-					this.dataForm.mesReworkInfoList = reworkInfoList
-					this.dataForm.reworkNum = reworkInfoList.length
-					this.dataForm.qualifiedNum = this.dataForm.totalNum - reworkInfoList.length
+					if(reworkInfoList){
+						uni.showToast({
+							title: '返工信息不能有空值！',
+							icon: 'none',
+							duration: 3000
+						})
+						return
+					}
 				}
 				Api.submitMesqualit({...this.dataForm}).then((res)=>{
 					if(res.code === 0){
 						uni.showToast({
 							title: '提交成功！',
 							icon: 'none',
-							duration: 3000
+							duration: 5000
 						})
 						this.isScanCode = false
 						this.resetAllInfo()
@@ -790,6 +805,9 @@
 									align-content: flex-start;
 									.select-tag{
 										height: 72rpx;
+										max-width: 420rpx;
+										overflow: hidden;
+										text-overflow: ellipsis; 
 										margin-right: 10rpx;
 										padding: 0 30rpx;
 										border-radius: 4rpx;
