@@ -172,8 +172,8 @@ const Api = {
 		return requestApi(`${API_ADDRESS}/mes/mesqualityinspection/scanningReworkCode`, 'GET', reqData)
 	},
 	// 修改返工状态
-	updateRepairStatus(reqData){
-		return requestApi(`${API_ADDRESS}/mes/mesreworkinfo/updateQualityInspectionStatus`, 'GET', reqData)
+	updateRepairStatus(url,reqData){
+		return requestApi(`${API_ADDRESS}/${url}`, 'GET', reqData)
 	},
 }
 

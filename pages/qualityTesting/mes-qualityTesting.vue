@@ -146,7 +146,7 @@
 	import  Api from '../../service/api'
 	import {KEY_MAP} from "../../constant/index.js"
 	import {formateDate} from "../../utils/index.js"
-	const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
+	// const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
 	var preKeyCode = '';
 	var allKeyCodeTemp = '';
 	export default {
@@ -201,8 +201,8 @@
 			this.getUserInfo()
 			
 			// 开启扫码监听事件
-			this.setOnKeyEventListener()
-			// this.getInfo('PD20220805105944298-08-XS-3')
+			// this.setOnKeyEventListener()
+			this.getInfo('PD20220805105944298-08-XS-3')
 		},
 		onUnload(){
 			//取消所有监听
@@ -491,6 +491,14 @@
 			// 新增自定义tag
 			async submitDiyTag(item){
 				if(this.diyTag.trim()){
+					if(this.diyTag.trim().length > 10){
+						uni.showToast({
+							title: '最多只能输入十个字符！',
+							icon: 'none',
+							duration: 3000
+						})
+						return
+					}
 					let result = this.handleTag(this.diyTag)
 					if(result){
 						let res = await Api.updateTag({customs:this.diyTag})

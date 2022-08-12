@@ -144,13 +144,13 @@
 			let res = uni.getSystemInfoSync()
 			// 获取状态栏高度
 			this.statusHeight = res.statusBarHeight
-			
+
 			// 获取用户信息
 			this.getUserInfo()
 
 			// 开启扫码监听事件
 			this.setOnKeyEventListener()
-			// this.getInfo('ZJ-1557192642885058562')
+			// this.getInfo('PD20220812090140317-16-M(170/92A)-10-01')
 		},
 		onUnload(){
 			//取消所有监听
@@ -275,11 +275,12 @@
 			// 质检提交
 			changeStatus(id,type,index){
 				let typeList = ['返修','确认','报废','取消']
+				let urlList = ['','mes/mesreworkinfo/updateQualityInspectionStatus','mes/mesreworkinfo/scrapRework','mes/mesreworkinfo/cancelRework']
 				uni.showModal({
 					title: `${typeList[type]} 返修？`,
 					success: (result) => {
 						if (result.confirm) {
-							Api.updateRepairStatus({id,type}).then((res)=>{
+							Api.updateRepairStatus(urlList[type],{id}).then((res)=>{
 								if(res.code === 0){
 									uni.showToast({
 										title: '修改成功！',
@@ -357,6 +358,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+			position: relative;
 			.control-info{
 				font-size: 44rpx;
 				color: #FFFFFF;
@@ -366,9 +368,11 @@
 				margin-left: 20rpx;
 			}
 			.back{
+				position: absolute;
 				width: 64rpx;
 				height: 50rpx;
-				left: calc(100% - 84rpx);
+				// left: calc(100% - 84rpx);
+				right: 0;
 				margin-right: 20rpx;
 			}
 		}
