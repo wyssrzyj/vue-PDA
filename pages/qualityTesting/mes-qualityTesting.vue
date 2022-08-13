@@ -35,8 +35,9 @@
 					<view><text class="lab">款号：</text>{{mesProduceQualityVO.proNum}}</view>
 					<view><text class="lab">款名：</text>{{mesProduceQualityVO.name}}</view>
 					<view><text class="lab">数量：</text>{{mesProduceQualityVO.qtyFinal}}</view>
-					<view><text class="lab">质检：</text>{{mesProduceQualityVO.qualifiedNumber}} / {{mesProduceQualityVO.qualityInspectionNumber}}</view>
-					<view><text class="lab">合格率：</text>{{(mesProduceQualityVO.percentPass * 100).toFixed(2)}} %</view>
+					<view><text class="lab">质检：</text>{{mesProduceQualityVO.qualifiedNumber + dataForm.qualifiedNum}} / {{mesProduceQualityVO.qualityInspectionNumber + dataForm.totalNum}}</view>
+					<!-- <view><text class="lab">合格率：</text>{{(mesProduceQualityVO.percentPass * 100).toFixed(2)}} %</view> -->
+					<view><text class="lab">合格率：</text>{{(percentPass*100).toFixed(2)}} %</view>
 				</view>
 				<view class="info-box">
 					<view class="title"><view/><text>组码信息</text></view>
@@ -146,7 +147,7 @@
 	import  Api from '../../service/api'
 	import {KEY_MAP} from "../../constant/index.js"
 	import {formateDate} from "../../utils/index.js"
-	// const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
+	const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
 	var preKeyCode = '';
 	var allKeyCodeTemp = '';
 	export default {
@@ -162,6 +163,7 @@
 				scrollImg: 0,	//图片上传滚动距离
 				scrollQuality: 0,	//质检滚动距离
 				mesProduceQualityVO:{},//生产单信息
+				percentPass:0,			//百分比
 				mesGroupCodeDto:{},		//组码信息
 				mesDefectsGruopDtoList:[],//标签数组
 				// 返回数据
@@ -184,6 +186,15 @@
 				resultStrFinal: null
 			}
 		},
+		watch:{
+			'dataForm.reworkNum': {
+				handler() {
+					this.percentPass = (this.mesProduceQualityVO.qualifiedNumber + this.dataForm.qualifiedNum) / (this.mesProduceQualityVO.qualityInspectionNumber + this.dataForm.totalNum)
+					console.log(this.percentPass)
+				},
+				immediate: true  //初始化时先执行一次
+			}
+		},
 		onLoad() {
 			// 重置数据
 			this.resetAllInfo()
@@ -201,8 +212,8 @@
 			this.getUserInfo()
 			
 			// 开启扫码监听事件
-			// this.setOnKeyEventListener()
-			this.getInfo('PD20220805105944298-08-XS-3')
+			this.setOnKeyEventListener()
+			// this.getInfo('PD20220805105944298-08-XS-3')
 		},
 		onUnload(){
 			//取消所有监听

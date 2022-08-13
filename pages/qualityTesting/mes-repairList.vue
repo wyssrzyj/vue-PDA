@@ -43,7 +43,8 @@
 				<scroll-view class="scroll-view-y" scroll-y >
 					<view class="repair">
 						<view class="repair-box" v-for="(item,index) in mesReworkInfoList" :key="item.id">
-							<view class="repair-title">序号{{index + 1}}</view>
+							<!-- <view class="repair-title">序号{{index + 1}}</view> -->
+							<view class="repair-title" />
 							<view class="repair-steps">
 								<view class="repair-icon">
 									<view class="repair-i">
@@ -456,9 +457,12 @@
 					justify-content: space-between;
 					flex-wrap: wrap;
 					.repair-box{
-						width: calc(100%/2 - 10rpx);
-						height: 330rpx;
-						margin-bottom: 14rpx;
+						// width: calc(100%/2 - 10rpx);
+						// height: 330rpx;
+						// margin-bottom: 14rpx;
+						width: 100%;
+						height: 100%;
+						
 						padding: 12rpx 20rpx;
 						background-color: #FFFFFF;
 						display: flex;
@@ -466,36 +470,51 @@
 						justify-content: space-between;
 						border-radius: 4rpx;
 						.repair-title{
+							// font-size: 32rpx;
+							font-size: 36rpx;
+							
 							width: 100%;
 							height: 44rpx;
-							font-size: 32rpx;
 							line-height: 44rpx;
 							color: #2C2B2B;
 						}
 						.repair-steps{
+							// height: 72rpx;
+							height: 100rpx;
+							
 							width: 100%;
-							height: 72rpx;
 							.repair-icon{
+								// height: 32rpx;
+								height: 40rpx;
+								
 								width: 100%;
-								height: 32rpx;
 								display: flex;
 								.repair-hr{
-									width: calc(100% - 64rpx);
-									height: 16rpx;
+									// width: calc(100% - 64rpx);
+									// height: 16rpx;
+									width: calc(100% - 80rpx);
+									height: 20rpx;
+									
 									border-bottom: 4rpx solid #D8D8D8;
 								}
 								.repair-i{
+									// width: 32rpx;
+									// height: 32rpx;
+									// border-radius: 16rpx;
+									width: 40rpx;
+									height: 40rpx;
+									border-radius: 20rpx;
+									
 									display: inline-block;
-									width: 32rpx;
-									height: 32rpx;
-									border-radius: 16rpx;
 									background-color: #0C99F2;
 									display: flex;
 									justify-content: center;
 									align-items: center;
 									image{
-										width: 17rpx;
-										height: 11rpx;
+										// width: 17rpx;
+										// height: 11rpx;
+										width: 20rpx;
+										height: 15rpx;
 									}
 								}
 								.repair{
@@ -512,26 +531,34 @@
 								}
 							}
 							.repair-info{
+								// font-size: 24rpx;
+								// height: 40rpx;
+								// line-height: 40rpx;
+								font-size: 32rpx;
+								height: 60rpx;
+								line-height: 60rpx;
+								
 								width: 100%;
-								height: 40rpx;
-								font-size: 24rpx;
-								line-height: 40rpx;
 								color: #6D6D6D;
 								display: flex;
 								justify-content: space-between;
 							}
 						}
 						.repair-message{
+							// height: 88rpx;
+							height: 458rpx;
+							
 							width: 100%;
-							height: 88rpx;
 							display: flex;
 							justify-content: space-between;
 							.repair-tags-y{
-								width: calc(100% - 110rpx);
-								height: 88rpx;
-								border-radius: 8rpx;
+								// width: calc(100% - 110rpx);
+								// height: 88rpx;
+								width: calc(100% - 500rpx);
+								height: 458rpx;
+								
+								border-radius: 10rpx;
 								border: 1px solid #E4E4E4;
-								// margin-right: 20rpx;
 								.repair-tags{
 									width: 100%;
 									height: 88rpx;
@@ -540,47 +567,73 @@
 									justify-content: flex-start;
 									flex-wrap: wrap;
 									.repair-tag{
-										height: 40rpx;
-										padding: 0 14rpx;
-										margin-right: 14rpx;
-										margin-bottom: 10rpx;
-										line-height: 40rpx;
+										// height: 40rpx;
+										// padding: 0 14rpx;
+										// font-size: 24rpx;
+										// line-height: 40rpx;
+										// margin: 0 14rpx 10rpx 0;
+										height: 80rpx;
+										border-radius: 4rpx;
+										font-size: 36rpx;
+										line-height: 80rpx;
+										text-align: center;
+										padding: 0 30rpx;
+										border-radius: 4rpx;
+										margin: 0 20rpx 20rpx 0;
+										
 										border: 1px solid #E4E4E4;
-										font-size: 24rpx;
 										color: #6D6D6D;
 									}
 								}	
 							}
 							image{
-								width: 88rpx;
-								height: 88rpx;
+								// width: 88rpx;
+								// height: 88rpx;
+								width: 458rpx;
+								height: 458rpx;
 							}
 						}
 						.repair-control{
+							// height: 56rpx;
+							height: 90rpx;
+							margin-top: 10rpx;
+							
 							width: 100%;
-							height: 56rpx;
 							display: flex;
 							justify-content: space-between;
 							.control-info{
-								width: 340rpx;
-								height: 56rpx;
-								line-height: 30rpx;
-								font-size: 24rpx;
+								// width: 340rpx;
+								// height: 56rpx;
+								// line-height: 30rpx;
+								// font-size: 24rpx;
+								width: 50%;
+								height: 90rpx;
+								line-height: 45rpx;
+								font-size: 32rpx;
+								
 								color: #6D6D6D;
 								.control-time{
-									margin-left: 45rpx;
+									margin-left: 60rpx;
 								}
 							}
 							.control-btn{
-								width: 330rpx;
+								// width: 330rpx;
+								width: 40%;
+								
 								.control-btn-flex{
 									display: flex;
 									justify-content: space-between;
 									view{
-										width: 100rpx;
-										height: 56rpx;
-										font-size: 28rpx;
-										line-height: 56rpx;
+										// width: 100rpx;
+										// height: 56rpx;
+										// font-size: 28rpx;
+										// line-height: 56rpx;
+										width: 160rpx;
+										height: 80rpx;
+										font-size: 32rpx;
+										line-height: 84rpx;
+										margin: 5rpx 0;
+										
 										text-align: center;
 										color: #FFFFFF;
 										border-radius: 8rpx;
@@ -596,9 +649,11 @@
 									}
 								}
 								.control-tip{
-									font-size: 28rpx;
-									line-height: 56rpx;
-									// font-weight: bold;
+									// font-size: 28rpx;
+									// line-height: 56rpx;
+									font-size: 32rpx;
+									line-height: 90rpx;
+									
 									text-align: right;
 								}
 								.cancel{

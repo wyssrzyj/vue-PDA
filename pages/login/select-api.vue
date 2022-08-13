@@ -25,17 +25,19 @@ export default{
 		return {
 			showSelect:false,
 			items: [
-				{value: '192.168.99.140:8081',name: '测试地址'},
-				{value: '192.168.1.5/proxyApi',name: '盛宝丽',},
-				{value: '192.168.68.28:8081',name: '蔡鹏志'},
-				{value: '10.18.34.6:8081',name: '熊锋'},
-				{value: '10.18.56.96:8081',name: '周志键'},
-				{value: '192.168.68.58:8081',name: '李国庆'},
+				{value: '192.168.0.235:8081',name: '线上地址'},
+				{value: '192.168.99.140:8081',name: '测试地址'}
+				// {value: '192.168.1.5/proxyApi',name: '盛宝丽',},
+				// {value: '192.168.68.28:8081',name: '蔡鹏志'},
+				// {value: '10.18.34.6:8081',name: '熊锋'},
+				// {value: '10.18.56.96:8081',name: '周志键'},
+				// {value: '192.168.68.58:8081',name: '李国庆'},
+				// {value: '192.168.68.58:8081',name: '李国庆'},
 			],
 			current: 0,
-			api:'192.168.99.140:8081',
+			api:'192.168.0.235:8081',
 			queryCurrent:0,
-			queryApi:'192.168.99.140:8081'
+			queryApi:'192.168.0.235:8081'
 		}
 	},
 	mounted() {
@@ -88,11 +90,13 @@ export default{
 	z-index: 2;
 	background-color: #FFFFFF;
 	width: 500rpx;
-	height: 1000rpx;
+	// height: 1000rpx;
+	height: 500rpx;
 	border-radius: 20rpx;
 	position: fixed;
 	left:0;
 	right: 0;
+	transform: translate(0, -50%);
 	bottom: 50rpx;
 	margin: 0 auto;
 }
