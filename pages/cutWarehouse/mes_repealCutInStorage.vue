@@ -740,7 +740,7 @@
 			z-index: 5;
 			.reasonDialog {
 				width: 900rpx;
-				height: 780rpx;
+				height: 760rpx;
 				position: absolute;
 				left: 50%;
 				top: 50%;
@@ -796,7 +796,7 @@
 				display: flex;
 				justify-content: space-evenly;
 				align-items: center;
-				padding-top: 60rpx;
+				padding-top: 20rpx;
 			}
 			}
 		}
