@@ -68,8 +68,8 @@
 										<view class="repair-tag" v-for="(i,indey) in item.defectsInfoStr" :key="indey">{{i}}</view>
 									</view>
 								</scroll-view>
-								<image v-if="item.mesReworkFileDTOList" :src="`http://${item.mesReworkFileDTOList[0].path}`" @click="previewImage(`http://${item.mesReworkFileDTOList[0].path}`)" />
-								<image v-else src="../../static/qualityTesting/default.png" @click="previewImage('../../static/qualityTesting/default.png')" />
+								<image v-if="item.mesReworkFileDTOList" :src="`http://${item.mesReworkFileDTOList[0].path}`" @click="previewImage(item.mesReworkFileDTOList)" />
+								<image v-else src="../../static/qualityTesting/default.png" />
 							</view>
 							<view class="repair-control">
 								<view class="control-info">
@@ -151,7 +151,7 @@
 
 			// 开启扫码监听事件
 			this.setOnKeyEventListener()
-			// this.getInfo('PD20220812090140317-16-M(170/92A)-10-01')
+			// this.getInfo('ZJ-1558285682416308225-04')
 		},
 		onUnload(){
 			//取消所有监听
@@ -267,10 +267,13 @@
 				uni.navigateBack()
 			},
 			// 预览图片
-			previewImage(url){
+			previewImage(urlObj){
 				uni.previewImage({
-					current: url,
-					urls:[url]
+					current: `http://${urlObj[0].path}`,
+					indicator: 'number',
+					urls: urlObj.map(item => {
+						return `http://${item.path}`
+					})
 				})
 			},
 			// 质检提交
