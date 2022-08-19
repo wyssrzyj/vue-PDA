@@ -320,11 +320,21 @@
 									if(produceOrderFind){ //组码扫描必须同一生产单下
 										const codeGroup=this.outStorageArr.find(item=>item.snNum==res.data.snNum)
 										if(codeGroup){ //同一组码编号数量相加
-											codeGroup.count+=res.data.count
-											this.outStorageArr = this.outStorageArr.reverse()
-											const index=this.outStorageArr.findIndex(item=>item.snNum===codeGroup.snNum)
-											const obj=this.outStorageArr.splice(index,1)
-											this.outStorageArr.unshift(...obj)
+											uni.showModal({
+												title: '提示',
+												content: '扫描同一组码编号报工数量是否累加',
+												success: (res1)=> {
+													if (res1.confirm) {
+														codeGroup.count+=res.data.count
+														this.outStorageArr = this.outStorageArr.reverse()
+														const index=this.outStorageArr.findIndex(item=>item.snNum===codeGroup.snNum)
+														const obj=this.outStorageArr.splice(index,1)
+														this.outStorageArr.unshift(...obj)
+													} else if (res1.cancel) {
+														console.log('用户点击取消');
+													}
+												}
+											});
 										}else{  //不同组码编号添加记录
 											this.scanPCSEncapsulation.call(this,res)
 										}
@@ -478,7 +488,6 @@
 			overflow: hidden;
 			text-overflow:ellipsis;
 			white-space: nowrap;
-			width: 825rpx;
 		}
 		.pannelContent {
 			margin-bottom: 156rpx;
