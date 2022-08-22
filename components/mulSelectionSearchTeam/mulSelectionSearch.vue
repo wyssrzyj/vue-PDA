@@ -10,13 +10,13 @@
 								<button plain="true" style="margin-top: 20rpx;border-style:none;" @click="cancelChange()"><text class="button-text">取消</text></button>
 						    </uni-col> -->
 						    <uni-col :span="24">
-						        <uni-search-bar style="margin-top: 22.5rpx;font-size: 4.5em;" :value="searchKey" radius="0" placeholder="搜索" clearButton="none" cancelButton="none" @input="search"/>
+						        <uni-search-bar style="margin-top: 15rpx;font-size: 3em;" :value="searchKey" radius="0" placeholder="搜索" clearButton="none" cancelButton="none" @input="search"/>
 						    </uni-col>
 							<!-- <uni-col :span="6">
 								<button plain="true" style="margin-top: 20rpx;border-style:none;" @click="sureSelect()"><text class="button-text">确定</text></button>
 							</uni-col> -->
 						</uni-row>
-						<picker-view v-if="visible" :value="pickerValue" indicator-style="height:50px;" @change="bindChange">
+						<picker-view v-if="visible" :value="pickerValue" indicator-style="height:40px;" @change="bindChange">
 							<picker-view-column>
 								<view class="item" v-for="(item,index) in pickerList" :key="index"  @click="sureSelect()">{{`班组:${item.teamName}`}}</view>
 							</picker-view-column>
@@ -194,20 +194,20 @@
  
 <style lang="less" scoped>
 	.uni-popup{
-		height: 1200rpx !important;
+		height: 800rpx !important;
 	} 
 	.bottom{
-		height: 1200rpx !important;
+		height: 800rpx !important;
 	}
     picker-view {
         width: 100%;
-        height: 600rpx;
+        height: 400rpx;
     }
 	picker-view-column{
 		.item {
-			font-size: 52.5rpx;
+			font-size: 35rpx;
 			font-weight: blod;
-		    line-height: 150rpx;
+		    line-height: 100rpx;
 		    text-align: center;
 		}
 	}

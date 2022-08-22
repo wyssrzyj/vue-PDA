@@ -433,21 +433,12 @@
 		background-color: #FC361D!important;
 		color: #007AFF;
 	}
-	::v-deep .u-toolbar__wrapper__confirm{
-		font-size: 36rpx;
-	}
-	::v-deep .u-toolbar__wrapper__cancel{
-		font-size: 36rpx;
-	}
-	::v-deep .uni-picker-view-wrapper{
-		font-size: 36rpx;
-	}
 	.requier{
 		color: red;
-		margin-right: 15rpx;
+		margin-right: 10rpx;
 	}
 	.iconfont{
-		font-size: 18rpx;
+		font-size: 12rpx;
 	}
 	::v-deep .u-toolbar[data-v-6d25fc6f]{
 		border-bottom: 1px solid  #EAEAEA!important;
@@ -456,70 +447,63 @@
 		position: relative;
 		background-color: #F3F3F3;
 		.borderBottom{
-			padding-bottom: 15rpx;
+			padding-bottom: 10rpx;
 		}
+
 		//查询按钮样式
 		.queryBtn{
 			background-color: $theme-color;
-			width: 195rpx;
-			border-radius: 12rpx;
-			margin: 0 15rpx;
+			width: 130rpx;
+			border-radius: 8rpx;
+			margin: 0 10rpx;
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			height: 90rpx;
+			height: 60rpx;
 			color: white;
 			font-weight: 600;
 			cursor: pointer;
 		}
 		.radioLocation {
 			text-align: right;
-			margin-right: 30rpx;
+			margin-right: 20rpx;
 			.checkboxStyle {
 				display: inline-block;
 			}
 		}
-		li{
-			height: 67.5rpx;
-			line-height: 67.5rpx;
-			font-size: 48rpx;
-			margin: 0rpx 22.5rpx;
-			padding: 15rpx 0rpx;
-			overflow: hidden;
-			text-overflow:ellipsis;
-			white-space: nowrap;
-		}
+		
 		.pannelContent {
-			margin-bottom: 156rpx;
+			height: calc(100vh - 474rpx);
+			overflow: auto;
 			width: 100%;
 			.first_item {
 				color: #0C99F2;
 			
 			}
 			.storageItem {
-				height: 321rpx;
+				height: 214rpx;
 				width: 100%;
 				display: flex;
-				margin: 15rpx 0;
-				padding: 0 45rpx ;
+				margin: 10rpx 0;
+				padding: 0 30rpx ;
 				background-color: #FFFFFF;
 				overflow: hidden;
 				.serialNumber{
-					font-size: 54rpx;
+					font-size: 36rpx;
 					font-weight: bold;
 					color: #333333;
-					line-height: 321rpx;
-					margin-right: 45rpx;
+					line-height: 214rpx;
+					margin-right: 30rpx;
 				}
 				.storageInfo{
-					font-size: 51rpx;
+					font-size: 34rpx;
 					color: #333333;
 					.storageCode{
-						line-height: 120rpx;
+						line-height: 80rpx;
 						font-weight: bold;
 					}
 					.storageColor{
-						margin-bottom: 30rpx;
+						margin-bottom: 20rpx;
 						text:first-child{
 							font-weight: bold;
 						}
@@ -531,7 +515,7 @@
 						display: flex;
 						justify-content: space-between;
 						.number{
-							width: 480rpx;
+							width: 320rpx;
 							text:first-child{
 								font-weight: bold;
 							}
@@ -540,17 +524,17 @@
 							}
 						}
 						.count{
-							width: 540rpx;
+							width: 360rpx;
 							display: flex;
 							text:first-child{
 								font-weight: bold;
-								width: 180rpx;
+								width: 120rpx;
 							}
 							input{
-								width: 210rpx;
-								height: 78rpx;
+								width: 140rpx;
+								height: 52rpx;
 								border: 1px solid #0C99F2;
-								border-radius: 6rpx;
+								border-radius: 4rpx;
 								text-align: center;
 							}
 						}
@@ -573,41 +557,41 @@
 		
 		.btnModal {
 			position: absolute;
-			left: 45rpx;
-			bottom: 15rpx;
+			left: 30rpx;
+			bottom: 10rpx;
 			z-index: 10;
 			.modalImage {
-				width: 450rpx;
-				height:249rpx;
+				width: 300rpx;
+				height:166rpx;
 			}
 		}
 		.commonBtn {
 			display: inline-block;
 			text-align: center;
 			color: #fff;
-			padding: 30rpx 82.5rpx;
-			border-radius: 22.5rpx;
+			padding: 20rpx 55rpx;
+			border-radius: 15rpx;
 		}
 		.emptyBtn {
 			background-color: #FC361D;
 			position: absolute;
-			left: 97.5rpx;
-			top: 52.5rpx
+			left: 65rpx;
+			top: 35rpx
 		}
 		.remindPopup {
 			color: #666;
-			font-size: 45rpx;
+			font-size: 30rpx;
 			font-weight: bold;
-			border-radius: 15rpx;
-			width: 795rpx;
-			height: 120rpx;
+			border-radius: 10rpx;
+			width: 530rpx;
+			height: 80rpx;
 			text-align: center;
-			line-height: 120rpx;
+			line-height: 80rpx;
 			position: absolute;
 			left: 50%;
 			top: 50%;
-			margin-left: -397.5rpx;
-			margin-top: -60rpx;
+			margin-left: -265rpx;
+			margin-top: -40rpx;
 			z-index: 999;
 		}
 		.successPopup {
@@ -616,11 +600,11 @@
 			.successImage {
 				display: inline-block;
 				background: url('../../static/cutWarehouse/success.png') no-repeat;
-				width: 75rpx;
-				height: 75rpx;
+				width: 50rpx;
+				height: 50rpx;
 				position: absolute;
-				left: 60rpx;
-				top: 15rpx;
+				left: 40rpx;
+				top: 10rpx;
 			}
 		}
 		.errorPopup {
@@ -629,11 +613,11 @@
 			.errorImage {
 				display: inline-block;
 				background: url('../../static/cutWarehouse/error.png') no-repeat;
-				width: 60rpx;
-				height: 60rpx;
+				width: 40rpx;
+				height: 40rpx;
 				position: absolute;
-				left: 60rpx;
-				top: 30rpx;
+				left: 40rpx;
+				top: 20rpx;
 			}
 		}
 	}

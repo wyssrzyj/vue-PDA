@@ -4,7 +4,7 @@
 			<view class="tip_text"><text>{{storageValue ? '请扫描扎包条码!': '请扫描库位码'}}</text></view>
 		</view>
 		<view class="storageLocation">
-			<text class="storageTitle">当前库位：<text style="color: #666666; font-size: 54rpx;">{{storageValue}}</text></text>
+			<text class="storageTitle">当前库位：<text style="color: #666666; font-size: 36rpx;">{{storageValue}}</text></text>
 		</view>
 		<view class="pannelContent">
 			<uni-swipe-action>
@@ -44,11 +44,11 @@
 		<view class="bottomLocation">
 			<view class="btnLocation">
 				<view class="moreBtn">
-					<u--text style="padding-right: 15rpx;"  size="48" text="更多" :color="'#333333'" lineHeight="156" @tap="handleMore"></u--text>
+					<u--text style="padding-right: 10rpx;"  size="32" text="更多" :color="'#333333'" lineHeight="104" @tap="handleMore"></u--text>
 					<view class="iconfont icon-gengduo icon_style"></view>
 				</view>
 				<view class="scanNum">
-					<text style="padding-right: 30px;">已扫描行数：{{ inStorageArr.length }}</text>
+					<text style="padding-right: 20px;">已扫描行数：{{ inStorageArr.length }}</text>
 					<!-- <u-button class="inStorageBtn" type="primary" :class="!inStorageArr.length > 0 ?'custom-style' : ''" @tap="handleRepealInStorage" :disabled="!inStorageArr.length > 0" text="撤销入库"></u-button> -->
 					<view class="inStorageBtn btnActive" @click="handleRepealInStorage" v-if="inStorageArr.length > 0">撤销入库</view>
 					<view class="inStorageBtn btnDisable" v-else >撤销入库</view>
@@ -57,11 +57,11 @@
 		</view>
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
-			<view style="margin: 0 30rpx 0 135rpx;">{{ showSuccessMessage }}</view>
+			<view style="margin: 0 20rpx 0 90rpx;">{{ showSuccessMessage }}</view>
 		</view>
 		<view class="errorPopup remindPopup" v-if="showErrorPop">
 			<view class="errorImage"></view>
-			<view style="margin: 0 30rpx 0 120rpx;">{{ showErrorMessage }}</view>
+			<view style="margin: 0 20rpx 0 80rpx;">{{ showErrorMessage }}</view>
 		</view>
 		<view class="reasonMask" v-if="showReasonMask">
 			<view class="reasonDialog">
@@ -488,47 +488,51 @@
 				background-color: #E4F4FF;
 				width: 100%;
 				font-family: PingFang-SC-Bold;
-				font-size: 54rpx;
+				font-size: 36rpx;
 				color: #0C99F2;
-				padding: 39rpx 42rpx;
+				padding: 26rpx 28rpx;
 				font-weight: 700;
 			}
 			.scanInput {
-				height: 120rpx;
+				// width: 88%;
+				height: 80rpx;
 				border: 1px solid #767676;
 				background-color: #FFF;
-				padding: 0 15rpx;
+				padding: 0 10rpx;
 				text-align: center;
+				// margin-left: 70rpx;
 			}
 		}
 		.storageLocation {
 			width: 100%;
 			display: flex;
-			font-size: 54rpx;
+			font-size: 36rpx;
 			justify-content: flex-start;
-			padding: 39rpx 45rpx;
+			// height: 100rpx;
+			padding: 26rpx 30rpx;
 			background-color: #ffffff;
 			align-items: center;
 			.storageTitle {
+				// font-size: 25rpx;
 				color: #333333;
 				font-weight: bold;
 			}
 			.storageInput {
 				width: 75%;
-				height: 120rpx;
+				height: 80rpx;
 				display: inline-block;
 				border: 1rpx solid #212121;
 				background-color: #F2F2F2;
-				padding: 0 15rpx;
+				padding: 0 10rpx;
 			}
 		}
 		.pannelContent {
-			height: calc(100vh - 525rpx);
+			height: calc(100vh - 350rpx);
 			overflow: auto;
 			.storageItem {
-				margin: 30rpx 0;
+				margin: 20rpx 0;
 				width: 750rpx;
-				height: 312rpx;
+				height: 208rpx;
 				overflow: hidden;
 				.selectLine {
 					background-color: #E4F4FF !important;
@@ -536,15 +540,15 @@
 				}
 				.touch-list{
 					width: 750rpx;
-					padding: 45rpx 39rpx;
-					height: 312rpx;
+					padding: 30rpx 26rpx;
+					height: 208rpx;
 					overflow: hidden;
 				}
 				.list-touch{
 					width: 100%;
-					height: 312rpx;
+					height: 208rpx;
 					z-index: 5;
-					font-size: 48rpx;
+					font-size: 32rpx;
 					transition: left 0.2s ease-in-out;
 					white-space: nowrap;
 					text-overflow: ellipsis;
@@ -553,7 +557,7 @@
 					align-items: center;
 					
 					.serialNumber {
-						padding-right: 60rpx;
+						padding-right: 40rpx;
 						font-weight: bold;
 					}
 					.item_content {
@@ -576,10 +580,10 @@
 						}
 						.storageCode {
 							font-weight: bold;
-							padding-bottom: 24rpx;
+							padding-bottom: 16rpx;
 						}
 						.colorCode_item {
-							padding-bottom: 12rpx;
+							padding-bottom: 8rpx;
 						}
 						.storageContent {
 							display: flex;
@@ -593,21 +597,25 @@
 						display: flex;
 						justify-content: flex-end;
 						.arrowImage {
-							width: 66rpx;
-							height: 69rpx;
+							// position: absolute;
+							// right: 55rpx;
+							// top: 55rpx;
+							width: 44rpx;
+							height: 46rpx;
 						}
 					}
 				}
 				.list-delete{
 					right: 0;
 					float: left;
-					width: 150rpx;
-					height: 232.5rpx;
-					line-height: 232.5rpx;
-					padding: 7.5rpx 24rpx;
+					width: 100rpx;
+					height: 155rpx;
+					line-height: 155rpx;
+					padding: 5rpx 16rpx;
 					background-color: #F4333F;
+					// border-radius: 0 20rpx 20rpx 0;
 					color: #fff;
-					font-size: 52.5rpx;
+					font-size: 35rpx;
 					font-weight: lighter;
 					text-align: center;
 				}
@@ -618,17 +626,18 @@
 			background-color: #fafafa;
 			border-top: 1rpx solid #dcdcdc;
 			position: fixed;
-			height: 156rpx;
+			height: 104rpx;
 			left: 0;
 			bottom: 0;
-			padding: 0 45rpx;
+			padding: 0 30rpx;
 			z-index: 99;
 			.scanNum {
 			
-				line-height: 156rpx;
+				line-height: 104rpx;
 				text-align: center;
 				color: #585858;
-				font-size: 48rpx;
+				font-size: 32rpx;
+				// font-weight: bold;
 				display: flex;
 				justify-content: flex-end;
 				align-items:center;
@@ -644,10 +653,34 @@
 					align-items: center;
 					cursor: pointer;
 					.icon_style {
-						font-size: 30rpx;
+						font-size: 20rpx;
 						color: #999999;
 						
 					}
+				}
+				.inStorageBtn {
+					display: inline-block;
+					text-align: center;
+					color: #fff;
+					padding: 24rpx 32rpx;
+					line-height: 32rpx;
+					font-size: 32rpx;
+					border-radius: 8rpx;
+					width: 200rpx;
+					height: 80rpx;
+				}
+				.btnActive {
+					background-color: #4a70f5;
+					cursor: pointer;
+				}
+				.btnDisable {
+					background-color: #cccccc;
+					cursor: not-allowed;
+				}
+				.custom-style {
+					color: #999999;
+					background-color: #E0E0E0;
+					border-color: #E0E0E0;
 				}
 			}
 		}
@@ -656,48 +689,53 @@
 			display: inline-block;
 			text-align: center;
 			color: #fff;
-			padding: 30rpx 82.5rpx;
-			border-radius: 22.5rpx;
+			padding: 20rpx 55rpx;
+			border-radius: 15rpx;
 		}
 		.emptyBtn {
 			background-color: #FC361D;
 			position: absolute;
-			left: 97.5rpx;
-			top: 52.5rpx
+			left: 65rpx;
+			top: 35rpx
 		}
 		.cancelBtn {
 			display: inline-block;
 			text-align: center;
-			padding: 21rpx 111rpx;
-			font-size: 54rpx;
+			padding: 14rpx 74rpx;
+			font-size: 36rpx;
 			background-color: #fff;
 			border: 1rpx solid #0C99F2;
 			color: #0C99F2;
-			border-radius: 60rpx;
+			border-radius: 40rpx;
+			// margin: 40rpx 20rpx 40rpx 30rpx;
 			cursor: pointer;
 		}
 		.confirmBtn {
 			display: inline-block;
 			text-align: center;
-			padding: 21rpx 111rpx;
-			font-size: 48rpx;
+			padding: 14rpx 74rpx;
+			font-size: 36rpx;
 			background-color: #0C99F2;
 			border: 1rpx solid #0C99F2;
 			color: #fff;
-			border-radius: 60rpx;
+			border-radius: 40rpx;
+			// margin: 40rpx 30rpx 40rpx 20rpx;
 			cursor: pointer;
 		}
 		.remindPopup {
 			color: #666;
-			font-size: 45rpx;
+			font-size: 30rpx;
 			font-weight: bold;
-			border-radius: 15rpx;
-			height: 120rpx;
+			border-radius: 10rpx;
+			// width: 500rpx;
+			height: 80rpx;
 			text-align: center;
-			line-height: 120rpx;
+			line-height: 80rpx;
 			position: absolute;
 			left: 50%;
 			top: 50%;
+			// margin-left: -250rpx;
+			// margin-top: -40rpx;
 			transform: translate(-50%,-50%);
 			white-space:nowrap;
 			z-index: 999;
@@ -708,11 +746,11 @@
 			.successImage {
 				display: inline-block;
 				background: url('../../static/cutWarehouse/success.png') no-repeat;
-				width: 60rpx;
-				height: 60rpx;
+				width: 40rpx;
+				height: 40rpx;
 				position: absolute;
-				left: 30rpx;
-				top: 30rpx;
+				left: 20rpx;
+				top: 20rpx;
 			}
 		}
 		.errorPopup {
@@ -721,11 +759,11 @@
 			.errorImage {
 				display: inline-block;
 				background: url('../../static/cutWarehouse/error.png') no-repeat;
-				width: 60rpx;
-				height: 60rpx;
+				width: 40rpx;
+				height: 40rpx;
 				position: absolute;
-				left: 30rpx;
-				top: 30rpx;
+				left: 20rpx;
+				top: 20rpx;
 			}
 		}
 		.reasonMask {
@@ -739,55 +777,57 @@
 			bottom: 0;
 			z-index: 5;
 			.reasonDialog {
-				width: 900rpx;
-				height: 760rpx;
+				width: 600rpx;
+				height: 560rpx;
 				position: absolute;
 				left: 50%;
 				top: 50%;
-				margin-left: -450rpx;
-				margin-top: -450rpx;
+				margin-left: -300rpx;
+				margin-top: -300rpx;
 				background-color: #fff;
-				border-radius: 24rpx;
+				// padding: 30rpx 40rpx;
+				border-radius: 16rpx;
 				text-align: left;
 				color: #666;
-				font-size: 51rpx;
+				font-size: 34rpx;
 				.reasonTitle {
-					font-size: 48rpx;
+					font-size: 32rpx;
 					font-weight: bold;
 					text-align: center;
 					background-color: #E4F4FF;
-					border-radius: 24rpx;
-					padding: 42rpx 0;
+					border-radius: 16rpx;
+					padding: 28rpx 0;
 				}
 				.reasonContent {
-					padding: 0 45rpx;
+					padding: 0 30rpx;
 					.reason_content {
-						padding: 36rpx 0;
+						padding: 24rpx 0;
 						
 						border-bottom: 1px #EAEAEA solid;
 					}
 					.lastItem{border-bottom: 1px solid #EAEAEA;;}
 					.reasonInside {
+						// margin: 20rpx 0;
 						.reasonText {
 							display: inline-block;
-							font-size: 48rpx;
+							font-size: 32rpx;
 							font-weight: bold;
 						}
 						.reasonSelect {
 							position: relative;
 							display: inline-block;
 							background-color: #fff;
-							width: 375rpx;
-							height: 75rpx;
-							line-height: 75rpx;
+							width: 250rpx;
+							height: 50rpx;
+							line-height: 50rpx;
 							text-align: center;
 							border: 1px solid #000;
 							.selectDownArrow {
 								position: absolute;
-								right: 7.5rpx;
-								top: 15rpx;
-								width: 60rpx;
-								height: 45rpx;
+								right: 5rpx;
+								top: 10rpx;
+								width: 40rpx;
+								height: 30rpx;
 							}
 						}
 					}
@@ -796,7 +836,7 @@
 				display: flex;
 				justify-content: space-evenly;
 				align-items: center;
-				padding-top: 20rpx;
+				padding-top: 40rpx;
 			}
 			}
 		}

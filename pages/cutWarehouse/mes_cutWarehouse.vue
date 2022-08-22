@@ -55,7 +55,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="tabBoxItem">
+<!-- 		<view class="tabBoxItem">
 			<view class="text">
 				质检
 			</view>
@@ -67,7 +67,7 @@
 					</view>
 				</view>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -99,41 +99,41 @@ export default{
 
 <style lang="scss" scoped>
 .tabBox {
-	padding: 54rpx 45rpx 0 45rpx;
+	padding: 36rpx 30rpx 0 30rpx;
 	background-color: #FFFFFF;
 	.tabBoxItem{
-		height: 510rpx;
+		height: 340rpx;
 		.text{
-			font-size: 54rpx;
-			margin-bottom: 45rpx;
+			font-size: 36rpx;
+			margin-bottom: 30rpx;
 			font-weight: 600;
 		}
 		.factoryAccess{
 			display: flex;
-			justify-content: flex-start;
+			justify-content: space-between;
 			.factoryAccessItem{
-				width: 300rpx;
-				height: 300rpx;
+				width: 200rpx;
+				height: 200rpx;
 				background-color: #ecf7fc;
-				border-radius: 35rpx;
+				border-radius: 28rpx;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				flex-direction: column;
 				font-weight: 600;
-				font-size: 45rpx;
-				margin-right: 45rpx;
+				font-size: 30rpx;
+				margin-right: 30rpx;
 				.image{
-					width: 135rpx;
-					height: 135rpx;
-					margin-bottom: 22.5rpx;
+					width: 90rpx;
+					height: 90rpx;
+					margin-bottom: 15rpx;
 				}
 				.boxItemTitle{
 					font-family: AlibabaPuHuiTiM;
-					font-size: 45rpx;
+					font-size: 30rpx;
 					color: #333333;
 					text-align: center;
-					line-height: 24px;
+					line-height: 16px;
 				}
 			}
 		}

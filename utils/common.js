@@ -48,17 +48,17 @@ export const blanketDataList = [
 		link: '/pages/blanket/blanketDataCollect'
 	}
 ]
-export const qualityTestingDataList = [
-	{
-		title: '质检',
-		// permissions: 'mes:messpreadcloth:blanketDataCollect',
-		src: '../../static/workReport/workReport.png',
-		link: '/pages/qualityTesting/mes-qualityTesting'
-	},
-	{
-		title: '返修',
-		// permissions: 'mes:messpreadcloth:blanketDataCollect',
-		src: '../../static/outwardProcessing/outSourcingReceipt.png',
-		link: '/pages/qualityTesting/mes-repairList'
-	}
-]
+// export const qualityTestingDataList = [
+// 	{
+// 		title: '质检',
+// 		// permissions: 'mes:messpreadcloth:blanketDataCollect',
+// 		src: '../../static/workReport/workReport.png',
+// 		link: '/pages/qualityTesting/mes-qualityTesting'
+// 	},
+// 	{
+// 		title: '返修',
+// 		// permissions: 'mes:messpreadcloth:blanketDataCollect',
+// 		src: '../../static/outwardProcessing/outSourcingReceipt.png',
+// 		link: '/pages/qualityTesting/mes-repairList'
+// 	}
+// ]

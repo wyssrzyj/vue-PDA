@@ -21,7 +21,7 @@
 		</view>
 		<view class="pannelContent" >
 			 <uni-swipe-action>
-				 <uni-swipe-action-item style="width: 750rpx;border: none;" :right-options="options1" @click="deleteMember($event,item)"  @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
+				 <uni-swipe-action-item style="width: 500rpx;border: none;" :right-options="options1" @click="deleteMember($event,item)"  @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
 				 	<view :class="[index == 0 ? 'selectLine-in': '' , 'touch-list', 'list-touch']"
 				 		class="swipe-action u-border-top u-border-bottom">
 				 		<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
@@ -63,10 +63,10 @@
 		<view class="bottomLocation">
 			<view class="btnLocation">
 				<view class="moreBtn">
-					<u--text style="padding-right: 15rpx;"  size="48" text="更多" :color="'#333333'" lineHeight="156" @tap="handleMore"></u--text>
+					<u--text style="padding-right: 10rpx;"  size="32" text="更多" :color="'#333333'" lineHeight="104" @tap="handleMore"></u--text>
 					<view class="iconfont icon-gengduo icon_style"></view>
 				</view>
-				<view class="scanNum"><text style="padding-right: 30px;">已扫描行数：{{ inStorageArr.length }} </text>
+				<view class="scanNum"><text style="padding-right: 20px;">已扫描行数：{{ inStorageArr.length }} </text>
 				<!-- <u-button class="inStorageBtn" type="primary" :class="!inStorageArr.length > 0 ?'custom-style' : ''" @tap="handleInStorage" :disabled="!inStorageArr.length > 0" text="出库"></u-button></view> -->
 				<view class="inStorageBtn btnActive" @click="handleInStorage" v-if="inStorageArr.length > 0">出库</view>
 				<view class="inStorageBtn btnDisable" v-else >出库</view>
@@ -75,11 +75,11 @@
 		</view>
 		<view class="successPopup remindPopup" v-if="showSuccessPop">
 			<view class="successImage"></view>
-			<view style="margin: 0 30rpx 0 135rpx;">{{ showSuccessMessage }}</view>
+			<view style="margin: 0 20rpx 0 90rpx;">{{ showSuccessMessage }}</view>
 		</view>
 		<view class="errorPopup remindPopup" v-if="showErrorPop">
 			<view class="errorImage"></view>
-			<view style="margin: 0 30rpx 0 120rpx;">{{ showErrorMessage }}</view>
+			<view style="margin: 0 20rpx 0 80rpx;">{{ showErrorMessage }}</view>
 		</view>
 		<scan-code></scan-code>
 		<view>
@@ -399,9 +399,9 @@
 <style lang="less" scoped>
 .content-box {
 	flex: 1;
-	height: 66px;
-	line-height: 66px;
-	padding: 0 22.5px;
+	height: 44px;
+	line-height: 44px;
+	padding: 0 15px;
 	position: relative;
 	background-color: #fff;
 	border: 1px solid #f5f5f5;
@@ -409,253 +409,282 @@
 .u-border-bottom {
 	border: none !important;
 }
-	.u-page {
-	        padding: 0;
-	    }
+.u-page {
+		padding: 0;
+	}
+
+	.u-demo-block__title {
+		padding: 10px 0 2px 15px;
+	}
+
+	.swipe-action {
+		&__content {
+			 padding: 25rpx 0;
 	
-	    .u-demo-block__title {
-	        padding: 15px 0 3px 22.5px;
-	    }
-	
-	    .swipe-action {
-	        &__content {
-	             padding: 37.5rpx 0;
-	    
-	            &__text {
-	                 font-size: 22.5px;
-	                 color: black;
-	                 padding-left: 45rpx;
-	             }
-	        }
-	    }
-	.mainContent {
+			&__text {
+				 font-size: 15px;
+				 color: black;
+				 padding-left: 30rpx;
+			 }
+		}
+	}
+.mainContent {
+	position: relative;
+	background-color: #F3F3F3;
+	height: 100%;
+	width: 100%;
+	.requier{
+		color: red;
+		margin-right: 10rpx;
+	}
+	.location {
 		position: relative;
-		background-color: #F3F3F3;
-		height: 100%;
+		.tip_text {
+			background-color: #E4F4FF;
+			width: 100%;
+			font-family: PingFang-SC-Bold;
+			font-size: 36rpx;
+			color: #0C99F2;
+			padding: 26rpx 28rpx;
+			font-weight: 700;
+		}
+	}
+	.storageTop{
+		display: flex;
 		width: 100%;
-		.requier{
-			color: red;
-			margin-right: 15rpx;
+		padding-bottom: 8rpx;
+		justify-content: space-between;
+		font-weight: bold;
+		
+		.storageUse{
+			color: #0BC46F !important;
 		}
-		.location {
-			position: relative;
-			.tip_text {
-				background-color: #E4F4FF;
-				width: 100%;
-				font-family: PingFang-SC-Bold;
-				font-size: 27px;
-				color: #0C99F2;
-				padding: 20px 21px;
-				font-weight: 700;
-			}
+		.storageUnUse{
+			color: #FFA600 !important;
 		}
-		.storageTop{
-			display: flex;
-			width: 100%;
-			padding-bottom: 12rpx;
-			justify-content: space-between;
-			font-weight: bold;
-			
-			.storageUse{
-				color: #0BC46F !important;
-			}
-			.storageUnUse{
-				color: #FFA600 !important;
-			}
-			.NoStorageUnUse{
-				color: #F4333F !important;
-			}
+		.NoStorageUnUse{
+			color: #F4333F !important;
 		}
-		.pannelContent {
-			height: calc(100vh - 525rpx);
-			overflow: auto;
-			.selectLine-in {
+	}
+	.pannelContent {
+		height: calc(100vh - 350rpx);
+		overflow: auto;
+		.selectLine-in {
+			width: 750rpx;
+			background-color: #E4F4FF !important;
+			color: #0C99F2;
+		}
+		.storageItem {
+			margin: 20rpx 0;
+			width: 750rpx;
+			overflow: hidden;
+			.touch-list{
 				width: 750rpx;
-				background-color: #E4F4FF !important;
-				color: #0C99F2;
-			}
-			.storageItem {
-				margin: 30rpx 0;
-				width: 750rpx;
+				padding: 30rpx 26rpx;
 				overflow: hidden;
-				.touch-list{
-					width: 750rpx;
-					padding: 45rpx 39rpx;
-					overflow: hidden;
-					background-color: #ffffff;
+				background-color: #ffffff;
+			}
+			.list-touch{
+				width: 100%;
+				z-index: 5;
+				font-size: 32rpx;
+				transition: left 0.2s ease-in-out;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				.serialNumber {
+					padding-right: 40rpx;
+					font-weight: bold;
 				}
-				.list-touch{
-					width: 100%;
-					z-index: 5;
-					font-size: 48rpx;
-					transition: left 0.2s ease-in-out;
-					white-space: nowrap;
-					text-overflow: ellipsis;
-					display: flex;
-					justify-content: flex-start;
-					align-items: center;
-					.serialNumber {
-						padding-right: 60rpx;
+				.item_content {
+					width: 70%;
+					.label_style {
+						color:  #333333;
+						font-weight: 700;
+					}
+					.first-item {
+						font-weight: 700;
+						color: #0C99F2;
+					}
+					.first-item-value {
+						font-weight: 400;
+						color: #0C99F2;
+					}
+					.value_style {
+						font-weight: 400;
+						color:  #666666;
+					}
+					.storageCode {
 						font-weight: bold;
+						padding-bottom: 16rpx;
 					}
-					.item_content {
-						width: 70%;
-						.label_style {
-							color:  #333333;
-							font-weight: 700;
-						}
-						.first-item {
-							font-weight: 700;
-							color: #0C99F2;
-						}
-						.first-item-value {
-							font-weight: 400;
-							color: #0C99F2;
-						}
-						.value_style {
-							font-weight: 400;
-							color:  #666666;
-						}
-						.storageCode {
-							font-weight: bold;
-							padding-bottom: 24rpx;
-						}
-						.colorCode_item {
-							padding-bottom: 12rpx;
-						}
-						.storageContent {
-							display: flex;
-							flex-direction: row;
-							justify-content: space-between;
-							
-						}
+					.colorCode_item {
+						padding-bottom: 8rpx;
 					}
-					.image_style {
-						width: 30%;
+					.storageContent {
 						display: flex;
-						justify-content: flex-end;
-						.arrowImage {
-							width: 66rpx;
-							height: 69rpx;
-						}
-					}
-				}
-				.list-delete{
-					right: 0;
-					float: left;
-					width: 150rpx;
-					height: 232.5rpx;
-					line-height: 232.5rpx;
-					padding: 8rpx 24rpx;
-					background-color: #EA5863;
-					border-radius: 0 30rpx 30rpx 0;
-					color: #fff;
-					font-size: 52.5rpx;
-					font-weight: lighter;
-					text-align: center;
-				}
-			}
-		}
-		.bottomLocation {
-			width: 100%;
-			height: 156rpx;
-			background-color: #fafafa;
-			border-top: 1rpx solid #dcdcdc;
-			position: fixed;
-			left: 0;
-			bottom: 0;
-			padding: 0 45rpx;
-			
-			.scanNum {
-				line-height: 156rpx;
-				text-align: center;
-				color: #585858;
-				font-size: 48rpx;
-				display: flex;
-				justify-content: flex-end;
-				align-items:center;
-			}
-			.btnLocation {
-				display: flex;
-				flex-direction: row;
-				justify-content: space-between;
-				align-items:center;
-				.moreBtn {
-					display: flex;
-					justify-content: flex-start;
-					align-items: center;
-					cursor: pointer;
-					.icon_style {
-						font-size: 30rpx;
-						color: #999999;
+						flex-direction: row;
+						justify-content: space-between;
 						
 					}
 				}
+				.image_style {
+					width: 30%;
+					display: flex;
+					justify-content: flex-end;
+					.arrowImage {
+						// position: absolute;
+						// right: 55rpx;
+						// top: 55rpx;
+						width: 44rpx;
+						height: 46rpx;
+					}
+				}
 			}
-		}
-		.btnModal-cut {
-			position: absolute;
-			left: 45rpx;
-			bottom: 56px;
-			z-index: 90;
-			.modalImage {
-				width: 450rpx;
-				height: 249rpx;
-			}
-		}
-		.commonBtn {
-			display: inline-block;
-			text-align: center;
-			color: #fff;
-			padding: 30rpx 82.5rpx;
-			border-radius: 22.5rpx;
-		}
-		.emptyBtn {
-			background-color: #FC361D;
-			position: absolute;
-			left: 97.5rpx;
-			top: 52.5rpx
-		}
-		.remindPopup {
-			color: #666;
-			font-size: 45rpx;
-			font-weight: bold;
-			border-radius: 15rpx;
-			height: 120rpx;
-			text-align: center;
-			line-height: 120rpx;
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			transform: translate(-50%,-50%);
-			white-space:nowrap;
-			z-index: 999;
-		}
-		.successPopup {
-			background-color: #F6FFEE;
-			border: 1px solid #B9EA93;
-			.successImage {
-				display: inline-block;
-				background: url('../../static/cutWarehouse/success.png') no-repeat;
-				width: 75rpx;
-				height: 75rpx;
-				position: absolute;
-				left: 30rpx;
-				top: 15rpx;
-			}
-		}
-		.errorPopup {
-			background-color: #FFF2F1;
-			border: 1px solid #FDA4A0;
-			.errorImage {
-				display: inline-block;
-				background: url('../../static/cutWarehouse/error.png') no-repeat;
-				width: 60rpx;
-				height: 60rpx;
-				position: absolute;
-				left: 30rpx;
-				top: 30rpx;
+			.list-delete{
+				right: 0;
+				float: left;
+				width: 100rpx;
+				height: 155rpx;
+				line-height: 155rpx;
+				padding: 5rpx 16rpx;
+				background-color: #EA5863;
+				border-radius: 0 20rpx 20rpx 0;
+				color: #fff;
+				font-size: 35rpx;
+				font-weight: lighter;
+				text-align: center;
 			}
 		}
 	}
+	.bottomLocation {
+		width: 100%;
+		height: 104rpx;
+		background-color: #fafafa;
+		border-top: 1rpx solid #dcdcdc;
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		padding: 0 30rpx;
+		
+		.scanNum {
+			line-height: 104rpx;
+			text-align: center;
+			color: #585858;
+			font-size: 32rpx;
+			// font-weight: bold;
+			display: flex;
+			justify-content: flex-end;
+			align-items:center;
+		}
+		.btnLocation {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items:center;
+			.moreBtn {
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				cursor: pointer;
+				.icon_style {
+					font-size: 20rpx;
+					color: #999999;
+					
+				}
+			}
+			.inStorageBtn {
+				display: inline-block;
+				text-align: center;
+				color: #fff;
+				padding: 24rpx 68rpx;
+				line-height: 32rpx;
+				font-size: 32rpx;
+				border-radius: 8rpx;
+				width: 200rpx;
+				height: 80rpx;
+			}
+			.btnActive {
+				background-color: #4a70f5;
+				cursor: pointer;
+			}
+			.btnDisable {
+				background-color: #cccccc;
+				cursor: not-allowed;
+			}
+			.custom-style {
+				color: #999999;
+				background-color: #E0E0E0;
+				border-color: #E0E0E0;
+			}
+
+		}
+	}
+	.btnModal-cut {
+		position: absolute;
+		left: 30rpx;
+		bottom: 37px;
+		z-index: 90;
+		.modalImage {
+			width: 300rpx;
+			height: 166rpx;
+		}
+	}
+	.commonBtn {
+		display: inline-block;
+		text-align: center;
+		color: #fff;
+		padding: 20rpx 55rpx;
+		border-radius: 15rpx;
+	}
+	.emptyBtn {
+		background-color: #FC361D;
+		position: absolute;
+		left: 65rpx;
+		top: 35rpx
+	}
+	.remindPopup {
+		color: #666;
+		font-size: 30rpx;
+		font-weight: bold;
+		border-radius: 10rpx;
+		height: 80rpx;
+		text-align: center;
+		line-height: 80rpx;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%,-50%);
+		white-space:nowrap;
+		z-index: 999;
+	}
+	.successPopup {
+		background-color: #F6FFEE;
+		border: 1px solid #B9EA93;
+		.successImage {
+			display: inline-block;
+			background: url('../../static/cutWarehouse/success.png') no-repeat;
+			width: 50rpx;
+			height: 50rpx;
+			position: absolute;
+			left: 20rpx;
+			top: 10rpx;
+		}
+	}
+	.errorPopup {
+		background-color: #FFF2F1;
+		border: 1px solid #FDA4A0;
+		.errorImage {
+			display: inline-block;
+			background: url('../../static/cutWarehouse/error.png') no-repeat;
+			width: 40rpx;
+			height: 40rpx;
+			position: absolute;
+			left: 20rpx;
+			top: 20rpx;
+		}
+	}
+}
 </style>
