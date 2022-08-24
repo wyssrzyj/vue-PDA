@@ -97,8 +97,9 @@
 					console.log("扫描库位")
 					// 扫描库位
 					try{
-						data=JSON.parse(data.code)
-						this.handleScanStorage(data.code,data.factoryManagerName)
+						data=JSON.parse(decodeURI(data.code))
+						console.log(data)
+						this.handleScanStorage(data.code)
 					}catch(error){
 						this.showErrorMessage = '请扫描正确的库位码！'
 						this.showErrorPop = true
@@ -245,10 +246,9 @@
 					}
 				});
 			},
-			handleScanStorage(locationCode,factoryManagerName){ // 扫描库位
+			handleScanStorage(locationCode){ // 扫描库位
 				Api.outReceiptScanLocation({
 					locationCode,// 'A-01'
-					factoryManagerName,//库位名
 				}).then(res => {
 					if (res.code === 0) {
 						uni.showToast({

@@ -83,7 +83,6 @@
 		onShow() {
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
 			uni.$on('scancodedate', (data) => {
-				console.log(data)
 				if(this.storageValue) {
 					// console.log("扫描扎包条码")
 					// 扫描PCS码
@@ -91,7 +90,7 @@
 				}else {
 					// 扫描库位
 					try{
-						data=JSON.parse(data.code)
+						data=JSON.parse(decodeURI(data.code))
 						this.handleScanStorage(data.code)
 					}catch(error){
 						this.showErrorMessage = '请扫描正确的库位码！'

@@ -131,7 +131,7 @@
 					console.log("扫描库位")
 					// 扫描库位
 					try{
-						data=JSON.parse(data.code)
+						data=JSON.parse(decodeURI(data.code))
 						this.handleScanStorage(data.code)
 					}catch(error){
 						this.showErrorMessage = '请扫描正确的库位码！'
