@@ -92,7 +92,7 @@
 					// 扫描库位
 					try{
 						data=JSON.parse(data.code)
-						this.handleScanStorage(data.code,data.factoryManagerName)
+						this.handleScanStorage(data.code)
 					}catch(error){
 						this.showErrorMessage = '请扫描正确的库位码！'
 						this.showErrorPop = true
