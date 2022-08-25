@@ -25,14 +25,15 @@ export default{
 		return {
 			showSelect:false,
 			items: [
-				{value: '192.168.0.235:8081',name: '线上地址'},
-				{value: '192.168.99.140:8081',name: '测试地址'}
-				// {value: '192.168.1.5/proxyApi',name: '盛宝丽',},
-				// {value: '192.168.68.28:8081',name: '蔡鹏志'},
-				// {value: '10.18.34.6:8081',name: '熊锋'},
-				// {value: '10.18.56.96:8081',name: '周志键'},
-				// {value: '192.168.68.58:8081',name: '李国庆'},
-				// {value: '192.168.68.58:8081',name: '李国庆'},
+				{value: '192.168.0.235:8081',name: '线上地址'}
+				,{value: '58.210.184.228:9091',name: '可祺外网'}
+				,{value: '192.168.99.140:8081',name: '测试地址'}
+				// ,{value: '192.168.1.5/proxyApi',name: '盛宝丽'}
+				// ,{value: '192.168.68.28:8081',name: '蔡鹏志'}
+				// ,{value: '10.18.34.6:8081',name: '熊锋'}
+				// ,{value: '10.18.56.96:8081',name: '周志键'}
+				// ,{value: '192.168.68.58:8081',name: '李国庆'}
+				// ,{value: '192.168.68.58:8081',name: '李国庆'}
 			],
 			current: 0,
 			api:'192.168.0.235:8081',
@@ -91,14 +92,12 @@ export default{
 	background-color: #FFFFFF;
 	width: 500rpx;
 	// height: 1000rpx;
-	height: 500rpx;
+	// height: 500rpx;
 	border-radius: 20rpx;
-	position: fixed;
-	left:0;
-	right: 0;
-	transform: translate(0, -50%);
-	bottom: 50rpx;
-	margin: 0 auto;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
 }
 .mask {
 	z-index: 1;
@@ -113,13 +112,13 @@ export default{
 	margin-top: 20rpx;
 	display: flex;
 	width: 300rpx;
-	height: 100rpx;
+	height: 70rpx;
 	margin-left: 100rpx;
 	.radio{
-		line-height: 100rpx;
+		line-height: 70rpx;
 	}
 	.name{
-		line-height: 100rpx;
+		line-height: 70rpx;
 		text-align: center;
 		font-weight: bold;
 		width: 150rpx;
@@ -127,7 +126,7 @@ export default{
 	}
 }
 .input{
-	margin-top: 40rpx;
+	margin-top: 20rpx;
 	width: 100%;
 	height: 100rpx;
 	background-color: #eee;
@@ -137,8 +136,7 @@ export default{
 	width: 100%;
 	height:100rpx;
 	background-color: #0c99f2;
-	position: absolute;
-	bottom: 20rpx;
+	margin: 10rpx 0;
 	font-size: 40rpx;
 	color: #FFFFFF;
 	line-height: 100rpx;
