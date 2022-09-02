@@ -12,7 +12,7 @@
 						<checkbox-group @change="checkboxChange">
 							<label class="option_item" v-for="(item, index) in options" :key="index" style="overflow: hidden;">
 								<view>
-									<checkbox :value="item[value]" :checked="item.checked" style="transform:scale(0.8)"/>
+									<checkbox :value="item[value]" :checked="item.checked" style="transform:scale(0.8)" :disabled="item.valid===1?false:true"/>
 								</view>
 								<view>{{item[label]}}</view>
 							</label>						

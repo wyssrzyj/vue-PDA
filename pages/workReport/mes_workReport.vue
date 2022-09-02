@@ -5,8 +5,9 @@
 			<view class="storage">
 				<view class="storage-item">
 					<text class="storage-item-left"><text class="requier">*</text>报工工段</text>
-					<view class="storage-item-right" @click="show = true">
-						<text class="info">{{productNum?productNum:'请选择报工工段'}}</text>
+					<view class="storage-item-right">
+					<!-- <view class="storage-item-right" @click="show = true"> -->
+						<text class="info">{{'尾部'}}</text>
 						<text class="iconfont icon-youjiantou"></text>
 					</view>
 				</view>
@@ -100,7 +101,7 @@
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
 			uni.$on('scancodedate', (data) => {
 				// 扫描PCS码
-				this.handleScanPCS(data.code)
+				this.handleScanPCS(decodeURI(data.code))
 			})
 		},
 		mounted(){
@@ -246,11 +247,15 @@
 				//生产单号
 				this.productId=res.data.produceOrderId
 				//报工工段
-				this.workshopObj={}
-				res.data.sectionAndSectionNames.forEach(item=>{
-					this.workshopObj=Object.assign(item,this.workshopObj)
+				// this.workshopObj={}
+				// res.data.sectionAndSectionNames.forEach(item=>{
+				// 	this.workshopObj=Object.assign(item,this.workshopObj)
+				// })
+				// this.columns=[Object.values(this.workshopObj)]
+				// 报工工序
+				this.coutryList=res.data.processName.map(i=>{
+					return {...i,value:i.productName,name:i.productName}
 				})
-				this.columns=[Object.values(this.workshopObj)]
 				//报工工序
 				// let process=res.data.sectionsAndProductNames[0]
 				// let newArr=[]
@@ -269,94 +274,128 @@
 			// 报工分为组码报工和pcs码报工，新增组码报工，不能不同的报工类型，不同的生产单，
 			// 相同组码编号累加，不同组码编号相加
 			handleScanPCS(pcs){ // 扫描PCS码
-				this.outStorageArr = this.outStorageArr.reverse()
 				// PD20220630195145651-XK*111-叉L-1
 				Api.productionReportingPCS({
 					pcs:pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
+					console.log(res)
 					if (res.code === 0) {
 						if(this.outStorageArr.length===0){
-							this.scanPCSEncapsulation.call(this,res)
-						}else{
-							const pcsTypeFind=this.outStorageArr.find(item=>item.pcsType==res.data.pcsType)
-							if(pcsTypeFind){
-								//PCS码报工
-								if(res.data.pcsType==0){
-									const Find=this.outStorageArr.find((item)=>item.produceOrderId===res.data.produceOrderId)
-									if(Find){ //同一生产单不能重复扫描
-										const newFind=this.outStorageArr.find((item)=>item.packageCode===res.data.packageCode)
-										if(!newFind){ //同一扎包不能重复扫描
-											const find=this.outStorageArr.find(item=>item.snNum===res.data.snNum)
-											if(find){ //同一个PCS码不能重复扫描
-												this.showErrorMessage = '扎包条码已被扫描'
-												this.showErrorPop = true
-												let timer = setTimeout(() => {
-													clearTimeout(timer)
-													this.showErrorPop = false
-												}, 2000)
-											}else{
-												this.scanPCSEncapsulation.call(this,res)
-											}
-										}else{
-											this.showErrorMessage = '同一扎单不能重复扫描！'
-											this.showErrorPop = true
-											let timer = setTimeout(() => {
-												clearTimeout(timer)
-												this.showErrorPop = false
-											}, 2000)
-										}
-									}else{
-										this.showErrorMessage = '扎包条码不属于该生产单！'
-										this.showErrorPop = true
-										let timer = setTimeout(() => {
-											clearTimeout(timer)
-											this.showErrorPop = false
-										}, 2000)
-									}
-								//组码报工
-								}else if(res.data.pcsType==1){
-									//组码报工
-									const produceOrderFind=this.outStorageArr.find((item)=>item.produceOrderId===res.data.produceOrderId)
-									if(produceOrderFind){ //组码扫描必须同一生产单下
-										const codeGroup=this.outStorageArr.find(item=>item.snNum==res.data.snNum)
-										if(codeGroup){ //同一组码编号数量相加
-											uni.showModal({
-												title: '提示',
-												content: '扫描同一组码编号报工数量是否累加',
-												success: (res1)=> {
-													if (res1.confirm) {
-														codeGroup.count+=res.data.count
-														this.outStorageArr = this.outStorageArr.reverse()
-														const index=this.outStorageArr.findIndex(item=>item.snNum===codeGroup.snNum)
-														const obj=this.outStorageArr.splice(index,1)
-														this.outStorageArr.unshift(...obj)
-													} else if (res1.cancel) {
-														console.log('用户点击取消');
-													}
-												}
-											});
-										}else{  //不同组码编号添加记录
-											this.scanPCSEncapsulation.call(this,res)
-										}
-									}else{
-										this.showErrorMessage = '组码编号不属于该生产单！'
-										this.showErrorPop = true
-										let timer = setTimeout(() => {
-											clearTimeout(timer)
-											this.showErrorPop = false
-										}, 2000)
-									}
-								}
+							if(res.data[0]?.workerType===2){
+								this.outStorageArr = this.outStorageArr.reverse()
+								uni.showToast({
+									title: '扫描扎包条码成功！',
+									icon: 'none',
+									duration: 3000
+								})
+								this.outStorageArr=this.outStorageArr.concat(res.data)
+								//生产单号
+								this.productId=res.data[0]?.produceOrderId
+								this.coutryList=res.data[0]?.processName.map(i=>{
+									return {...i,value:i.productName,name:i.productName}
+								})
+								this.outStorageArr = this.outStorageArr.reverse()
 							}else{
-								this.showErrorMessage = '请扫描同一类型的扎包条码'
-								this.showErrorPop = true
-								let timer = setTimeout(() => {
-									clearTimeout(timer)
-									this.showErrorPop = false
-								}, 2000)
+								this.scanPCSEncapsulation.call(this,res)
 							}
-							
+						}else{
+							this.showErrorMessage = '请完成本次提交后再次扫码！'
+							this.showErrorPop = true
+							let timer = setTimeout(() => {
+								clearTimeout(timer)
+								this.showErrorPop = false
+							}, 2000)
 						}
+						// else{
+						// 	const pcsTypeFind=this.outStorageArr.find(item=>item.pcsType==res.data.pcsType)
+						// 	if(pcsTypeFind){
+						// 		//PCS码报工
+						// 		if(res.data.pcsType==0){
+						// 			const Find=this.outStorageArr.find((item)=>item.produceOrderId===res.data.produceOrderId)
+						// 			if(Find){ //同一生产单不能重复扫描
+						// 				const newFind=this.outStorageArr.find((item)=>item.packageCode===res.data.packageCode)
+						// 				if(!newFind){ //同一扎包不能重复扫描
+						// 					const find=this.outStorageArr.find(item=>item.snNum===res.data.snNum)
+						// 					if(find){ //同一个PCS码不能重复扫描
+						// 						this.showErrorMessage = '扎包条码已被扫描'
+						// 						this.showErrorPop = true
+						// 						let timer = setTimeout(() => {
+						// 							clearTimeout(timer)
+						// 							this.showErrorPop = false
+						// 						}, 2000)
+						// 					}else{
+						// 						this.scanPCSEncapsulation.call(this,res)
+						// 					}
+						// 				}else{
+						// 					this.showErrorMessage = '同一扎单不能重复扫描！'
+						// 					this.showErrorPop = true
+						// 					let timer = setTimeout(() => {
+						// 						clearTimeout(timer)
+						// 						this.showErrorPop = false
+						// 					}, 2000)
+						// 				}
+						// 			}else{
+						// 				this.showErrorMessage = '扎包条码不属于该生产单！'
+						// 				this.showErrorPop = true
+						// 				let timer = setTimeout(() => {
+						// 					clearTimeout(timer)
+						// 					this.showErrorPop = false
+						// 				}, 2000)
+						// 			}
+						// 		//组码报工
+						// 		}else if(res.data.pcsType==1){
+						// 			//组码报工
+						// 			// const produceOrderFind=this.outStorageArr.find((item)=>item.produceOrderId===res.data.produceOrderId)
+						// 			// if(produceOrderFind){ //组码扫描必须同一生产单下
+						// 			// 	const codeGroup=this.outStorageArr.find(item=>item.snNum==res.data.snNum)
+						// 			// 	if(codeGroup){ //同一组码编号数量相加
+						// 			// 		uni.showModal({
+						// 			// 			title: '提示',
+						// 			// 			content: '扫描同一组码编号报工数量是否累加',
+						// 			// 			success: (res1)=> {
+						// 			// 				if (res1.confirm) {
+						// 			// 					codeGroup.count+=res.data.count
+						// 			// 					this.outStorageArr = this.outStorageArr.reverse()
+						// 			// 					const index=this.outStorageArr.findIndex(item=>item.snNum===codeGroup.snNum)
+						// 			// 					const obj=this.outStorageArr.splice(index,1)
+						// 			// 					this.outStorageArr.unshift(...obj)
+						// 			// 				} else if (res1.cancel) {
+						// 			// 					console.log('用户点击取消');
+						// 			// 				}
+						// 			// 			}
+						// 			// 		});
+						// 			// 	}else{  //不同组码编号添加记录
+						// 			// 		this.scanPCSEncapsulation.call(this,res)
+						// 			// 	}
+						// 			// }else{
+						// 			// 	this.showErrorMessage = '组码编号不属于该生产单！'
+						// 			// 	this.showErrorPop = true
+						// 			// 	let timer = setTimeout(() => {
+						// 			// 		clearTimeout(timer)
+						// 			// 		this.showErrorPop = false
+						// 			// 	}, 2000)
+						// 			// }
+						// 			if(this.outStorageArr.length===0){
+						// 				this.scanPCSEncapsulation.call(this,res)
+						// 			}else{
+						// 				this.showErrorMessage = '请完成本次提交后再次扫码！'
+						// 				this.showErrorPop = true
+						// 				let timer = setTimeout(() => {
+						// 					clearTimeout(timer)
+						// 					this.showErrorPop = false
+						// 				}, 2000)
+						// 			}
+						// 		}
+						// 	}else{
+						// 		this.showErrorMessage = '请扫描同一类型的扎包条码'
+						// 		this.showErrorPop = true
+						// 		let timer = setTimeout(() => {
+						// 			clearTimeout(timer)
+						// 			this.showErrorPop = false
+						// 		}, 2000)
+						// 	}
+							
+						// }
 					}else{
 						this.showErrorMessage = res.msg
 						this.showErrorPop = true
@@ -380,15 +419,15 @@
 			},
 			
 			handleOutStorage(){ // 出库
-				if(!this.productNum){ //工段必填
-					this.showErrorMessage = '请选择报工工段'
-					this.showErrorPop = true
-					let timer = setTimeout(() => {
-						clearTimeout(timer)
-						this.showErrorPop = false
-					}, 2000)
-					return;
-				}
+				// if(!this.productNum){ //工段必填
+				// 	this.showErrorMessage = '请选择报工工段'
+				// 	this.showErrorPop = true
+				// 	let timer = setTimeout(() => {
+				// 		clearTimeout(timer)
+				// 		this.showErrorPop = false
+				// 	}, 2000)
+				// 	return;
+				// }
 				if(!this.supplierName){ //工序必填
 					this.showErrorMessage = '请选择报工工序'
 					this.showErrorPop = true
@@ -399,7 +438,8 @@
 					return;
 				}
 				let mesEngineeringManagementDTOS=this.outStorageArr.map(item=>{
-					return {...item,section:findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
+					// return {...item,section:findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
+					return {...item,section:'尾部',productName:this.supplierName,engineeringManagementDate:formateDate()}
 				});
 				Api.productionReporting({
 					mesEngineeringManagementDTOS,
