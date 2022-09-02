@@ -25,7 +25,8 @@
 		</form>
 		
 		<!-- 选择环境弹窗 -->
-		<select-api ref="select"></select-api>
+		<!-- <select-api ref="select"></select-api> -->
+		<new-select-api ref='select'></new-select-api>
 	</view>
 </template>
 
@@ -33,6 +34,7 @@
 import { toasting } from '../../utils/index.js'
 import Api from '../../service/api'
 import selectApi from './select-api.vue'
+import newSelectApi from './new-select-api.vue'
 import {Store} from 'vuex'; 
 
 export default {
@@ -44,7 +46,8 @@ export default {
 		}
 	},
 	components:{
-		'select-api':selectApi
+		'select-api':selectApi,
+		'new-select-api':newSelectApi
 	},
 	onLoad() {
 		// 判断本地是否有账号密码，自动填充
@@ -63,51 +66,55 @@ export default {
 			e.detail.value.length === 0 ? this.remember = false : this.remember = true
 		},
 		formSubmit(e){
-				try {
-					const { username, password } = e.detail.value
-					if(!username){
-						toasting('请输入用户名')
-						return
-					}else if(!password){
-						toasting('请输入密码')
-						return
-					}
-					Api.login({  
-						username: username,
-						password: password,
-					}).then(res => {
-						console.log(res)
-						if (res.code === 0) {
-							toasting('登录成功')
-							uni.removeStorageSync('token')
-							uni.setStorageSync('token', res.data.token)
-							if (this.remember) {
-								uni.setStorageSync('username', this.username)
-								uni.setStorageSync('password', this.password)
-							} else {
-								uni.removeStorageSync('username')
-								uni.removeStorageSync('password')
-							}
-							uni.navigateTo({
-								url: '/pages/cutWarehouse/mes_cutWarehouse'
-							})
-							Api.pdaNav({}).then(res => {
-							})
-							Api.getPermissions().then(res => {
-								// $store.commit('set_is_b_link', true)
-								this.$store.commit('setPermissions', res.data)
-							})
-							// uni.switchTab({
-							// 	url:'/pages/cutWarehouse/cutWarehouse'
-							// })
-						}else{
-							toasting('账号或密码错误')
-						}
-					})
-				} catch (error) {
-					console.log(error)
-				}
+			if(!this.$refs.select.api) {
+				toasting('请先点击右上角并输入环境地址！', ()=>{}, 3000)
+				return
 			}
+			try {
+				const { username, password } = e.detail.value
+				if(!username){
+					toasting('请输入用户名')
+					return
+				}else if(!password){
+					toasting('请输入密码')
+					return
+				}
+				Api.login({  
+					username: username,
+					password: password,
+				}).then(res => {
+					console.log(res)
+					if (res.code === 0) {
+						toasting('登录成功')
+						uni.removeStorageSync('token')
+						uni.setStorageSync('token', res.data.token)
+						if (this.remember) {
+							uni.setStorageSync('username', this.username)
+							uni.setStorageSync('password', this.password)
+						} else {
+							uni.removeStorageSync('username')
+							uni.removeStorageSync('password')
+						}
+						uni.navigateTo({
+							url: '/pages/cutWarehouse/mes_cutWarehouse'
+						})
+						Api.pdaNav({}).then(res => {
+						})
+						Api.getPermissions().then(res => {
+							// $store.commit('set_is_b_link', true)
+							this.$store.commit('setPermissions', res.data)
+						})
+						// uni.switchTab({
+						// 	url:'/pages/cutWarehouse/cutWarehouse'
+						// })
+					}else{
+						toasting('账号或密码错误')
+					}
+				})
+			} catch (error) {
+				console.log(error)
+			}
+		}
 	}
 }
 </script>
