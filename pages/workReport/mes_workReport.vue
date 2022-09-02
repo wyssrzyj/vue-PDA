@@ -34,16 +34,17 @@
 			<view class="storageItem" v-for="(item,index) in outStorageArr" :key="index" :class="index == 0?'selectStorage':''">
 				<text class="serialNumber">{{ index + 1 }}.</text>
 				<view class="storageInfo">
-					<text class="storageCode">{{ item.proNum }}</text>
+					<!-- <text class="storageCode">{{ item.proNum }}</text> -->
+					<text class="storageCode">{{ item.productOrderNum }}</text>
 					<view class="storageColor">
 						<text>颜色尺码：</text>
 						<text>{{ item.colorCode }}&emsp;{{ item.colorName }}&emsp;{{ item.sizeCode }}</text>
 					</view>
 					<view class="storageContent">
-						<view class="number">
+						<!-- <view class="number">
 							<text>扎号：</text>
 							<text>{{ item.packageNum }}</text>
-						</view>
+						</view> -->
 						<view class="count">
 							<text>数量：</text>
 							<input v-model="item.count" type="number" @input="handleInput($event,item)"/>
@@ -231,10 +232,27 @@
 				this.show=false
 			},
 			handleInput(e,item){
-				e.target.value = e.target.value.split('.')[0].replace(/^[^\d]|[.]/g, '')
-				this.$nextTick(() => {
-					item.count= Number(e.target.value)
-				})
+				if(Number(e.target.value)<=Number(item.limitCount)&&e.target.value){
+					e.target.value = e.target.value.split('.')[0].replace(/^[^\d]|[.]/g, '')
+					this.$nextTick(() => {
+						item.count= Number(e.target.value)
+					})
+				}else if(!e.target.value){
+					this.$nextTick(()=>{
+						item.count=''
+					})
+				}else{
+					this.$nextTick(()=>{
+						item.count=Number(item.limitCount)
+					})
+					this.showErrorMessage = '报工数量不能大于上一个报工的件数'
+					this.showErrorPop = true
+					let timer = setTimeout(() => {
+						clearTimeout(timer)
+						this.showErrorPop = false
+					}, 2000)
+				}
+				
 			},
 			//封装函数
 			scanPCSEncapsulation(res){
@@ -278,7 +296,6 @@
 				Api.productionReportingPCS({
 					pcs:pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
-					console.log(res)
 					if (res.code === 0) {
 						if(this.outStorageArr.length===0){
 							if(res.data[0]?.workerType===2){
@@ -514,6 +531,7 @@
 		
 		.pannelContent {
 			height: calc(100vh - 474rpx);
+			margin-bottom: 104rpx;
 			overflow: auto;
 			width: 100%;
 			.first_item {
@@ -542,15 +560,7 @@
 						line-height: 80rpx;
 						font-weight: bold;
 					}
-					.storageColor{
-						margin-bottom: 20rpx;
-						text:first-child{
-							font-weight: bold;
-						}
-						text:last-child{
-							color: #666666;
-						}
-					}
+					
 					.storageContent{
 						display: flex;
 						justify-content: space-between;
@@ -594,7 +604,11 @@
 			}
 
 		}
-		
+		.storageColor{
+			width: 750rpx;
+			overflow: hidden;
+			margin-bottom: 20rpx;
+		}
 		.btnModal {
 			position: absolute;
 			left: 30rpx;
