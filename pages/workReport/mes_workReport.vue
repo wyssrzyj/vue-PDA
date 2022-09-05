@@ -245,7 +245,7 @@
 					this.$nextTick(()=>{
 						item.count=Number(item.limitCount)
 					})
-					this.showErrorMessage = '报工数量不能大于上一个报工的件数'
+					this.showErrorMessage = '数量不能大于上一个报工的件数'
 					this.showErrorPop = true
 					let timer = setTimeout(() => {
 						clearTimeout(timer)
