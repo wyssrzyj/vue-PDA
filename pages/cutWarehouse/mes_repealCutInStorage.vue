@@ -126,7 +126,7 @@
 				if(this.storageValue) {
 					console.log("扫描PCS码")
 					// 扫描PCS码
-					this.handleScanPCS(data.code)
+					this.handleScanPCS(decodeURI(data.code))
 				}else {
 					console.log("扫描库位")
 					// 扫描库位
