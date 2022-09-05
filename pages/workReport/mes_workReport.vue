@@ -1,7 +1,7 @@
 <template>
 	<view class="mainContent">
 		<view class="borderBottom">
-			<view class="scanInput">请扫描扎包条码!</view>
+			<view class="scanInput">请扫描包条码!</view>
 			<view class="storage">
 				<view class="storage-item">
 					<text class="storage-item-left"><text class="requier">*</text>报工工段</text>
@@ -14,13 +14,13 @@
 				<view class="storage-item">
 					<text class="storage-item-left"><text class="requier">*</text>报工工序</text>
 					<view class="storage-item-right" @click="showMultiple">
-						<text class="info">请选择报工工序</text>
+						<text class="info">{{supplierName||'请选择报工工序'}}</text>
 						<text class="iconfont icon-youjiantou"></text>
 					</view>
 				</view>
-				<ul>
+				<!-- <ul>
 					<li v-for="item in checkedList" :key="item.name" style="font-size: 30rpx;">{{item.value}}</li>
-				</ul>
+				</ul> -->
 				<view class="storage-item">
 					<text class="storage-item-left" style="margin-left: 15px;">当前员工</text>
 					<view class="storage-item-right">
@@ -257,7 +257,7 @@
 			//封装函数
 			scanPCSEncapsulation(res){
 				uni.showToast({
-					title: '扫描扎包条码成功！',
+					title: '扫描包条码成功！',
 					icon: 'none',
 					duration: 3000
 				})
@@ -298,10 +298,10 @@
 				}).then(res => {
 					if (res.code === 0) {
 						if(this.outStorageArr.length===0){
-							if(res.data[0]?.workerType===2){
+							if(res.data[0]?.workerType===1){
 								this.outStorageArr = this.outStorageArr.reverse()
 								uni.showToast({
-									title: '扫描扎包条码成功！',
+									title: '扫描包条码成功！',
 									icon: 'none',
 									duration: 3000
 								})
@@ -334,7 +334,7 @@
 						// 				if(!newFind){ //同一扎包不能重复扫描
 						// 					const find=this.outStorageArr.find(item=>item.snNum===res.data.snNum)
 						// 					if(find){ //同一个PCS码不能重复扫描
-						// 						this.showErrorMessage = '扎包条码已被扫描'
+						// 						this.showErrorMessage = '包条码已被扫描'
 						// 						this.showErrorPop = true
 						// 						let timer = setTimeout(() => {
 						// 							clearTimeout(timer)
@@ -352,7 +352,7 @@
 						// 					}, 2000)
 						// 				}
 						// 			}else{
-						// 				this.showErrorMessage = '扎包条码不属于该生产单！'
+						// 				this.showErrorMessage = '包条码不属于该生产单！'
 						// 				this.showErrorPop = true
 						// 				let timer = setTimeout(() => {
 						// 					clearTimeout(timer)
@@ -404,7 +404,7 @@
 						// 			}
 						// 		}
 						// 	}else{
-						// 		this.showErrorMessage = '请扫描同一类型的扎包条码'
+						// 		this.showErrorMessage = '请扫描同一类型的包条码'
 						// 		this.showErrorPop = true
 						// 		let timer = setTimeout(() => {
 						// 			clearTimeout(timer)
@@ -468,7 +468,6 @@
 						this.checkedList=[]
 						this.coutryList=[]
 						this.columns=[]
-						this.checkedList=[]
 						this.showSuccessMessage = '报工成功！'
 						this.showSuccessPop = true
 						let timer = setTimeout(() => {
