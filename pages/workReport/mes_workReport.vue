@@ -296,6 +296,7 @@
 				Api.productionReportingPCS({
 					pcs:pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
+					console.log(res)
 					if (res.code === 0) {
 						if(this.outStorageArr.length===0){
 							if(res.data[0]?.workerType===1){
@@ -479,6 +480,13 @@
 						this.coutryList=[]
 						this.columns=[]
 						this.showSuccessMessage = '报工成功！'
+						this.showSuccessPop = true
+						let timer = setTimeout(() => {
+							clearTimeout(timer)
+							this.showSuccessPop = false
+						}, 2000)
+					}else{
+						this.showSuccessMessage = res.data
 						this.showSuccessPop = true
 						let timer = setTimeout(() => {
 							clearTimeout(timer)
