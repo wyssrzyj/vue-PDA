@@ -21,7 +21,7 @@
 		</view>
 		<view class="pannelContent" >
 			 <uni-swipe-action>
-				 <uni-swipe-action-item style="width: 500rpx;border: none;" :right-options="options1" @click="deleteMember($event,item)"  @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
+				 <uni-swipe-action-item style="width: 100%;border: none;" :right-options="options1" @click="deleteMember($event,item)"  @change="swipeChange($event, index)" :name="item.id" class="storageItem" v-for="(item, index) in inStorageArr" :key="item.id">
 				 	<view :class="[index == 0 ? 'selectLine-in': '' , 'touch-list', 'list-touch']"
 				 		class="swipe-action u-border-top u-border-bottom">
 				 		<text class="serialNumber">{{ inStorageArr.length-index }}.</text>
@@ -113,7 +113,7 @@
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
 			uni.$on('scancodedate', (data) => {
 				// 扫描PCS码
-				this.handleScanPCS(data.code)
+				this.handleScanPCS(decodeURI(data.code))
 				})
 		},
 		mounted(){

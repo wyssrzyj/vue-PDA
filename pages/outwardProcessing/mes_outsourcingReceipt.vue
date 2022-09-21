@@ -92,13 +92,12 @@
 				if(this.storageValue) {
 					console.log("扫描PCS码")
 					// 扫描PCS码
-					this.handleScanPCS(data.code)
+					this.handleScanPCS(decodeURI(data.code))
 				}else {
 					console.log("扫描库位")
 					// 扫描库位
 					try{
 						data=JSON.parse(decodeURI(data.code))
-						console.log(data)
 						this.handleScanStorage(data.code)
 					}catch(error){
 						this.showErrorMessage = '请扫描正确的库位码！'

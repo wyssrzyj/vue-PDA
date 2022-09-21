@@ -86,7 +86,7 @@
 				if(this.storageValue) {
 					// console.log("扫描扎包条码")
 					// 扫描PCS码
-					this.handleScanPCS(data.code)
+					this.handleScanPCS(decodeURI(data.code))
 				}else {
 					// 扫描库位
 					try{

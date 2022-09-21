@@ -245,7 +245,7 @@
 					this.$nextTick(()=>{
 						item.count=Number(item.limitCount)
 					})
-					this.showErrorMessage = '报工数量不能大于上一个报工的件数'
+					this.showErrorMessage = '数量不能大于上一个报工的件数'
 					this.showErrorPop = true
 					let timer = setTimeout(() => {
 						clearTimeout(timer)
@@ -296,6 +296,7 @@
 				Api.productionReportingPCS({
 					pcs:pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
+					console.log(res)
 					if (res.code === 0) {
 						
 						
@@ -470,6 +471,16 @@
 					}, 2000)
 					return;
 				}
+				const find=this.outStorageArr.find((item)=>item.count===0)
+				if(find){
+					this.showErrorMessage = '报工数量不能为0'
+					this.showErrorPop = true
+					let timer = setTimeout(() => {
+						clearTimeout(timer)
+						this.showErrorPop = false
+					}, 2000)
+					return;
+				}
 				let mesEngineeringManagementDTOS=this.outStorageArr.map(item=>{
 					// return {...item,section:findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
 					return {...item,section:'尾部',productName:this.supplierName,engineeringManagementDate:formateDate()}
@@ -485,6 +496,13 @@
 						this.coutryList=[]
 						this.columns=[]
 						this.showSuccessMessage = '报工成功！'
+						this.showSuccessPop = true
+						let timer = setTimeout(() => {
+							clearTimeout(timer)
+							this.showSuccessPop = false
+						}, 2000)
+					}else{
+						this.showSuccessMessage = res.data
 						this.showSuccessPop = true
 						let timer = setTimeout(() => {
 							clearTimeout(timer)
