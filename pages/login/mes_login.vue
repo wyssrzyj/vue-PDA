@@ -104,6 +104,7 @@ export default {
 							// $store.commit('set_is_b_link', true)
 							this.$store.commit('setPermissions', res.data)
 						})
+						this.$store.dispatch('initApp')
 						// uni.switchTab({
 						// 	url:'/pages/cutWarehouse/cutWarehouse'
 						// })

@@ -30,6 +30,10 @@ const Api = {
 	getPermissions(reqData) {
 	  return requestApi(`${API_ADDRESS}/mes/pdalogin/permissions`, 'GET', reqData)
 	},
+	// 功能标识
+	getFunc() {
+	  return requestApi(`${API_ADDRESS}/mes/sysconfigpage/selectAllAuthorization`, 'GET')
+	},
 	// 扫描库位
 	getLocation(reqData) {
 	  return requestApi(`${API_ADDRESS}/MesLocationManagement/meslocationmanagement/getLocation`, 'GET', reqData)

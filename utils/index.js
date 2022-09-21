@@ -1,3 +1,5 @@
+import store from '../store/store.js'
+
 export const hasToken = () => {
 	const token = uni.getStorageSync('token');
 	return token ? token : null
@@ -135,3 +137,7 @@ export const useDebounce=(func, wait=1500)=> {
 　　 }
 }
 
+// 判断是否有此功能的授权标识
+export const checkFunc = (key) => {
+	return store.state.func.includes(key)
+}

@@ -78,7 +78,7 @@
 </template>
 
 <script>
-	import {formateDate,findKey,useDebounce} from "@/utils/index.js"
+	import {formateDate,findKey,useDebounce,checkFunc} from "@/utils/index.js"
 	import Api from '../../service/api'
 	import scanCode from "@/components/scan/scan.vue"
 	import selectCodeMultiple from '@/components/mulSelection/mulSelection.vue'
@@ -297,6 +297,22 @@
 					pcs:pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
 					if (res.code === 0) {
+						
+						
+						
+						// 只有组码报工
+						if(checkFunc('codeToWork') && !checkFunc('packBarCodeReportWork')) {
+							
+							// 只有扎包条码报工
+						} else if(!checkFunc('codeToWork') && checkFunc('packBarCodeReportWork')) {
+							
+							// 扎包条码和组码报工都有
+						} else if(checkFunc('codeToWork') && checkFunc('packBarCodeReportWork')) {
+							
+						}
+						
+						
+						
 						if(this.outStorageArr.length===0){
 							if(res.data[0]?.workerType===1){
 								this.outStorageArr = this.outStorageArr.reverse()
