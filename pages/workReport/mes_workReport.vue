@@ -296,41 +296,50 @@
 				Api.productionReportingPCS({
 					pcs:pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
-					console.log(res)
 					if (res.code === 0) {
-						
-						
-						
-						// 只有组码报工
-						if(checkFunc('codeToWork') && !checkFunc('packBarCodeReportWork')) {
-							
-							// 只有扎包条码报工
-						} else if(!checkFunc('codeToWork') && checkFunc('packBarCodeReportWork')) {
-							
-							// 扎包条码和组码报工都有
-						} else if(checkFunc('codeToWork') && checkFunc('packBarCodeReportWork')) {
-							
-						}
-						
-						
-						
 						if(this.outStorageArr.length===0){
-							if(res.data[0]?.workerType===1){
-								this.outStorageArr = this.outStorageArr.reverse()
-								uni.showToast({
-									title: '扫描包条码成功！',
-									icon: 'none',
-									duration: 3000
-								})
-								this.outStorageArr=this.outStorageArr.concat(res.data)
-								//生产单号
-								this.productId=res.data[0]?.produceOrderId
-								this.coutryList=res.data[0]?.processName.map(i=>{
-									return {...i,value:i.productName,name:i.productName}
-								})
-								this.outStorageArr = this.outStorageArr.reverse()
-							}else{
+							if(checkFunc('codeToWork') && !checkFunc('packBarCodeReportWork')) { // 只有组码报工
+								if(Array.isArray(res.data) && res.data[0].workerType===1){ //返修
+									this.outStorageArr = this.outStorageArr.reverse()
+									uni.showToast({
+										title: '扫描包条码成功！',
+										icon: 'none',
+										duration: 3000
+									})
+									this.outStorageArr=this.outStorageArr.concat(res.data)
+									//生产单号
+									this.productId=res.data[0]?.produceOrderId
+									this.coutryList=res.data[0]?.processName.map(i=>{
+										return {...i,value:i.productName,name:i.productName}
+									})
+									this.outStorageArr = this.outStorageArr.reverse()
+								}else{	//组码
+									this.scanPCSEncapsulation.call(this,res)
+								}
+							} else if(!checkFunc('codeToWork') && checkFunc('packBarCodeReportWork')) { // 只有扎包条码报工
 								this.scanPCSEncapsulation.call(this,res)
+							} else if(checkFunc('codeToWork') && checkFunc('packBarCodeReportWork')) { // 扎包条码和组码报工都有
+								if(res.data.pcsType==0){
+									this.scanPCSEncapsulation.call(this,res)
+								} else {
+									if(res.data.workerType===1){
+										this.outStorageArr = this.outStorageArr.reverse()
+										uni.showToast({
+											title: '扫描包条码成功！',
+											icon: 'none',
+											duration: 3000
+										})
+										this.outStorageArr=this.outStorageArr.concat(res.data)
+										//生产单号
+										this.productId=res.data[0]?.produceOrderId
+										this.coutryList=res.data[0]?.processName.map(i=>{
+											return {...i,value:i.productName,name:i.productName}
+										})
+										this.outStorageArr = this.outStorageArr.reverse()
+									}else{
+										this.scanPCSEncapsulation.call(this,res)
+									}
+								}
 							}
 						}else{
 							this.showErrorMessage = '请完成本次提交后再次扫码！'
