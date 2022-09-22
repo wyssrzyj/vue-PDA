@@ -5,9 +5,9 @@
 			<view class="storage">
 				<view class="storage-item">
 					<text class="storage-item-left"><text class="requier">*</text>报工工段</text>
-					<view class="storage-item-right">
+					<view class="storage-item-right" @click="clickSection">
 					<!-- <view class="storage-item-right" @click="show = true"> -->
-						<text class="info">{{'尾部'}}</text>
+						<text class="info">{{ section || '请选择报工工段' }}</text>
 						<text class="iconfont icon-youjiantou"></text>
 					</view>
 				</view>
@@ -73,6 +73,7 @@
 		</view>
 		<select-code-multiple :visible="showM" :checkedValue="checkedList" :optionList="coutryList"
 			@confirm="getCodeMu"></select-code-multiple>
+		<u-action-sheet :actions="sectionList" :show="showSection" @select="sectionSelectClick" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showSection=false"></u-action-sheet>
 		<scan-code></scan-code>
 	</view>
 </template>
@@ -130,6 +131,10 @@
 				employeeName:"",
 				showM: false,
 				coutryList: [],
+				showSection: false,
+				section: '',	//工段
+				sectionList: [],//工段列表
+				sectionAndCoutry: {},//工段工序组合数据
 				//选中的值
 				checkedList: [],
 				workshopObj:{},
@@ -231,6 +236,28 @@
 			handleCancel(){		//报工工段取消
 				this.show=false
 			},
+			// 弹出工段选择
+			clickSection(){
+				if(this.section === '尾部') return
+				if(Object.keys(this.sectionAndCoutry).length === 0) {
+					this.showErrorMessage = '暂无工段可供选择！'
+					this.showErrorPop = true
+					let timer = setTimeout(() => {
+						clearTimeout(timer)
+						this.showErrorPop = false
+					}, 3000)
+				} else {
+					this.showSection = true
+				}
+			},
+			//选择不同的工段
+			sectionSelectClick(e){
+				this.section = e.name
+				this.coutryList = []
+				this.sectionAndCoutry[e.name].forEach(item => {
+					this.coutryList.push({name: item, value: item, valid: 1})
+				})
+			},
 			handleInput(e,item){
 				if(Number(e.target.value)<=Number(item.limitCount)&&e.target.value){
 					e.target.value = e.target.value.split('.')[0].replace(/^[^\d]|[.]/g, '')
@@ -252,7 +279,6 @@
 						this.showErrorPop = false
 					}, 2000)
 				}
-				
 			},
 			//封装函数
 			scanPCSEncapsulation(res){
@@ -270,10 +296,20 @@
 				// 	this.workshopObj=Object.assign(item,this.workshopObj)
 				// })
 				// this.columns=[Object.values(this.workshopObj)]
-				// 报工工序
-				this.coutryList=res.data.processName.map(i=>{
-					return {...i,value:i.productName,name:i.productName}
-				})
+				
+				// 扎包报工工序
+				if (res.data.pcsType==0) {
+					this.sectionAndCoutry = res.data.sectionsAndProcessList || {}
+					this.sectionList = Object.keys(res.data.sectionsAndProcessList).map(item => {
+						return {name: item}
+					})
+				// 组码报工工序
+				} else {
+					this.section = '尾部'
+					this.coutryList=res.data.processName.map(i=>{
+						return {...i,value:i.productName,name:i.productName}
+					})
+				}
 				//报工工序
 				// let process=res.data.sectionsAndProductNames[0]
 				// let newArr=[]
@@ -296,6 +332,7 @@
 				Api.productionReportingPCS({
 					pcs:pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
+					console.log(res)
 					if (res.code === 0) {
 						if(this.outStorageArr.length===0){
 							if(checkFunc('codeToWork') && !checkFunc('packBarCodeReportWork')) { // 只有组码报工
@@ -307,6 +344,7 @@
 										duration: 3000
 									})
 									this.outStorageArr=this.outStorageArr.concat(res.data)
+									this.section = '尾部'
 									//生产单号
 									this.productId=res.data[0]?.produceOrderId
 									this.coutryList=res.data[0]?.processName.map(i=>{
@@ -322,7 +360,7 @@
 								if(res.data.pcsType==0){
 									this.scanPCSEncapsulation.call(this,res)
 								} else {
-									if(res.data.workerType===1){
+									if(Array.isArray(res.data) && res.data[0].workerType===1){
 										this.outStorageArr = this.outStorageArr.reverse()
 										uni.showToast({
 											title: '扫描包条码成功！',
@@ -330,6 +368,7 @@
 											duration: 3000
 										})
 										this.outStorageArr=this.outStorageArr.concat(res.data)
+										this.section = '尾部'
 										//生产单号
 										this.productId=res.data[0]?.produceOrderId
 										this.coutryList=res.data[0]?.processName.map(i=>{
@@ -458,19 +497,22 @@
 					this.productNum = ''
 					this.supplierName=""
 					this.checkedList=[]
+					this.section=''
+					this.sectionAndCoutry={}
+					this.sectionList=[]
 				}
 			},
 			
 			handleOutStorage(){ // 出库
-				// if(!this.productNum){ //工段必填
-				// 	this.showErrorMessage = '请选择报工工段'
-				// 	this.showErrorPop = true
-				// 	let timer = setTimeout(() => {
-				// 		clearTimeout(timer)
-				// 		this.showErrorPop = false
-				// 	}, 2000)
-				// 	return;
-				// }
+				if(!this.section){ //工段必填
+					this.showErrorMessage = '请选择报工工段'
+					this.showErrorPop = true
+					let timer = setTimeout(() => {
+						clearTimeout(timer)
+						this.showErrorPop = false
+					}, 2000)
+					return;
+				}
 				if(!this.supplierName){ //工序必填
 					this.showErrorMessage = '请选择报工工序'
 					this.showErrorPop = true
@@ -492,7 +534,7 @@
 				}
 				let mesEngineeringManagementDTOS=this.outStorageArr.map(item=>{
 					// return {...item,section:findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
-					return {...item,section:'尾部',productName:this.supplierName,engineeringManagementDate:formateDate()}
+					return {...item,section:this.section,productName:this.supplierName,engineeringManagementDate:formateDate()}
 				});
 				Api.productionReporting({
 					mesEngineeringManagementDTOS,
@@ -504,6 +546,9 @@
 						this.checkedList=[]
 						this.coutryList=[]
 						this.columns=[]
+						this.section = ''
+						this.sectionAndCoutry= {}
+						this.sectionList = []
 						this.showSuccessMessage = '报工成功！'
 						this.showSuccessPop = true
 						let timer = setTimeout(() => {
