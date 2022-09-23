@@ -84,7 +84,7 @@
 	import scanCode from "@/components/scan/scan.vue"
 	import selectCodeMultiple from '@/components/mulSelection/mulSelection.vue'
 	import {KEY_MAP} from "../../constant/index.js"
-	const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
+	// const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
 	var timer;
 	var preKeyCode = '';
 	var allKeyCodeTemp = '';
@@ -93,12 +93,12 @@
 			selectCodeMultiple,
 			scanCode
 		},
-		onLoad() {
-			this.setOnKeyEventListener();
-		},
-		onUnload(){
-			this.disableAllOnKeyEventListener(); //取消所有监听
-		},
+		// onLoad() {
+		// 	this.setOnKeyEventListener();
+		// },
+		// onUnload(){
+		// 	this.disableAllOnKeyEventListener(); //取消所有监听
+		// },
 		onShow() {
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
 			uni.$on('scancodedate', (data) => {
@@ -145,28 +145,28 @@
 			}
 		},
 		methods:{
-			setOnKeyEventListener() {
-				let that = this;
-				// longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen');//引用插件
-				//设置监听，可设置多个，回调按 tag 区分哪个监听返回。
-				longyoungKeyEventListen.setOnKeyEventListenerLy({
-					tag: that.tag //不必理会，固定 1 就好
-				}, result => {
-					if (!result.keyCode) {
-						that.resultStr += '\n' + JSON.stringify(result) + '\n';
-					}
-					if (result && result.return_code == 'SUCCESS') {
-						if (result.return_type == 'dataBack') { //return_type=dataBack是返回数据标识，返回的数据在此获取
+			// setOnKeyEventListener() {
+			// 	let that = this;
+			// 	// longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen');//引用插件
+			// 	//设置监听，可设置多个，回调按 tag 区分哪个监听返回。
+			// 	longyoungKeyEventListen.setOnKeyEventListenerLy({
+			// 		tag: that.tag //不必理会，固定 1 就好
+			// 	}, result => {
+			// 		if (!result.keyCode) {
+			// 			that.resultStr += '\n' + JSON.stringify(result) + '\n';
+			// 		}
+			// 		if (result && result.return_code == 'SUCCESS') {
+			// 			if (result.return_type == 'dataBack') { //return_type=dataBack是返回数据标识，返回的数据在此获取
 			
-							//页面只显示1和a，供查看数据结构
-							if (result.keyCode == 'KEYCODE_1' || result.keyCode == 'KEYCODE_A') {
-								that.resultStr += '\n' + JSON.stringify(result) + '\n';
-							}
-							that.handleData(result);
-						}
-					}
-				});
-			},
+			// 				//页面只显示1和a，供查看数据结构
+			// 				if (result.keyCode == 'KEYCODE_1' || result.keyCode == 'KEYCODE_A') {
+			// 					that.resultStr += '\n' + JSON.stringify(result) + '\n';
+			// 				}
+			// 				that.handleData(result);
+			// 			}
+			// 		}
+			// 	});
+			// },
 			handleData(result) {
 				let that = this;
 				if (result.return_type == 'dataBack') {
@@ -195,16 +195,16 @@
 					}
 				}
 			},
-			disableAllOnKeyEventListener() {
-				let that = this;
-				//取消所有监听
-				longyoungKeyEventListen.disableAllOnKeyEventListenerLy({}, result => {
-					that.resultStr += '\n' + JSON.stringify(result) + '\n';
-					if (result && result.return_code == 'SUCCESS') {
-						console.log("取消所有监听成功")
-					}
-				});
-			},
+			// disableAllOnKeyEventListener() {
+			// 	let that = this;
+			// 	//取消所有监听
+			// 	longyoungKeyEventListen.disableAllOnKeyEventListenerLy({}, result => {
+			// 		that.resultStr += '\n' + JSON.stringify(result) + '\n';
+			// 		if (result && result.return_code == 'SUCCESS') {
+			// 			console.log("取消所有监听成功")
+			// 		}
+			// 	});
+			// },
 			//打开多选
 			showMultiple() {
 				this.showM = true
@@ -253,6 +253,7 @@
 			//选择不同的工段
 			sectionSelectClick(e){
 				this.section = e.name
+				this.supplierName = ''
 				this.coutryList = []
 				this.sectionAndCoutry[e.name].forEach(item => {
 					this.coutryList.push({name: item, value: item, valid: 1})
@@ -556,11 +557,11 @@
 							this.showSuccessPop = false
 						}, 2000)
 					}else{
-						this.showSuccessMessage = res.data
-						this.showSuccessPop = true
+						this.showErrorMessage = res.msg
+						this.showErrorPop = true
 						let timer = setTimeout(() => {
 							clearTimeout(timer)
-							this.showSuccessPop = false
+							this.showErrorPop = false
 						}, 2000)
 					}
 				})
