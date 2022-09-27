@@ -260,16 +260,16 @@
 				})
 			},
 			handleInput(e,item){
-				if(Number(e.target.value)<=Number(item.limitCount)&&e.target.value){
+				if(Number(e.target.value)<=Number(item.limitCount)&&e.target.value&&item.pcsType){
 					e.target.value = e.target.value.split('.')[0].replace(/^[^\d]|[.]/g, '')
 					this.$nextTick(() => {
 						item.count= Number(e.target.value)
 					})
-				}else if(!e.target.value){
+				}else if(!e.target.value&&item.pcsType){
 					this.$nextTick(()=>{
 						item.count=''
 					})
-				}else{
+				}else if(item.pcsType){
 					this.$nextTick(()=>{
 						item.count=Number(item.limitCount)
 					})
