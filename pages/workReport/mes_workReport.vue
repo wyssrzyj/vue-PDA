@@ -22,9 +22,10 @@
 					<li v-for="item in checkedList" :key="item.name" style="font-size: 30rpx;">{{item.value}}</li>
 				</ul> -->
 				<view class="storage-item">
-					<text class="storage-item-left" style="margin-left: 15px;">当前员工</text>
-					<view class="storage-item-right">
-						<text class="info">{{employeeName?employeeName:'未绑定'}}</text>
+					<text class="storage-item-left"><text class="requier">*</text>当前员工</text>
+					<view class="storage-item-right" @click="selectUser">
+						<text class="info">{{realName||'未绑定'}}</text>
+						<text class="iconfont icon-youjiantou"></text>
 					</view>
 				</view>
 			</view>
@@ -71,10 +72,11 @@
 			<view class="errorImage"></view>
 			<view style="margin-left: 30rpx;">{{ showErrorMessage }}</view>
 		</view>
-		<select-code-multiple :visible="showM" :checkedValue="checkedList" :optionList="coutryList"
-			@confirm="getCodeMu"></select-code-multiple>
+		<select-code-multiple :visible="showM" :checkedValue="checkedList" :optionList="coutryList"@confirm="getCodeMu"></select-code-multiple>
 		<u-action-sheet :actions="sectionList" :show="showSection" @select="sectionSelectClick" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showSection=false"></u-action-sheet>
 		<scan-code></scan-code>
+		<!-- 选择用户 -->
+		<mpv ref="mpv" v-model='realName' :list="userList" @selectSure="selectSure" />
 	</view>
 </template>
 
@@ -84,6 +86,7 @@
 	import scanCode from "@/components/scan/scan.vue"
 	import selectCodeMultiple from '@/components/mulSelection/mulSelection.vue'
 	import {KEY_MAP} from "../../constant/index.js"
+	import mpv from "@/components/mulSelectionSearch/mulSelectionSearch-user.vue"
 	// const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
 	var timer;
 	var preKeyCode = '';
@@ -91,7 +94,8 @@
 	export default{
 		components: {
 			selectCodeMultiple,
-			scanCode
+			scanCode,
+			mpv
 		},
 		// onLoad() {
 		// 	this.setOnKeyEventListener();
@@ -107,11 +111,20 @@
 			})
 		},
 		mounted(){
-			Api.productionGetAdmin().then(res=>{
+			// 获取员工列表
+			Api.getAlluser().then(res => {
 				if(res.code=="0"){
-					this.employeeName=res.data.realName
+					this.userList = res.data.map(item => {
+						return {id: item.id, staffId: item.staffId, realName: item.realName}
+					})
 				}
 			})
+			// Api.productionGetAdmin().then(res=>{
+				// if(res.code=="0"){
+					// console.log(res)
+					// this.employeeName=res.data.realName
+				// }
+			// })
 		},
 		data(){
 			return{
@@ -128,7 +141,10 @@
 				selectIndex: 0,
 				columns:[],
 				show:false,
-				employeeName:"",
+				userId:null,//用户id
+				realName:'', //前端用户名称
+				userList:[], //用户列表
+				canSelectUser: false,//是否可以选择用户
 				showM: false,
 				coutryList: [],
 				showSection: false,
@@ -259,6 +275,15 @@
 					this.coutryList.push({name: item, value: item, valid: 1})
 				})
 			},
+			// 选择用户弹窗
+			selectUser(){
+				if(!this.canSelectUser) return
+				this.$refs.mpv.toggle('bottom')
+			},
+			// 选择了某个值
+			selectSure(val){
+				this.userId = val.id
+			},
 			handleInput(e,item){
 				if(Number(e.target.value)<=Number(item.limitCount)&&e.target.value){
 					e.target.value = e.target.value.split('.')[0].replace(/^[^\d]|[.]/g, '')
@@ -333,10 +358,12 @@
 				Api.productionReportingPCS({
 					pcs:pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
-					console.log(res)
 					if (res.code === 0) {
 						if(this.outStorageArr.length===0){
 							if(checkFunc('codeToWork') && !checkFunc('packBarCodeReportWork')) { // 只有组码报工
+								this.canSelectUser = false
+								this.realName = res.data.realName + '—' + res.data.staffId
+								this.userId = res.data.userId
 								if(Array.isArray(res.data) && res.data[0].workerType===1){ //返修
 									this.outStorageArr = this.outStorageArr.reverse()
 									uni.showToast({
@@ -356,11 +383,16 @@
 									this.scanPCSEncapsulation.call(this,res)
 								}
 							} else if(!checkFunc('codeToWork') && checkFunc('packBarCodeReportWork')) { // 只有扎包条码报工
+								this.canSelectUser = true
 								this.scanPCSEncapsulation.call(this,res)
 							} else if(checkFunc('codeToWork') && checkFunc('packBarCodeReportWork')) { // 扎包条码和组码报工都有
 								if(res.data.pcsType==0){
+									this.canSelectUser = true
 									this.scanPCSEncapsulation.call(this,res)
 								} else {
+									this.canSelectUser = false
+									this.realName = res.data.realName + '—' + res.data.staffId
+									this.userId = res.data.userId
 									if(Array.isArray(res.data) && res.data[0].workerType===1){
 										this.outStorageArr = this.outStorageArr.reverse()
 										uni.showToast({
@@ -535,7 +567,7 @@
 				}
 				let mesEngineeringManagementDTOS=this.outStorageArr.map(item=>{
 					// return {...item,section:findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
-					return {...item,section:this.section,productName:this.supplierName,engineeringManagementDate:formateDate()}
+					return {...item,section:this.section,productName:this.supplierName,engineeringManagementDate:formateDate(),userId:this.userId}
 				});
 				Api.productionReporting({
 					mesEngineeringManagementDTOS,
@@ -550,6 +582,9 @@
 						this.section = ''
 						this.sectionAndCoutry= {}
 						this.sectionList = []
+						this.realName = ''
+						this.userId = null
+						this.canSelectUser = false
 						this.showSuccessMessage = '报工成功！'
 						this.showSuccessPop = true
 						let timer = setTimeout(() => {

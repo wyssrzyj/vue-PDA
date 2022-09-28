@@ -115,6 +115,10 @@ const Api = {
 	productionGetAdmin(reqData){
 		return requestApi(`${API_ADDRESS}/mes/mesengineeringmanagement/user`, 'GET', reqData)
 	},
+	//获取所有员工列表
+	getAlluser(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesemployee/list`, 'GET', reqData)
+	},
 	// 根据布条码获取收货数据
 	getReceiveData(reqData) {
 	  return requestApi(`${API_ADDRESS}/mes/messpreadcloth/getReceiveData`, 'GET', reqData)
