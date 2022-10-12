@@ -5,7 +5,7 @@
 				<image
 					:src="productionInfoData.image?getimage(productionInfoData.image):'../../static/qualityTesting/default.png'"
 					class="image" @click="bigimage(productionInfoData.image)"></image>
-				<view style="display: flex;" @click="downup(list.detailMap)">
+				<view style="display: flex;margin-top: 5rpx;" @click="downup(list.detailMap)">
 					<text style="margin-right: 8rpx;">详情</text>
 					<u-icon v-if="downupflag" name="arrow-up" size="16px" :bold="true"></u-icon>
 					<u-icon v-else name="arrow-down" size="16px" :bold="true"></u-icon>
@@ -18,15 +18,15 @@
 				<view class="header-grid-alllist">
 					<view class="header-grid-all-list">
 						<view class="name">单号：</view>
-						<view class="code">{{productionInfoData.productOrderNum}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{productionInfoData.productOrderNum}}</view>
 					</view>
 					<view class="header-grid-all-list">
 						<view class="name">数量：</view>
-						<view class="code">{{productionInfoData.sum}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{productionInfoData.sum}}</view>
 					</view>
 					<view class="header-grid-all-list">
 						<view class="name">客号：</view>
-						<view class="code">{{productionInfoData.customerId}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{productionInfoData.customerId}}</view>
 					</view>
 					<view class="header-grid-all-list">
 						<view class="name">客户：</view>
@@ -34,11 +34,11 @@
 					</view>
 					<view class="header-grid-all-list">
 						<view class="name">添加：</view>
-						<view class="code">{{datechange(productionInfoData.createDate)}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{datechange(productionInfoData.createDate)}}</view>
 					</view>
 					<view class="header-grid-all-list">
 						<view class="name">交期：</view>
-						<view class="code">{{datechange(productionInfoData.deliverTime)}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{datechange(productionInfoData.deliverTime)}}</view>
 					</view>
 				</view>
 			</view>
@@ -59,19 +59,19 @@
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">交期：</view>
-						<view class="code">{{datechange(list.completeTime)}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{datechange(list.completeTime)}}</view>
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">添加：</view>
-						<view class="code">{{datechange(list.createDate)}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{datechange(list.createDate)}}</view>
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">单价：</view>
-						<view class="code">{{list.unitPrice}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{list.unitPrice}}</view>
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">数量：</view>
-						<view class="code">{{list.num}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{list.num}}</view>
 					</view>
 				</view>
 			</view>
@@ -97,10 +97,10 @@
 		<view class="footer">
 			<u--form ref="form" :labelStyle="{'font-size':'30rpx','font-weight': 600}">
 				<u-form-item label="全部完成" borderBottom labelWidth="150">
-					<switch class="switch" @change="change()" color="#2979ff !important" style="transform:scale(0.7)" />
+					<switch v-model="switch_value" :value="true" class="switch" @change="change()" color="#2979ff !important" style="transform:scale(0.7)" />
 				</u-form-item>
 				<u-form-item label="收货数量" :required="true" borderBottom labelWidth="150" v-if="list.existDetail == 0">
-					<u--input v-model="receiveNum" border="none" placeholder="请输入数量" type="number">
+					<u--input v-model="receiveNum" :clearable="true" border="none" placeholder="请输入数量" type="number">
 					</u--input>
 					<view class="">{{list.unit}}</view>
 				</u-form-item>
@@ -147,7 +147,7 @@
 		},
 		data() {
 			return {
-				receiveNum:0,
+				receiveNum:'',
 				num: null,
 				id: '',
 				productionInfoData: {},
@@ -172,6 +172,7 @@
 			if(num==1){
 				this.change_list.tableData =this.change_list.tableData.splice(0,this.change_list.tableData.length-1)
 				this.receiveNum = this.change_list.num
+				// this.switch_value = this.change_list.completeFlag?true:false
 			}
 			this.change_num = num
 			this.getdata(id)
@@ -212,7 +213,7 @@
 					this.processData1 = obj[i]
 					for (let x of obj[i]) {
 						tempObj.name = x.color
-						tempObj[x.size] = 0
+						tempObj[x.size] = ''
 					}
 					this.tableData1.push(tempObj)
 				}
@@ -350,8 +351,8 @@
 	}
 
 	.header {
-		width: 100vw;
-		height: 18%;
+		width: 100%;
+		height: 240rpx;
 		padding: 20rpx;
 		display: flex;
 		background-color: white;

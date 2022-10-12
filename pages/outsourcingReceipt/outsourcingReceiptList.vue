@@ -16,19 +16,19 @@
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">交期：</view>
-						<view class="code">{{datechange(list.deliverTime)}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{datechange(list.deliverTime)}}</view>
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">添加：</view>
-						<view class="code">{{datechange(list.createDate)}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{datechange(list.createDate)}}</view>
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">单价：</view>
-						<view class="code">{{list.unitPrice}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{list.unitPrice}}</view>
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">数量：</view>
-						<view class="code">{{list.num}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{list.num}}</view>
 					</view>
 				</view>
 			</view>
@@ -73,7 +73,7 @@
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name" style="width: 110rpx;">收货数：</view>
-						<view class="code">{{item.num}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{item.num}}</view>
 					</view>
 				</view>
 			</view>

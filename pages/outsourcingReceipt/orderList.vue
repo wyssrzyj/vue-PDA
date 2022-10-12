@@ -3,7 +3,7 @@
 		<view class="list-header">
 			<view class="list-header-input">
 				<u--input placeholder="输入搜索" prefixIcon="search" prefixIconStyle="font-size: 22px;color: #909399"
-					suffixIcon="scan" suffixIconStyle="font-size: 22px;color: #909399" v-model="productionid">
+					suffixIcon="scan" suffixIconStyle="font-size: 22px;color: #909399" v-model="productionid" :clearable="true">
 				</u--input>
 			</view>
 			<view class="list-header-text" @click="query()">
@@ -28,21 +28,20 @@
 							</view>
 							<view style="position: absolute;right: 40rpx;" @click="item.show = !item.show">
 								<u-icon name="plus-circle" color="#59b7ff" size="44"></u-icon>
-								<view
-									style="background-color: #3c9cff;position: absolute;right: -20rpx;top: 40rpx;padding: 10rpx;"
+								<view style="background-color: #3c9cff;position: absolute;right: -20rpx;top: 40rpx;"
 									v-if="item.show">
-									<u-button type="primary" text="外协收货" size='mini'
-										@click="outsourcingReceiptindex(item)"></u-button>
+									<u-button type="primary" text="外协收货" @click="outsourcingReceiptindex(item)">
+									</u-button>
 									<u-line dashed></u-line>
-									<u-button type="primary" text="收货列表" size='mini'
-										@click="outsourcingReceiptList(item)"></u-button>
+									<u-button type="primary" text="收货列表" @click="outsourcingReceiptList(item)">
+									</u-button>
 								</view>
 							</view>
 						</view>
 						<view class="header-grid-alllist">
 							<view class="header-grid-all-list">
 								<view class="name" style="width: 120rpx;">生产单：</view>
-								<view class="code">{{item.productionId}}</view>
+								<view class="code" style="margin-top: 5rpx;">{{item.productionId}}</view>
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">类型：</view>
@@ -54,22 +53,25 @@
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">添加：</view>
-								<view class="code">{{item.createDate?datechange(item.createDate):''}}</view>
+								<view class="code" style="margin-top: 5rpx;">
+									{{item.createDate?datechange(item.createDate):''}}</view>
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">交期：</view>
-								<view class="code">{{item.deliverTime?datechange(item.deliverTime):''}}</view>
+								<view class="code" style="margin-top: 5rpx;">
+									{{item.deliverTime?datechange(item.deliverTime):''}}</view>
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">完成：</view>
-								<view class="code">{{item.completeTime?datechange(item.completeTime):''}}</view>
+								<view class="code" style="margin-top: 5rpx;">
+									{{item.completeTime?datechange(item.completeTime):''}}</view>
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">数量：</view>
-								<view class="code" style="display: flex;align-items: center;">
+								<view class="code" style="display: flex;align-items: center;margin-top: 5rpx;">
 									<view>{{item.num}}</view>
 									<view v-if="item.existDetail==1"
-										style="display: flex;margin-left: 10rpx;font-size: 12px;color: #0c99f2;"
+										style="display: flex;margin-left: 10rpx;font-size: 12px;color: #0c99f2;margin-bottom: 3rpx;"
 										@click="downup(item.detailMap,item.id)">
 										<text style="margin-right: 8rpx;">明细</text>
 										<u-icon v-if="item.show1" name="arrow-up" size="12px" :bold="true"
@@ -82,7 +84,7 @@
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">收货：</view>
-								<view class="code">{{item.receiveNum}}</view>
+								<view class="code" style="margin-top: 5rpx;">{{item.receiveNum}}</view>
 							</view>
 						</view>
 					</view>
@@ -132,7 +134,7 @@
 				processData: [],
 				tableData: [],
 				page: 1,
-				a:0
+				a: 0
 			}
 		},
 		onShow() {
@@ -143,9 +145,9 @@
 					code
 				} = data
 				_this.productionid = code
-				_this.getData(code,1)
+				_this.getData(code, 1)
 			})
-			_this.getData()
+			_this.getData(_this.productionid,1)
 			_this.api = uni.getStorageSync('pda-api')
 		},
 		// 底部加载
@@ -156,18 +158,18 @@
 		},
 
 		methods: {
-			query(){
-				this.getData(this.productionid,1)
+			query() {
+				this.getData(this.productionid, 1)
 			},
 			// 查询 获取data
-			getData(code,num) {
-				if(num==1){
-					this.page=1
+			getData(code, num) {
+				if (num == 1) {
+					this.page = 1
 				}
 				let obj = {
 					limit: 10,
 					page: this.page,
-					productionId: code?code:''
+					productionId: code ? code : ''
 				}
 				console.log(obj);
 				Api.outsourcingReceipt(obj).then(res => {
@@ -178,10 +180,9 @@
 							list
 						} = res.data
 						if (list.length == 0) {
-							if(num==1){
-								this.allList=[]
+							if (num == 1) {
+								this.allList = []
 							}
-							// this.a=0
 							toasting('暂无更多数据')
 						} else {
 							this.a++
@@ -190,10 +191,10 @@
 								item.show1 = false
 								return item
 							})
-							if(this.a>1&&num!=1){
-								this.allList = [...o_list,...new_list]
+							if (this.a > 1 && num != 1) {
+								this.allList = [...o_list, ...new_list]
 								this.page = this.page + 1
-							}else{
+							} else {
 								this.allList = [...new_list]
 								this.page = this.page + 1
 							}
@@ -337,6 +338,7 @@
 
 			.list-header-text {
 				padding: 0 20rpx;
+				font-weight: bold;
 			}
 		}
 
