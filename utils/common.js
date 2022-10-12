@@ -48,6 +48,14 @@ export const blanketDataList = [
 		link: '/pages/blanket/blanketDataCollect'
 	}
 ]
+export const outsourcingDataList = [
+	{
+		title: '外协收货',
+		permissions: 'mes:messpreadcloth:outsourcingreceipt',
+		src: '../../static/blanket/blanket.png',
+		link: '/pages/outsourcingReceipt/orderList'
+	}
+]
 // export const qualityTestingDataList = [
 // 	{
 // 		title: '质检',

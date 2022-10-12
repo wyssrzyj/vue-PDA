@@ -86,6 +86,27 @@
 			}
 		},
 		{
+			"path": "pages/outsourcingReceipt/index",
+			"style": {
+				"navigationBarTitleText": "外协收货",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/outsourcingReceipt/orderList",
+			"style": {
+				"navigationBarTitleText": "外协单列表",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/outsourcingReceipt/outsourcingReceiptList",
+			"style": {
+				"navigationBarTitleText": "外协收货列表",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
 		    "path" : "pages/qualityTesting/mes-qualityTesting",
 			"style": {
 				"app-plus":{
