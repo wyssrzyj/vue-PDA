@@ -10,6 +10,7 @@
 			<text>库位：</text>
 			<!-- <input class="uni-input storageInput" placeholder-style="font-size: 34rpx" v-model="storageValue" confirm-type="search" placeholder="请扫描库位码" disabled/> -->
 			<text class="locationPromptText">{{storageValue}}</text>
+			<el-switch v-model="value1" />
 		</view>
 		<view class="pannelContent">
 			<uni-swipe-action>

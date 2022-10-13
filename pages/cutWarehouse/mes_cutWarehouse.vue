@@ -55,6 +55,19 @@
 				</view>
 			</view>
 		</view>
+		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:messpreadcloth:blanketDataCollect')">
+			<view class="text">
+				外协收货
+			</view>
+			<view class="factoryAccess blanket" >
+				<view v-for="(item, index) in outsourcingDataList" :key="index" @tap="toList(item)" >
+					<view class="factoryAccessItem" >
+						<image :src="item.src" class="image"></image>
+						<text class="titleItem">{{ item.title }}</text>
+					</view>
+				</view>
+			</view>
+		</view>
 <!-- 		<view class="tabBoxItem">
 			<view class="text">
 				质检
@@ -72,7 +85,7 @@
 </template>
 
 <script>
-import { cutWarehouseList, outwardProcessingList,blanketDataList,workReportList,qualityTestingDataList } from '../../utils/common.js';
+import { cutWarehouseList, outwardProcessingList,blanketDataList,workReportList,qualityTestingDataList,outsourcingDataList } from '../../utils/common.js';
 import { checkPermission } from '../../utils/index.js'
 
 export default{
@@ -84,11 +97,13 @@ export default{
 			blanketDataList,
 			workReportList,
 			qualityTestingDataList,
-			checkPermission
+			checkPermission,
+			outsourcingDataList
 		}
 	},
 	methods:{
 		toList(item){
+			console.log(item.link);
 				uni.navigateTo({
 					url: item.link
 				});

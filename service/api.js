@@ -184,6 +184,30 @@ const Api = {
 	updateRepairStatus(url,reqData){
 		return requestApi(`${API_ADDRESS}/${url}`, 'GET', reqData)
 	},
+	// 外协列表
+	outsourcingReceipt(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/page`, 'GET', reqData)
+	},
+	// 外协收货信息
+	outsourcingReceiptassistinfo(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/assistinfo`, 'GET', reqData)
+	},
+	// 外协收货保存
+	outsourcingReceiptreceiveSave(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/receiveSave`, 'POST', reqData)
+	},
+	// 外协收货编辑
+	outsourcingReceiptreceiveUpdate(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/receiveUpdate`, 'POST', reqData)
+	},
+	// 外协收货列表
+	outsourcingReceiptreceivePage(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/receivePage`, 'GET', reqData)
+	},
+	// 外协收货头部信息
+	outsourcingReceiptheadinfo(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/headinfo`, 'GET', reqData)
+	},
 }
 
 export default Api
