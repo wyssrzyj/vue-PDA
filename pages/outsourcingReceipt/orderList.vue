@@ -2,8 +2,8 @@
 	<view class="list">
 		<view class="list-header">
 			<view class="list-header-input">
-				<u--input placeholder="输入搜索" prefixIcon="search" prefixIconStyle="font-size: 22px;color: #909399"
-					suffixIcon="scan" suffixIconStyle="font-size: 22px;color: #909399" v-model="productionid" :clearable="true">
+				<u--input placeholder="输入搜索" prefixIcon="search" prefixIconStyle="font-size: 44rpx;color: #909399"
+					suffixIcon="scan" suffixIconStyle="font-size: 44rpx;color: #909399" v-model="productionid" fontSize="28rpx">
 				</u--input>
 			</view>
 			<view class="list-header-text" @click="query()">
@@ -30,11 +30,13 @@
 								<u-icon name="plus-circle" color="#59b7ff" size="44"></u-icon>
 								<view style="background-color: #3c9cff;position: absolute;right: -20rpx;top: 40rpx;"
 									v-if="item.show">
-									<u-button type="primary" text="外协收货" @click="outsourcingReceiptindex(item)">
-									</u-button>
+									<view @click="outsourcingReceiptindex(item)" class="button">
+										<view style="margin-top: 7rpx;">外协收货</view>
+									</view>
 									<u-line dashed></u-line>
-									<u-button type="primary" text="收货列表" @click="outsourcingReceiptList(item)">
-									</u-button>
+									<view @click="outsourcingReceiptList(item)" class="button">
+										<view style="margin-top: 7rpx;">收货列表</view>
+									</view>
 								</view>
 							</view>
 						</view>
@@ -73,11 +75,11 @@
 									<view v-if="item.existDetail==1"
 										style="display: flex;margin-left: 10rpx;font-size: 12px;color: #0c99f2;margin-bottom: 3rpx;"
 										@click="downup(item.detailMap,item.id)">
-										<text style="margin-right: 8rpx;">明细</text>
-										<u-icon v-if="item.show1" name="arrow-up" size="12px" :bold="true"
+										<text style="margin-right: 8rpx;font-size: 24rpx;">明细</text>
+										<u-icon v-if="item.show1" name="arrow-up" size="24rpx" :bold="true"
 											color="#0c99f2">
 										</u-icon>
-										<u-icon v-else name="arrow-down" size="12px" :bold="true" color="#0c99f2">
+										<u-icon v-else name="arrow-down" size="24rpx" :bold="true" color="#0c99f2">
 										</u-icon>
 									</view>
 								</view>
@@ -171,7 +173,6 @@
 					page: this.page,
 					productionId: code ? code : ''
 				}
-				console.log(obj);
 				Api.outsourcingReceipt(obj).then(res => {
 					if (res.code == 0) {
 						const o_list = this.allList
@@ -276,7 +277,7 @@
 				if (image == null) {
 					return '../../static/qualityTesting/default.png'
 				}
-				// console.log(`http://${this.api}/upload${image.split('upload')[1]}`)
+				// `http://${this.api}/upload${image.split('upload')[1]}`
 				return image
 			},
 			// 查看图片
@@ -319,8 +320,16 @@
 </script>
 
 <style lang="scss">
+	uni-view.u-input__content__subfix-icon {
+		font-size: 40rpx !important;
+	}
 	.list {
+		height: 100%;
+		width: 100%;
+		
 		.list-header {
+			width: 100%;
+			height: 100%;
 			display: flex;
 			background-color: #0c99f2;
 			color: white;
@@ -332,6 +341,7 @@
 
 			.list-header-input {
 				width: 80%;
+				// height: 80%;
 				border-radius: 10rpx;
 				background-color: white;
 			}
@@ -357,7 +367,7 @@
 					justify-content: center;
 
 					.image {
-						margin-bottom: 16rpx;
+						margin-bottom: 5rpx;
 						width: 160rpx;
 						height: 160rpx;
 					}
@@ -385,7 +395,7 @@
 						.header-grid-all-list {
 							display: flex;
 							margin-top: 3rpx;
-							font-size: 12px;
+							font-size: 24rpx;
 							align-items: center;
 
 							.name {
@@ -399,6 +409,14 @@
 								text-overflow: ellipsis;
 							}
 						}
+					}
+					.button {
+						width: 200rpx;
+						height: 60rpx;
+						padding: 4rpx 10rpx;
+						text-align: center;
+						color: white;
+						font-weight: normal;
 					}
 				}
 			}

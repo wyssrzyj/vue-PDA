@@ -217,7 +217,6 @@
 								this.arrlist = [...list]
 								this.page = this.page + 1
 							}
-							// this.arrlist = list
 						}
 						return
 					}
