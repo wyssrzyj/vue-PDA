@@ -97,7 +97,7 @@
 		<view class="footer">
 			<u--form ref="form" :labelStyle="{'font-size':'30rpx','font-weight': 600}">
 				<u-form-item label="全部完成" borderBottom labelWidth="150">
-					<switch v-model="switch_value" :value="true" class="switch" @change="change()" color="#2979ff !important" style="transform:scale(0.7)" />
+					<switch :checked="switch_value" class="switch" @change="change()" color="#2979ff !important" style="transform:scale(0.7)" />
 				</u-form-item>
 				<u-form-item label="收货数量" :required="true" borderBottom labelWidth="150" v-if="list.existDetail == 0">
 					<u--input v-model="receiveNum" :clearable="true" border="none" placeholder="请输入数量" type="number">
@@ -128,7 +128,7 @@
 		<u-tabbar :fixed="true" :placeholder="true" :safeAreaInsetBottom="true">
 			<view class="button">
 				<view class="button-left">
-					<u-button type="primary" text="保存并返回列表" @click="submit()"></u-button>
+					<u-button type="primary" text="保存" @click="submit()"></u-button>
 				</view>
 			</view>
 		</u-tabbar>
@@ -172,7 +172,8 @@
 			if(num==1){
 				this.change_list.tableData =this.change_list.tableData.splice(0,this.change_list.tableData.length-1)
 				this.receiveNum = this.change_list.num
-				// this.switch_value = this.change_list.completeFlag?true:false
+				this.switch_value = this.change_list.completeFlag?true:false
+				console.log(this.switch_value);
 			}
 			this.change_num = num
 			this.getdata(id)
@@ -342,6 +343,10 @@
 		color: #8799a3 !important;
 		z-index: unset !important;
 	}
+	.switch::after {
+		color: #55aaff !important;
+		z-index: unset !important;
+	}
 
 	page {
 		padding: 0;
@@ -395,11 +400,11 @@
 					align-items: center;
 
 					.name {
-						width: 90rpx;
+						width: 84rpx;
 					}
 
 					.code {
-						width: 150rpx;
+						width: 176rpx;
 						overflow: hidden;
 						while-space: nowrap;
 						text-overflow: ellipsis;
@@ -449,6 +454,7 @@
 						overflow: hidden;
 						while-space: nowrap;
 						text-overflow: ellipsis;
+						white-space: nowrap;
 					}
 				}
 			}

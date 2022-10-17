@@ -42,7 +42,7 @@
 						</view>
 						<view class="header-grid-alllist">
 							<view class="header-grid-all-list">
-								<view class="name" style="width: 120rpx;">生产单：</view>
+								<view class="name" style="width: 96rpx;">生产单：</view>
 								<view class="code" style="margin-top: 5rpx;">{{item.productionId}}</view>
 							</view>
 							<view class="header-grid-all-list">
@@ -329,7 +329,7 @@
 		
 		.list-header {
 			width: 100%;
-			height: 100%;
+			// height: 100%;
 			display: flex;
 			background-color: #0c99f2;
 			color: white;
@@ -399,7 +399,7 @@
 							align-items: center;
 
 							.name {
-								width: 90rpx;
+								width: 72rpx;
 							}
 
 							.code {
@@ -407,6 +407,7 @@
 								overflow: hidden;
 								while-space: nowrap;
 								text-overflow: ellipsis;
+								white-space: nowrap;
 							}
 						}
 					}
