@@ -329,7 +329,7 @@
 		
 		.list-header {
 			width: 100%;
-			// height: 100%;
+			height: 100%;
 			display: flex;
 			background-color: #0c99f2;
 			color: white;
