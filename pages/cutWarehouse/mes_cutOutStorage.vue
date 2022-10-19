@@ -38,7 +38,7 @@
 				 			</view>
 				 			<view class="storageContent">
 				 				<view>
-				 					<text :class="[index == 0 ? 'first-item' :'label_style']">扎号：</text>
+				 					<text :class="[index == 0 ? 'first-item' :'label_style']">包号：</text>
 				 					<text :class="[index == 0 ? '.first-item-value' :'value_style']">{{ item.packageNum }}</text>
 				 				</view>
 				 				<view class="storageNum">

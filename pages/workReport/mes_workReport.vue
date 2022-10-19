@@ -14,13 +14,14 @@
 				<view class="storage-item">
 					<text class="storage-item-left"><text class="requier">*</text>报工工序</text>
 					<view class="storage-item-right" @click="showMultiple">
-						<text class="info">{{supplierName||'请选择报工工序'}}</text>
+						<!-- <text class="info">{{supplierName||'请选择报工工序'}}</text> -->
+						<text class="info">请选择报工工序</text>
 						<text class="iconfont icon-youjiantou"></text>
 					</view>
 				</view>
-				<!-- <ul>
+				<ul>
 					<li v-for="item in checkedList" :key="item.name" style="font-size: 30rpx;">{{item.value}}</li>
-				</ul> -->
+				</ul>
 				<view class="storage-item">
 					<text class="storage-item-left"><text class="requier">*</text>当前员工</text>
 					<view class="storage-item-right" @click="selectUser">
@@ -149,6 +150,7 @@
 				coutryList: [],
 				showSection: false,
 				section: '',	//工段
+				canSelectSection: false,
 				sectionList: [],//工段列表
 				sectionAndCoutry: {},//工段工序组合数据
 				//选中的值
@@ -254,7 +256,7 @@
 			},
 			// 弹出工段选择
 			clickSection(){
-				if(this.section === '尾部') return
+				if(!this.canSelectSection) return
 				if(Object.keys(this.sectionAndCoutry).length === 0) {
 					this.showErrorMessage = '暂无工段可供选择！'
 					this.showErrorPop = true
@@ -285,20 +287,24 @@
 				this.userId = val.id
 			},
 			handleInput(e,item){
-				if(Number(e.target.value)<=Number(item.limitCount)&&e.target.value&&item.pcsType){
+				if(Number(e.target.value)<=Number(item.limitCount)&&e.target.value){
 					e.target.value = e.target.value.split('.')[0].replace(/^[^\d]|[.]/g, '')
 					this.$nextTick(() => {
 						item.count= Number(e.target.value)
 					})
-				}else if(!e.target.value&&item.pcsType){
+				}else if(!e.target.value){
 					this.$nextTick(()=>{
 						item.count=''
 					})
-				}else if(item.pcsType){
+				}else{
 					this.$nextTick(()=>{
 						item.count=Number(item.limitCount)
 					})
-					this.showErrorMessage = '数量不能大于上一个报工的件数'
+					if (item.pcsType) {
+						this.showErrorMessage = '数量不能大于上一个报工的件数'
+					} else {
+						this.showErrorMessage = '报工数量不能大于件数'
+					}
 					this.showErrorPop = true
 					let timer = setTimeout(() => {
 						clearTimeout(timer)
@@ -362,6 +368,7 @@
 						if(this.outStorageArr.length===0){
 							if(checkFunc('codeToWork') && !checkFunc('packBarCodeReportWork')) { // 只有组码报工
 								this.canSelectUser = false
+								this.canSelectSection = false
 								this.realName = res.data.realName + '—' + res.data.staffId
 								this.userId = res.data.userId
 								if(Array.isArray(res.data) && res.data[0].workerType===1){ //返修
@@ -384,13 +391,16 @@
 								}
 							} else if(!checkFunc('codeToWork') && checkFunc('packBarCodeReportWork')) { // 只有扎包条码报工
 								this.canSelectUser = true
+								this.canSelectSection = true
 								this.scanPCSEncapsulation.call(this,res)
 							} else if(checkFunc('codeToWork') && checkFunc('packBarCodeReportWork')) { // 扎包条码和组码报工都有
 								if(res.data.pcsType==0){
 									this.canSelectUser = true
+									this.canSelectSection = true
 									this.scanPCSEncapsulation.call(this,res)
 								} else {
 									this.canSelectUser = false
+									this.canSelectSection = false
 									this.realName = res.data.realName + '—' + res.data.staffId
 									this.userId = res.data.userId
 									if(Array.isArray(res.data) && res.data[0].workerType===1){
@@ -533,6 +543,7 @@
 					this.section=''
 					this.sectionAndCoutry={}
 					this.sectionList=[]
+					this.canSelectSection=false
 				}
 			},
 			
@@ -555,9 +566,18 @@
 					}, 2000)
 					return;
 				}
-				const find=this.outStorageArr.find((item)=>item.count===0)
+				const find=this.outStorageArr.find((item)=>item.count===0 || item.count === '')
 				if(find){
 					this.showErrorMessage = '报工数量不能为0'
+					this.showErrorPop = true
+					let timer = setTimeout(() => {
+						clearTimeout(timer)
+						this.showErrorPop = false
+					}, 2000)
+					return;
+				}
+				if(!this.userId){
+					this.showErrorMessage = '当前员工不能为空'
 					this.showErrorPop = true
 					let timer = setTimeout(() => {
 						clearTimeout(timer)
@@ -582,6 +602,7 @@
 						this.section = ''
 						this.sectionAndCoutry= {}
 						this.sectionList = []
+						this.canSelectSection = false
 						this.realName = ''
 						this.userId = null
 						this.canSelectUser = false
