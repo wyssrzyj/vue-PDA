@@ -7,12 +7,18 @@
 			"path": "pages/login/mes_login",
 			"style": {
 				"navigationBarTitleText": "登录",
-				"backgroundColor": "#FFFFFF"
-				, "app-plus":{
+				"backgroundColor": "#FFFFFF", 
+				"app-plus":{
 					"titleNView":{
 						"buttons":[//按钮
 							{
 								"type":"favorite",
+								"fontSize":"30",
+								"float": "right",
+								"background":"rgba(0,0,0,0)"
+							},
+							{
+								"type":"menu",
 								"fontSize":"30",
 								"float": "right",
 								"background":"rgba(0,0,0,0)"

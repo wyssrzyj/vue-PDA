@@ -14,7 +14,7 @@ let API_ADDRESS = ''
 
 export const changeApi=(api)=>{
 	API_ADDRESS = `http://${api}`
-	console.log("当前环境:"+API_ADDRESS)
+	// console.log("当前环境:"+API_ADDRESS)
 }
 
 const Api = {
@@ -26,6 +26,7 @@ const Api = {
 	pdaNav(reqData) {
 	  return requestApi(`${API_ADDRESS}/mes/pdalogin/nav`, 'GET', reqData)
 	},
+	
 	// 权限标识
 	getPermissions(reqData) {
 	  return requestApi(`${API_ADDRESS}/mes/pdalogin/permissions`, 'GET', reqData)
@@ -208,6 +209,9 @@ const Api = {
 	outsourcingReceiptheadinfo(reqData){
 		return requestApi(`${API_ADDRESS}/mes/assist/headinfo`, 'GET', reqData)
 	},
+	changeVersoin(reqData){
+		return requestApi(`${API_ADDRESS}/mes/softwareversion/getnewver`, 'GET', reqData)
+	}
 }
 
 export default Api

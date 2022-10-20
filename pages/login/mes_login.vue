@@ -27,6 +27,7 @@
 		<!-- 选择环境弹窗 -->
 		<!-- <select-api ref="select"></select-api> -->
 		<new-select-api ref='select'></new-select-api>
+		<new-select-version ref='select1'></new-select-version>
 	</view>
 </template>
 
@@ -35,6 +36,7 @@ import { toasting } from '../../utils/index.js'
 import Api from '../../service/api'
 import selectApi from './select-api.vue'
 import newSelectApi from './new-select-api.vue'
+import newSelectVersion from "./new-select-version.vue"
 import {Store} from 'vuex'; 
 
 export default {
@@ -47,18 +49,22 @@ export default {
 	},
 	components:{
 		'select-api':selectApi,
-		'new-select-api':newSelectApi
+		'new-select-api':newSelectApi,
+		'new-select-version':newSelectVersion
 	},
 	onLoad() {
-		// 判断本地是否有账号密码，自动填充
 		if(uni.getStorageSync('username')) this.username = uni.getStorageSync('username')
 		if(uni.getStorageSync('password')) this.password = uni.getStorageSync('password')
 	},
 	onShow() {
 		uni.removeStorageSync("token")
 	},
-	onNavigationBarButtonTap(){
-		this.$refs.select.showSelect = !this.$refs.select.showSelect
+	onNavigationBarButtonTap(Object){
+		if(Object.type==='favorite'){
+			this.$refs.select.showSelect = !this.$refs.select.showSelect
+		}else if(Object.type==='menu'){
+			this.$refs.select1.showSelect = !this.$refs.select1.showSelect
+		}
 	},
 	methods:{
 		// 是否记住密码
@@ -83,7 +89,7 @@ export default {
 					username: username,
 					password: password,
 				}).then(res => {
-					console.log(res)
+					// console.log(res)
 					if (res.code === 0) {
 						toasting('登录成功')
 						uni.removeStorageSync('token')
