@@ -544,6 +544,10 @@
 					this.sectionAndCoutry={}
 					this.sectionList=[]
 					this.canSelectSection=false
+					this.columns=[]
+					this.realName = ''
+					this.userId = null
+					this.canSelectUser = false
 				}
 			},
 			
