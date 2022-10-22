@@ -369,9 +369,9 @@
 							if(checkFunc('codeToWork') && !checkFunc('packBarCodeReportWork')) { // 只有组码报工
 								this.canSelectUser = false
 								this.canSelectSection = false
-								this.realName = res.data.realName + '—' + res.data.staffId
-								this.userId = res.data.userId
 								if(Array.isArray(res.data) && res.data[0].workerType===1){ //返修
+									this.realName = res.data[0].realName + '—' + res.data[0].staffId
+									this.userId = res.data[0].userId
 									this.outStorageArr = this.outStorageArr.reverse()
 									uni.showToast({
 										title: '扫描包条码成功！',
@@ -387,6 +387,8 @@
 									})
 									this.outStorageArr = this.outStorageArr.reverse()
 								}else{	//组码
+									this.realName = res.data.realName + '—' + res.data.staffId
+									this.userId = res.data.userId
 									this.scanPCSEncapsulation.call(this,res)
 								}
 							} else if(!checkFunc('codeToWork') && checkFunc('packBarCodeReportWork')) { // 只有扎包条码报工
@@ -401,9 +403,9 @@
 								} else {
 									this.canSelectUser = false
 									this.canSelectSection = false
-									this.realName = res.data.realName + '—' + res.data.staffId
-									this.userId = res.data.userId
 									if(Array.isArray(res.data) && res.data[0].workerType===1){
+										this.realName = res.data[0].realName + '—' + res.data[0].staffId
+										this.userId = res.data[0].userId
 										this.outStorageArr = this.outStorageArr.reverse()
 										uni.showToast({
 											title: '扫描包条码成功！',
@@ -419,6 +421,8 @@
 										})
 										this.outStorageArr = this.outStorageArr.reverse()
 									}else{
+										this.realName = res.data.realName + '—' + res.data.staffId
+										this.userId = res.data.userId
 										this.scanPCSEncapsulation.call(this,res)
 									}
 								}
