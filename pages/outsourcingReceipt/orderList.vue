@@ -9,6 +9,7 @@
 			<view class="list-header-text" @click="query()">
 				搜索
 			</view>
+			<uni-icons type="scan" size="30" @click="queryReceipt"></uni-icons>
 		</view>
 		<view class="list-list">
 			<view style="margin-bottom: 16rpx;height: 100%;" v-for="item in allList" :key="item.billNo">
@@ -36,6 +37,10 @@
 									<u-line dashed></u-line>
 									<view @click="outsourcingReceiptList(item)" class="button">
 										<view style="margin-top: 7rpx;">收货列表</view>
+									</view>
+									<u-line dashed></u-line>
+									<view @click="updateOutsourcing(item)" class="button">
+										<view style="margin-top: 7rpx;">修改</view>
 									</view>
 								</view>
 							</view>
@@ -162,6 +167,11 @@
 		methods: {
 			query() {
 				this.getData(this.productionid, 1)
+			},
+			queryReceipt(){
+				uni.navigateTo({
+					url:'/pages/outsourcingReceipt/outsourcingReceipt'
+				})
 			},
 			// 查询 获取data
 			getData(code, num) {
@@ -313,6 +323,12 @@
 			outsourcingReceiptList(item) {
 				uni.navigateTo({
 					url: `./outsourcingReceiptList?productionId=${item.id}&id=${item.billNo}&existDetail=${item.existDetail}`
+				});
+			},
+			// 外协收货列表跳转
+			updateOutsourcing(item) {
+				uni.navigateTo({
+					url: `./outsourcingAdd?assistId=${item.id}&assistNO=${item.billNo}`
 				});
 			}
 		}

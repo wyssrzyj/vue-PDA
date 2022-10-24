@@ -273,35 +273,22 @@
 			},
 			// 编辑
 			changelist(item) {
-				uni.navigateTo({
-					url: `./index?id=${this.id}&item=${JSON.stringify(item)}&num=${1}`
-				});
+				if(item.receiveStatus===0){
+					uni.navigateTo({
+						url: `./outsourcingReceipt?receiveId=${item.id}`
+					});
+				}else if(item.receiveStatus===1){
+					uni.navigateTo({
+						url: `./index?id=${this.id}&item=${JSON.stringify(item)}&num=${1}`
+					});
+				}
+				
 			}
 		}
 	}
 </script>
 
 <style lang="scss">
-	// .list-header {
-	// 	display: flex;
-	// 	background-color: #0c99f2;
-	// 	color: white;
-	// 	align-items: center;
-	// 	justify-content: space-evenly;
-	// 	font-size: 34rpx;
-	// 	padding: 20rpx;
-	// 	margin-top: 1rpx;
-
-	// 	.list-header-input {
-	// 		width: 80%;
-	// 		border-radius: 10rpx;
-	// 		background-color: white;
-	// 	}
-
-	// 	.list-header-text {
-	// 		padding: 0 20rpx;
-	// 	}
-	// }
 	.nav {
 		width: 100vw;
 		padding: 10rpx;
@@ -350,7 +337,6 @@
 				}
 			}
 		}
-
 		.nav-table {
 			padding: 0;
 			margin: 0;

@@ -50,6 +50,12 @@ export const blanketDataList = [
 ]
 export const outsourcingDataList = [
 	{
+		title: '添加外协',
+		permissions: 'mes:messpreadcloth:outsourcingreceipt',
+		src: '../../static/blanket/blanket.png',
+		link: '/pages/outsourcingReceipt/outsourcingAdd'
+	},
+	{
 		title: '外协收货',
 		permissions: 'mes:messpreadcloth:outsourcingreceipt',
 		src: '../../static/blanket/blanket.png',

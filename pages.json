@@ -106,6 +106,20 @@
 			}
 		},
 		{
+			"path": "pages/outsourcingReceipt/outsourcingAdd",
+			"style": {
+				"navigationBarTitleText": "添加外协",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/outsourcingReceipt/outsourcingReceipt",
+			"style": {
+				"navigationBarTitleText": "外协收货",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/outsourcingReceipt/outsourcingReceiptList",
 			"style": {
 				"navigationBarTitleText": "外协收货列表",

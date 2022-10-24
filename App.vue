@@ -1,7 +1,9 @@
 <script>
 	export default {
 		onLaunch: function() {
-			// console.log('App Launch')
+			// #ifdef APP-PLUS
+			plus.screen.lockOrientation("portrait-primary")
+			// #endif
 		},
 		onShow: function() {
 			// console.log('App Show')
@@ -49,4 +51,17 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
 	font-size: 18px;
 }
 // #endif
+ /* radio 选中后的样式 */
+uni-radio .uni-radio-input.uni-radio-input-checked{
+	background-color: #1890FF!important;
+	border-color: #1890FF!important;
+	background-clip: content-box!important;
+	padding: 10rpx!important;
+	box-sizing: border-box;
+}
+
+/* radio 选中后的图标样式*/
+uni-radio .uni-radio-input.uni-radio-input-checked::before{
+	display: none!important;
+}
 </style>

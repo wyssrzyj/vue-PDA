@@ -173,7 +173,6 @@
 				this.change_list.tableData =this.change_list.tableData.splice(0,this.change_list.tableData.length-1)
 				this.receiveNum = this.change_list.num
 				this.switch_value = this.change_list.completeFlag?true:false
-				console.log(this.switch_value);
 			}
 			this.change_num = num
 			this.getdata(id)
