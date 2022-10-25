@@ -9,7 +9,11 @@
 			<view class="list-header-text" @click="query()">
 				搜索
 			</view>
-			<uni-icons type="scan" size="30" @click="queryReceipt"></uni-icons>
+			<view style="width: 1px; height: 50rpx; background-color: #fff;"></view>
+			<view @click="queryReceipt" class="scan-icon">
+				<uni-icons type="scan" size="30" color="#fff"></uni-icons>
+				<text>收货</text>
+			</view>
 		</view>
 		<view class="list-list">
 			<view style="margin-bottom: 16rpx;height: 100%;" v-for="item in allList" :key="item.billNo">
@@ -48,11 +52,11 @@
 						<view class="header-grid-alllist">
 							<view class="header-grid-all-list">
 								<view class="name" style="width: 96rpx;">生产单：</view>
-								<view class="code" style="margin-top: 5rpx;">{{item.productionId}}</view>
+								<view class="code" style="margin-top: 5rpx;">{{item.productionInfo.productOrderNum}}</view>
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">类型：</view>
-								<view class="code">{{item.billType}}</view>
+								<view class="code">{{getDictLabel($store.state.dicts,'outsourcing_type',item.billType)}}</view>
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">工厂：</view>
@@ -125,6 +129,7 @@
 		toasting
 	} from '../../utils/index.js'
 	import Api from '../../service/api'
+	import { getDictLabel } from '../../utils/index.js'
 	import scanCode from "../../components/scan/scan.vue"
 	export default {
 		components: {
@@ -165,6 +170,7 @@
 		},
 
 		methods: {
+			getDictLabel,
 			query() {
 				this.getData(this.productionid, 1)
 			},
@@ -356,7 +362,7 @@
 			margin-top: 1rpx;
 
 			.list-header-input {
-				width: 80%;
+				width: 428rpx;
 				// height: 80%;
 				border-radius: 10rpx;
 				background-color: white;
@@ -364,6 +370,11 @@
 
 			.list-header-text {
 				padding: 0 20rpx;
+				font-weight: bold;
+			}
+			.scan-icon{
+				display: flex;
+				align-items: center;
 				font-weight: bold;
 			}
 		}

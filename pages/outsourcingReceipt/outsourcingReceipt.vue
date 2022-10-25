@@ -4,7 +4,7 @@
 			<view class="storage-item">
 				<text class="storage-item-left">请扫包条码</text>
 				<view class="storage-item-right">
-					<text class="info">历史记录</text>
+					<text class="info" @tap="goToDelievery">历史记录</text>
 				</view>
 			</view>
 			<view class="ul">
@@ -215,6 +215,12 @@
 			this.init()
 		},
 		methods:{
+			goToDelievery(){
+				const {assistId,billNo,existDetail}=this.modelData
+				uni.navigateTo({
+					url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}`
+				})
+			},
 			getDictLabel,
 			//确认选中的收货单
 			closeScanPort(item){

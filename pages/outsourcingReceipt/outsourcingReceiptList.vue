@@ -8,7 +8,7 @@
 				<view class="nav-grid-alllist">
 					<view class="nav-grid-all-list">
 						<view class="name">类型：</view>
-						<view class="code">{{list.billType}}</view>
+						<view class="code">{{getDictLabel($store.state.dicts,'outsourcing_type',list.billType)}}</view>
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">工厂：</view>
@@ -23,12 +23,14 @@
 						<view class="code" style="margin-top: 6rpx;">{{datechange(list.createDate)}}</view>
 					</view>
 					<view class="nav-grid-all-list">
-						<view class="name">单价：</view>
-						<view class="code" style="margin-top: 6rpx;">{{list.unitPrice}}</view>
-					</view>
-					<view class="nav-grid-all-list">
+<!-- 						<view class="name">单价：</view>
+						<view class="code" style="margin-top: 6rpx;">{{list.unitPrice}}</view> -->
 						<view class="name">数量：</view>
 						<view class="code" style="margin-top: 6rpx;">{{list.num}}</view>
+					</view>
+					<view class="nav-grid-all-list">
+						<view class="name">部位：</view>
+						<view class="code" style="margin-top: 6rpx;">{{list.position}}</view>
 					</view>
 				</view>
 			</view>
@@ -69,11 +71,15 @@
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">完成：</view>
-						<view class="code">{{item.completeFlag?'是':'否'}}</view>
+						<view class="code">{{item.completeFlag?'完成':'部分收货'}}</view>
 					</view>
 					<view class="nav-grid-all-list">
-						<view class="name" style="width: 110rpx;">收货数：</view>
+						<view class="name" style="width: 110rpx;">数量：</view>
 						<view class="code" style="margin-top: 6rpx;">{{item.num}}</view>
+					</view>
+					<view class="nav-grid-all-list">
+						<view class="name" style="width: 110rpx;">部位：</view>
+						<view class="code" style="margin-top: 6rpx;">{{item.position}}</view>
 					</view>
 				</view>
 			</view>
@@ -102,6 +108,7 @@
 		toasting
 	} from '../../utils/index.js'
 	import Api from '../../service/api'
+	import { getDictLabel } from '../../utils/index.js'
 	import scanCode from "../../components/scan/scan.vue"
 	export default {
 		components: {
@@ -142,6 +149,7 @@
 			uni.hideNavigationBarLoading()
 		},
 		methods: {
+			getDictLabel,
 			// 获取头部data
 			getHeaderData(id) {
 				Api.outsourcingReceiptassistinfo({

@@ -132,6 +132,17 @@
 		onLoad(option){ //初始化获取外协单号和外协id
 			this.assistId=option.assistId
 			this.assistNO=option.assistNO
+			//改变title
+			if (option.assistId) {//判断是否有id传入，有id就执行编辑，没有就是创建
+				uni.setNavigationBarTitle({
+					title:'编辑外协'
+				})
+			}
+			else{
+				uni.setNavigationBarTitle({
+					title:'新增外协'
+				})
+			}
 		},
 		data(){
 			return {
