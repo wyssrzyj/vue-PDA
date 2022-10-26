@@ -3,7 +3,7 @@
 		<view class="tagContainer">
 			<view  :class="tagItem.flag?'tagItemActive':'tagItem'"  v-bind:key="index" v-for="(tagItem,index) in value">
 				<text @tap="tapTag" :data-text="tagItem.partsName">{{tagItem.partsName}}</text>
-				<text v-if="isShowDelIcon" class="tagDelIcon" @tap="delTag" :data-text="tagItem.partsName">x</text>
+				<text v-if="isShowDelIcon" class="tagDelIcon" @click.stop="delTag" :data-text="tagItem.partsName" id="x">x</text>
 			</view>
 		</view>
 		<!-- <view class="tagInput" v-if="isShowAdd">
@@ -63,8 +63,9 @@
 				this.$emit('input', this.value)
 			}, 
 			delTag: function(e){
+				console.log(e)
 				let delTagText = e.currentTarget.dataset.text
-				let delTagIndex = this.value.indexOf(delTagText)
+				let delTagIndex = this.value.map(i=>i.partsName).indexOf(delTagText)
 				this.value.splice(delTagIndex,1)
 				this.$emit("delete", {
 					currentTag: delTagText,
@@ -89,7 +90,7 @@
 		flex-wrap: wrap;
 		flex-direction: row;
 		justify-content: flex-start;
-		max-height: 320rpx;
+		max-height: 360rpx;
 		overflow-y: auto;
 	}
 	.tagItem{

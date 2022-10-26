@@ -2,7 +2,7 @@
     "name" : "杰克PDA系统",
     "appid" : "__UNI__C9850F4",
     "description" : "mes的pda",
-    "versionName" : "1.0.3",
+    "versionName" : "1.1.4",
     "versionCode" : 3,
     "transformPx" : false,
     /* 5+App特有相关 */
@@ -22,10 +22,10 @@
         },
         /* 应用发布信息 */
         "distribute" : {
-			/* 重力感应、横竖屏配置 */
-			"distribute" : {
-				"orientation" : [ "portrait-primary"]
-			},
+            /* 重力感应、横竖屏配置 */
+            "distribute" : {
+                "orientation" : [ "portrait-primary" ]
+            },
             /* android打包配置 */
             "android" : {
                 "permissions" : [
@@ -158,7 +158,7 @@
     "h5" : {
         "devServer" : {
             // #ifdef APP
-			"https":false,
+            "https" : false,
             "proxy" : {
                 "/proxyApi" : {
                     "target" : "http://172.16.101.194",

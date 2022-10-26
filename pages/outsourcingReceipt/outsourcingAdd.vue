@@ -2,7 +2,7 @@
 	<view class="out-sourcing">
 		<view class="storage">
 			<view class="storage-item">
-				<text class="storage-item-left">外协类型</text>
+				<text class="storage-item-left"><text style="color:red">*</text>外协类型</text>
 				<hpy-form-select :dataList="sectionList" text="dictLabel" name="dictValue" v-model="modelData.billType" @change="sectionSelectClick" islot="true">
 					<view class="storage-item-right">
 						<text class="info-active" v-if="modelData.billName">{{modelData.billName}}</text>
@@ -12,9 +12,9 @@
 				</hpy-form-select>
 			</view>
 			<view class="storage-item">
-				<text class="storage-item-left">外协工厂</text>
+				<text class="storage-item-left"><text style="color:red">*</text>外协工厂</text>
 				<hpy-form-select :dataList="sectionList1" text="name" name="id" v-model="modelData.customerName" @change="sectionSelectClick1" islot="true">
-					<view class="storage-item-right">
+					<view class="storage-item-right" style="display: flex;">
 						<text class="info-active" v-if="modelData.customerName">{{modelData.customerName}}</text>
 						<text class="info" v-else>{{'请选择工厂'}}</text>
 						<text class="iconfont icon-youjiantou"></text>
@@ -22,17 +22,19 @@
 				</hpy-form-select>
 			</view>
 			<view class="storage-item">
-				<text class="storage-item-left">期望交期</text>
-					<view class="storage-item-right" @tap="openDatetimePicker">
-						<text class="info-active" v-if="modelData.deliverTime">{{modelData.deliverTime}}</text>
-						<text class="info" v-else>{{'请选择期望交期'}}</text>
-						<text class="iconfont icon-youjiantou"></text>
-					</view>
+				<text class="storage-item-left"><text style="color:red">*</text>期望交期</text>
+				<view class="storage-item-right" @tap="openDatetimePicker">
+					<text class="info-active" v-if="modelData.deliverTime">{{modelData.deliverTime}}</text>
+					<text class="info" v-else>{{'请选择期望交期'}}</text>
+					<text class="iconfont icon-youjiantou"></text>
+				</view>
 			</view> 
 			<view class="storage-item">
-				<text class="storage-item-left">部&emsp;&emsp;位</text>
+				<text class="storage-item-left"><text style="color:red">*</text>部&emsp;&emsp;位</text>
 				<view class="storage-item-right" @tap="selectUser">
-					<text class="info-active" v-if="modelData.position">{{modelData.position}}</text>
+					<text class="info-active" v-if="modelData.position">
+						<robby-tags :value="checkTagsList" :enable-del="true" @delete="handleDelete"></robby-tags>
+					</text>
 					<text class="info" v-else>{{'请选择部位'}}</text>
 					<text class="iconfont icon-youjiantou"></text>
 				</view>
@@ -56,7 +58,7 @@
 			</view>
 		</view>
 		<view class="cart" >
-			<table class="cart-table" v-if="tableVisible">
+			<table class="cart-table" v-if="tableVisible&&outSourcingList.length>0">
 			  <thead>
 				<tr>
 				  <th class="cart-table-th" v-for="(tdItem,ind) in Object.keys(cartList[0])" v-if="tdItem!=='total'">{{cartList[0][tdItem]}}</th>
@@ -89,9 +91,11 @@
 			<template #content>
 				<view class="popup">
 					<view class="pop-title"><view style="width: 12rpx;height: 32rpx;background-color: #1794D1;margin-right: 6rpx;"></view>选择部位</view>
-					<view class="pop-search"><span style="width: 124rpx;font-size: 28rpx;">添加部位</span>
-					<input type="text" v-model="popInputValue" style="border: 1px solid #ccc;margin: 0 18rpx;flex:1;height: 60rpx;"/>
-					<button type="primary" style="width:150rpx;height: 60rpx;font-size: 32rpx;line-height: 60rpx;border-radius: 4rpx;" @click="handlePopPart">添加</button></view>
+					<view class="pop-search">
+						<span style="width: 124rpx;font-size: 28rpx;">添加部位</span>
+						<input type="text" :value="popInputValue" @input="handlePopInput" style="border: 1px solid #ccc;margin: 0 18rpx;flex:1;height: 60rpx;"/>
+						<button type="primary" style="width:150rpx;height: 60rpx;font-size: 32rpx;line-height: 60rpx;border-radius: 4rpx;" @click="handlePopPart">添加</button>
+					</view>
 					<view class="pop-content">
 						<robby-tags :value="tagList" @click="handleTag"></robby-tags>
 					</view>
@@ -103,7 +107,7 @@
 </template>
 <script>
 	import Api from "../../service/api.js"
-	import { useDebounce,getDictDataList,formateDateHour,getDictLabel } from '../../utils/index.js'
+	import { useDebounce,getDictDataList,formateDateHour,getDictLabel,toasting } from '../../utils/index.js'
 	import scanCode from "../../components/scan/scan.vue"
 	import popup from "../../components/mulSelectionSearch/ge-popup.vue";
 	import robbyTags from '@/components/robby-tags/robby-tags.vue'
@@ -121,11 +125,7 @@
 				try{
 					this.handleScanPCS(decodeURI(data.code))
 				}catch(err){
-					uni.showToast({
-						title: '扫码失败',
-						icon: 'error',
-						duration: 3000
-					})
+					return toasting('扫码失败')
 				}
 			})
 		},
@@ -167,18 +167,15 @@
 				popValue:false, // 弹出框visible
 				popInputValue:"", //弹出框数据
 				tagList:[], //弹出框部位列表
-				tableVisible:false //是否显示详情
+				tableVisible:true, //是否显示详情
+				checkTagsList:[] //选中的部位数组
 			}
 		},
 		mounted(){
 			this.init() //初始化
-			Api.outsourcingFactory({deptType: 'factory', factoryType: '2'}).then(res=>{ //获取外发工厂列表
+			Api.outsourcingFactory({deptType: 'factory'}).then(res=>{ //获取外发工厂列表
 				if(res.code!==0){
-					return uni.showToast({
-						title: res.msg,
-						icon: 'error',
-						duration: 3000
-					})
+					return toasting(res.msg)
 				}
 				this.sectionList1=res.data
 			})
@@ -186,6 +183,18 @@
 			this.handleOutSourcing = useDebounce(this.handleOutSourcing); //防抖
 		},
 		methods:{
+			//删除部位
+			handleDelete(currentTag,allTags){
+				this.modelData.position=this.checkTagsList.map(i=>i.partsName).join(',')
+				const find=this.tagList.find(item=>item.partsName===currentTag)
+				if(find){
+					find.flag=false
+				}
+			},
+			//添加部位
+			handlePopInput(e){
+				this.popInputValue=e.detail.value
+			},
 			//初始化
 			init(){
 				if(this.assistId){
@@ -199,13 +208,10 @@
 					assistNO:this.assistNO
 				}).then(res=>{
 					if(res.code!==0){
-						return uni.showToast({
-							title: res.msg,
-							icon: 'error',
-							duration: 3000
-						})
+						return toasting(res.msg)
 					}
 					this.modelData={...res.data} //赋值form
+					this.checkTagsList=res.data.position.split(',').map(item=>({partsName:item,flag:true}))
 					this.modelData.billName=getDictLabel(this.$store.state.dicts,'outsourcing_type',res.data.billType) //赋值外发类型
 					this.cartList=res.data.mesAssistOrReceiveVO.tableRow //赋值详情数据
 					this.outSourcingList=[...res.data.barCodeList] //赋值扎包条码列表
@@ -230,14 +236,10 @@
 				this.modelData.deliverTime = `${e.year}-${e.month}-${e.day}`;
 			},
 			//打开部位弹窗
-			selectUser(){
+			selectUser(e){
 				Api.outsourcingAddGetPort().then(res=>{
 					if(res.code!==0){
-						return uni.showToast({
-							title: res.msg,
-							icon: 'error',
-							duration: 3000
-						})
+						return toasting(res.msg)
 					}
 					this.userList=res.data
 					this.tagList=res.data.map(item=>{
@@ -255,11 +257,7 @@
 			handlePopPart(){
 				Api.outsourcingAddSavePort({partsName:this.popInputValue}).then(res=>{
 					if(res.code!==0){
-						return uni.showToast({
-							title: res.msg,
-							icon: 'error',
-							duration: 3000
-						})
+						return toasting(res.msg)
 					}
 					this.tagList.unshift({partsName:this.popInputValue,flag:false})
 					this.popInputValue=""
@@ -272,7 +270,8 @@
 			},
 			//关闭部位弹窗
 			closePort(){
-				this.modelData.position=this.tagList.filter(item=>item.flag===true).map(i=>i.partsName).join(',')
+				this.checkTagsList=this.tagList.filter(item=>item.flag===true)
+				this.modelData.position=this.checkTagsList.map(i=>i.partsName).join(',')
 				this.popValue=false
 			},
 			//展开详情
@@ -283,29 +282,17 @@
 			handleScanPCS(barCode){
 				Api.outsourcingAddGet({barCode:String(barCode)}).then(res=>{
 					if(res.code!==0){
-						return uni.showToast({
-							title: res.msg,
-							icon: 'error',
-							duration: 3000
-						})
+						return toasting(res.msg)
 					}
 					//控制同一生产单
 					const produceFind=this.outSourcingList.find(item=>item.productionId===res.data.productionId)
 					if(!produceFind&&this.outSourcingList.length>0){
-						return uni.showToast({
-							title: '请扫描同一生产单的扎包条码',
-							icon: 'error',
-							duration: 3000
-						})
+						return toasting('请扫描同一生产单的扎包条码')
 					}else{
 						//控制不同的扎包条码
 						const barcodeFind=this.outSourcingList.find(item=>item.barcode===res.data.barcode)
 						if(barcodeFind){
-							return uni.showToast({
-								title: '相同的扎包条码不能重复扫描',
-								icon: 'error',
-								duration: 3000
-							})
+							return toasting('相同的扎包条码不能重复扫描')
 						}else{
 							//添加扎单条码
 							this.outSourcingList.push({...res.data})
@@ -389,8 +376,19 @@
 					}
 				});
 			},
+			valid(){
+				 const {billType,customerId,deliverTime,position}=this.modelData
+				 if(billType===''||customerId===''||deliverTime===''||position===''){
+					 return false
+				 }else{
+					 return true
+				 }
+			},
 			//保存修改外协单
 			handleOutSourcing(){
+				if(!this.valid()){
+					return toasting('请输入必填项')
+				}
 				const obj={
 					...this.modelData,
 					unit:'件',
@@ -400,15 +398,11 @@
 				const that=this.assistId?Api.outsourcingAddUpdate:Api.outsourcingAddSave
 				that(obj).then(res=>{
 					if(res.code!==0){
-						return uni.showToast({
-							title: res.msg,
-							icon: 'error',
-							duration: 3000
-						})
+						return toasting(res.msg)
 					}else{
 						uni.showToast({
 							title: '保存成功',
-							icon: 'error',
+							icon: 'success',
 							duration: 3000,
 							success:()=>{
 								this.modelData={}
@@ -436,21 +430,23 @@
 				height: 100%;
 			}
 			.storage-item-left{
-				width: 140rpx;
+				width: 160rpx;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 			}
 			.storage-item-right{
 				align-items: center;
+				max-width: 478rpx;
 				.info{
-					max-width: 368rpx;
+					max-width: 478rpx !important;
 					color: #ccc;
 					margin-right: 15rpx;
 				}
 				.info-active{
-					max-width: 368rpx;
+					max-width: 478rpx !important;
 					color: #000;
+					line-height: 70rpx;
 					margin-right: 15rpx;
 				}
 			}
@@ -493,7 +489,7 @@
 					line-height: 48rpx;
 					padding: 6rpx 0rpx;
 					font-size: 28rpx;
-					background:#FFFFFF;
+					background:#eee;
 					border-bottom: 1px dashed #D8D8D8;
 				}
 			}

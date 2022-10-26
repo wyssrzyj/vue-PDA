@@ -27,7 +27,9 @@
 			<view class="storage-item">
 				<text class="storage-item-left">部&emsp;&emsp;位</text>
 				<view class="storage-item-right" @tap="selectUser">
-					<text class="info-active" v-if="modelData.position">{{modelData.position}}</text>
+					<text class="info-active" v-if="modelData.position">
+						<robby-tags :value="checkTagsList" :enable-del="true" @delete="handleDelete"></robby-tags>
+					</text>
 					<text class="info" v-else>{{modelData.position||'请选择部位'}}</text>
 					<text class="iconfont icon-youjiantou"></text>
 				</view>
@@ -72,7 +74,8 @@
 			<template #content>
 				<view class="popup">
 					<view class="pop-title"><view style="width: 12rpx;height: 32rpx;background-color: #1794D1;margin-right: 6rpx;"></view>选择部位</view>
-					<view class="pop-search"><span style="width: 124rpx;font-size: 28rpx;">添加部位</span><input type="text" v-model="popInputValue" style="border: 1px solid #ccc;margin: 0 18rpx;flex:1;height: 60rpx;"/><button type="primary" style="width:150rpx;height: 60rpx;font-size: 32rpx;line-height: 60rpx;border-radius: 4rpx;" @click="handlePopPart">添加</button></view>
+					<!-- <view class="pop-search"><span style="width: 124rpx;font-size: 28rpx;">添加部位</span><input type="text" v-model="popInputValue" style="border: 1px solid #ccc;margin: 0 18rpx;flex:1;height: 60rpx;"/><button type="primary" style="width:150rpx;height: 60rpx;font-size: 32rpx;line-height: 60rpx;border-radius: 4rpx;" @click="handlePopPart">添加</button></view> -->
+					<view style="height:74rpx;"></view>
 					<view class="pop-content">
 						<robby-tags :value="tagList" @click="handleTag"></robby-tags>
 					</view>
@@ -90,7 +93,7 @@
 										:src="item.productionInfo?getimage(item.productionInfo):'../../static/qualityTesting/default.png'"
 										class="image" @click="bigimage(item)"></image>
 										<view style="font-size: 28rpx;color: #85da29;" v-if="item.billState===0">外发中</view>
-										<view style="font-size: 28rpx;color: #59b7ff;" v-else-if="item.billState===1">部分收获</view>
+										<view style="font-size: 28rpx;color: #59b7ff;" v-else-if="item.billState===1">部分收货</view>
 										<view style="font-size: 28rpx;color: #e02020;" v-else-if="item.billState===2">已完成</view>
 								</view>
 								<view class="header-title">
@@ -137,7 +140,7 @@
 
 <script>
 	import evanSwitch from "../../components/evan-switch/evan-switch.vue"
-	import { useDebounce,getDictLabel } from '../../utils/index.js'
+	import { useDebounce,getDictLabel,toasting } from '../../utils/index.js'
 	import popup from "../../components/mulSelectionSearch/ge-popup.vue";
 	import robbyTags from '@/components/robby-tags/robby-tags.vue'
 	import { setToastConfig} from 'uni_modules/lyz-uni-api-helper'
@@ -153,27 +156,23 @@
 			uni.$on('scancodedate', (data) => {
 				try{
 					if(this.outSourcingList.length===0){
-						this.scanPopValue=true
 						Api.getScanCodeGoodsList({barCode:String(decodeURI(data.code))}).then(res=>{
 							if(res.code!==0){
-								return uni.showToast({
-									title: res.msg,
-									icon: 'error',
-									duration: 3000
-								})
+								return toasting(res.msg)
 							}
+							this.scanPopValue=true
 							this.delieveryList=res.data.mesAssistDtoList
+							if(this.delieveryList.length>0){
+								this.modelData.assistId=this.delieveryList[0].id
+								this.delieveryList[0].checked=true
+							}
 							this.barCode=String(decodeURI(data.code))
 						})
 					}else{
 						this.handleScanPCS(decodeURI(data.code))
 					}
 				}catch(err){
-					uni.showToast({
-						title: '扫码失败',
-						icon: 'error',
-						duration: 3000
-					})
+					return toasting('扫码失败')
 				}
 			})
 		},
@@ -206,8 +205,9 @@
 				tagList:[], //tags列表
 				receiveId:"" ,//收货单id,
 				delieveryList:[],
-				isAll:0,
-				barCode:""
+				isAll:1,
+				barCode:"",
+				checkTagsList:[]
 			}
 		},
 		mounted(){
@@ -215,6 +215,16 @@
 			this.init()
 		},
 		methods:{
+			//删除部位
+			handleDelete({currentTag,allTags}){
+				//弹出框置灰
+				const find=this.tagList.find(item=>item.partsName===currentTag)
+				if(find){
+					find.flag=false
+				}
+				//传值删除
+				this.modelData.position=this.checkTagsList.map(i=>i.partsName).join(',')
+			},
 			goToDelievery(){
 				const {assistId,billNo,existDetail}=this.modelData
 				uni.navigateTo({
@@ -224,17 +234,18 @@
 			getDictLabel,
 			//确认选中的收货单
 			closeScanPort(item){
+				console.log({
+					assistId:this.modelData.assistId,
+					barCode:this.barCode,
+					isAll:this.isAll
+				})
 				Api.scanCodeGoodsAllDetail({
 					assistId:this.modelData.assistId,
 					barCode:this.barCode,
 					isAll:this.isAll
 				}).then(res=>{
 					if(res.code!==0){
-						return uni.showToast({
-							title: res.msg,
-							icon: 'error',
-							duration: 3000
-						})
+						return toasting(res.msg)
 					}
 					if(this.isAll===1){
 						this.outSourcingList=res.data.mesOrderSubpackageItemsList
@@ -246,6 +257,7 @@
 					this.modelData.billType=res.data.mesAssistDTO.billType //外协类型
 					this.modelData.position=res.data.mesAssistDTO.position //部位
 					this.modelData.billName=getDictLabel(this.$store.state.dicts,'outsourcing_type',res.data.mesAssistDTO.billType) //赋值外发类型
+					this.checkTagsList=this.modelData.position.split(',').map(item=>({partsName:item,flag:true}))
 					this.cartList=res.data.mesAssistOrReceiveVO.tableRow
 				})
 				this.scanPopValue=false
@@ -259,6 +271,7 @@
 				if(this.receiveId){
 					this.getInfo(this.receiveId)
 				}
+				this.isAll=1
 			},
 			//修改获取信息
 			getInfo(id){
@@ -266,11 +279,7 @@
 					receiveId:this.receiveId
 				}).then(res=>{
 					if(res.code!==0){
-						return uni.showToast({
-							title: res.msg,
-							icon: 'error',
-							duration: 3000
-						})
+						return toasting(res.msg)
 					}
 					this.cartList=res.data.mesAssistOrReceiveVO.tableRow 
 					this.modelData={...res.data.mesAssistDTO}
@@ -281,6 +290,7 @@
 					this.modelData.existDetail=res.data.mesAssistDTO.existDetail    //外协但编号
 					this.modelData.completeFlag=res.data.completeFlag //全部完成
 					this.modelData.position=res.data.position //部位取外协单部位
+					this.checkTagsList=res.data.position.split(',').map(item=>({partsName:item,flag:true}))
 					this.outSourcingList=res.data.barCodeList
 				})
 			},
@@ -326,29 +336,17 @@
 					assistId:this.modelData.assistId,
 				}).then(res=>{
 					if(res.code!==0){
-						return uni.showToast({
-							title: res.msg,
-							icon: 'error',
-							duration: 3000
-						})
+						return toasting(res.msg)
 					}
 					if(!this.modelData.position){
 						this.modelData.position=res.data.mesAssistDTO.position
 					}
 					if(this.modelData.assistId!==res.data.mesAssistDTO.id&&this.outSourcingList.length>0){
-						return uni.showToast({
-							title: '请扫描同一外协单的扎包条码',
-							icon: 'error',
-							duration: 3000
-						})
+						return toasting('请扫描同一外协单的扎包条码')
 					}else{
 						const barcodeFind=this.outSourcingList.find(item=>item.barcode===res.data.mesOrderSubpackageItems.barcode)
 						if(barcodeFind){
-							return uni.showToast({
-								title: '相同的扎包条码不能重复扫描',
-								icon: 'error',
-								duration: 3000
-							})
+							return toasting('相同的扎包条码不能重复扫描')
 						}else{
 							//外协单id
 							this.modelData.billNo=res.data.mesAssistDTO.billNo    //外协但编号
@@ -444,11 +442,7 @@
 			handlePopPart(){
 				Api.outsourcingAddSavePort({partsName:this.popInputValue}).then(res=>{
 					if(res.code!==0){
-						return uni.showToast({
-							title: res.msg,
-							icon: 'error',
-							duration: 3000
-						})
+						return toasting(res.msg)
 					}
 					this.tagList.unshift({partsName:this.popInputValue,flag:false})
 					this.popInputValue=""
@@ -458,11 +452,7 @@
 			selectUser(){
 				Api.outsourcingAddGetPort().then(res=>{
 					if(res.code!==0){
-						return uni.showToast({
-							title: res.msg,
-							icon: 'error',
-							duration: 3000
-						})
+						return toasting(res.msg)
 					}
 					// this.userList=res.data
 					this.tagList=res.data.map(item=>{
@@ -483,7 +473,8 @@
 			},
 			// 关闭部位弹窗
 			closePort(){
-				this.modelData.position=this.tagList.filter(item=>item.flag===true).map(i=>i.partsName).join(',')
+				this.checkTagsList=this.tagList.filter(item=>item.flag===true)
+				this.modelData.position=this.checkTagsList.map(i=>i.partsName).join(',')
 				this.popValue=false
 			},
 			// 保存收货单
@@ -496,15 +487,11 @@
 				const that=this.receiveId?Api.outsourcingTakeDelieveryUpdate:Api.outsourcingTakeDelieverySave
 				that(obj).then(res=>{
 					if(res.code!==0){
-						return uni.showToast({
-							title: res.msg,
-							icon: 'error',
-							duration: 3000
-						})
+						return toasting(res.msg)
 					}else{
 						uni.showToast({
 							title: '保存成功',
-							icon: 'error',
+							icon: 'success',
 							duration: 3000,
 							success:()=>{
 								this.modelData={}
@@ -522,7 +509,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.outSourcing{
 		height: calc(100vh - 112rpx);
 		overflow-y: auto;
@@ -539,13 +526,14 @@
 			}
 			.storage-item-right{
 				align-items: center;
+				max-width: 478rpx;
 				.info{
-					max-width: 368rpx;
+					max-width: 478rpx;
 					color: #ccc;
 					margin-right: 15rpx;
 				}
 				.info-active{
-					max-width: 368rpx;
+					max-width: 478rpx;
 					color: #000;
 					margin-right: 15rpx;
 				}
@@ -588,7 +576,7 @@
 					line-height: 48rpx;
 					padding: 6rpx 0rpx;
 					font-size: 28rpx;
-					background:#FFFFFF;
+					background:#eee;
 					border-bottom: 1px dashed #D8D8D8;
 				}
 			}

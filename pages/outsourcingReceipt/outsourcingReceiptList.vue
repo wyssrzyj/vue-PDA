@@ -16,11 +16,11 @@
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">交期：</view>
-						<view class="code" style="margin-top: 6rpx;">{{datechange(list.deliverTime)}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{datechange(list.deliverTime||'')}}</view>
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">添加：</view>
-						<view class="code" style="margin-top: 6rpx;">{{datechange(list.createDate)}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{datechange(list.createDate||'')}}</view>
 					</view>
 					<view class="nav-grid-all-list">
 <!-- 						<view class="name">单价：</view>
@@ -58,7 +58,7 @@
 			<view class="nav-title">
 				<view class="title" style="display: flex;align-items: center;">
 					<view class="">
-						{{datechange(item.createDate)}}
+						{{datechange(item.createDate||'')}}
 					</view>
 					<view class="change" @click="changelist(item)">
 						<u-icon name="share-square" size="20px"></u-icon>
@@ -74,12 +74,12 @@
 						<view class="code">{{item.completeFlag?'完成':'部分收货'}}</view>
 					</view>
 					<view class="nav-grid-all-list">
-						<view class="name" style="width: 110rpx;">数量：</view>
-						<view class="code" style="margin-top: 6rpx;">{{item.num}}</view>
+						<view class="name" >数量：</view>
+						<view class="code" >{{item.num}}</view>
 					</view>
 					<view class="nav-grid-all-list">
-						<view class="name" style="width: 110rpx;">部位：</view>
-						<view class="code" style="margin-top: 6rpx;">{{item.position}}</view>
+						<view class="name">部位：</view>
+						<view class="code" >{{item.position}}</view>
 					</view>
 				</view>
 			</view>
@@ -226,6 +226,7 @@
 								this.page = this.page + 1
 							}
 						}
+						
 						return
 					}
 					toasting(res.msg)

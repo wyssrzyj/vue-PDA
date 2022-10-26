@@ -3,7 +3,7 @@
 		<view class="list-header">
 			<view class="list-header-input">
 				<u--input placeholder="输入搜索" prefixIcon="search" prefixIconStyle="font-size: 44rpx;color: #909399"
-					suffixIcon="scan" suffixIconStyle="font-size: 44rpx;color: #909399" v-model="productionid" fontSize="28rpx">
+					suffixIcon="scan" suffixIconStyle="font-size: 44rpx;color: #909399" v-model="keyWord" fontSize="28rpx" :clearable="true">
 				</u--input>
 			</view>
 			<view class="list-header-text" @click="query()">
@@ -31,20 +31,20 @@
 							<view class="">
 								单号：{{item.billNo}}
 							</view>
-							<view style="position: absolute;right: 40rpx;" @click="item.show = !item.show">
+							<view style="position: absolute;right: 40rpx;" @click="handleShow(item)">
 								<u-icon name="plus-circle" color="#59b7ff" size="44"></u-icon>
-								<view style="background-color: #3c9cff;position: absolute;right: -20rpx;top: 40rpx;"
+								<view style="background-color: #3c9cff;position: absolute;right: -30rpx;top: 40rpx;"
 									v-if="item.show">
 									<view @click="outsourcingReceiptindex(item)" class="button">
-										<view style="margin-top: 7rpx;">外协收货</view>
+										<view>外协收货</view>
 									</view>
 									<u-line dashed></u-line>
 									<view @click="outsourcingReceiptList(item)" class="button">
-										<view style="margin-top: 7rpx;">收货列表</view>
+										<view>收货列表</view>
 									</view>
 									<u-line dashed></u-line>
 									<view @click="updateOutsourcing(item)" class="button">
-										<view style="margin-top: 7rpx;">修改</view>
+										<view>修改</view>
 									</view>
 								</view>
 							</view>
@@ -146,7 +146,8 @@
 				processData: [],
 				tableData: [],
 				page: 1,
-				a: 0
+				a: 0,
+				keyWord:""
 			}
 		},
 		onShow() {
@@ -159,20 +160,29 @@
 				_this.productionid = code
 				_this.getData(code, 1)
 			})
-			_this.getData(_this.productionid,1)
+			_this.getData(this.keyWord)
 			_this.api = uni.getStorageSync('pda-api')
 		},
 		// 底部加载
 		async onReachBottom() {
 			uni.showNavigationBarLoading()
-			this.getData(this.productionid);
+			this.getData(this.keyWord);
 			uni.hideNavigationBarLoading()
 		},
 
 		methods: {
+			handleShow(item){
+				this.allList.forEach(i=>{
+					if(i.id===item.id){
+						i.show=!i.show
+					}else{
+						i.show=false
+					}
+				})
+			},
 			getDictLabel,
 			query() {
-				this.getData(this.productionid, 1)
+				this.getData(this.keyWord, 1)
 			},
 			queryReceipt(){
 				uni.navigateTo({
@@ -187,7 +197,7 @@
 				let obj = {
 					limit: 10,
 					page: this.page,
-					productionId: code ? code : ''
+					keyWord:code ? code : '',
 				}
 				Api.outsourcingReceipt(obj).then(res => {
 					if (res.code == 0) {
@@ -440,11 +450,16 @@
 					}
 					.button {
 						width: 200rpx;
-						height: 60rpx;
+						height: 74rpx;
 						padding: 4rpx 10rpx;
-						text-align: center;
 						color: white;
 						font-weight: normal;
+						view{
+							height: 100%;
+							display: flex;
+							justify-content: center;
+							align-items: center;
+						}
 					}
 				}
 			}
