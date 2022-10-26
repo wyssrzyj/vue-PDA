@@ -125,7 +125,7 @@
 				try{
 					this.handleScanPCS(decodeURI(data.code))
 				}catch(err){
-					return toasting('扫码失败')
+					return toasting('扫码失败',null,3000)
 				}
 			})
 		},
@@ -175,7 +175,7 @@
 			this.init() //初始化
 			Api.outsourcingFactory({deptType: 'factory'}).then(res=>{ //获取外发工厂列表
 				if(res.code!==0){
-					return toasting(res.msg)
+					return toasting(res.msg,null,3000)
 				}
 				this.sectionList1=res.data
 			})
@@ -208,7 +208,7 @@
 					assistNO:this.assistNO
 				}).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg)
+						return toasting(res.msg,null,)
 					}
 					this.modelData={...res.data} //赋值form
 					this.checkTagsList=res.data.position.split(',').map(item=>({partsName:item,flag:true}))
