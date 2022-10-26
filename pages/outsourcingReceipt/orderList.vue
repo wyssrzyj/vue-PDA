@@ -81,7 +81,7 @@
 								<view class="name">数量：</view>
 								<view class="code" style="display: flex;align-items: center;margin-top: 5rpx;">
 									<view>{{item.num}}</view>
-									<view v-if="item.existDetail==1"
+									<view v-if="item.existDetail!==0"
 										style="display: flex;margin-left: 10rpx;font-size: 12px;color: #0c99f2;margin-bottom: 3rpx;"
 										@click="downup(item.detailMap,item.id)">
 										<text style="margin-right: 8rpx;font-size: 24rpx;">明细</text>

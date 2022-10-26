@@ -4,7 +4,8 @@
 			<view class="storage-item">
 				<text class="storage-item-left">请扫包条码</text>
 				<view class="storage-item-right">
-					<text class="info" @tap="goToDelievery">历史记录</text>
+					<text class="info" v-if="modelData.assistId" @tap="goToDelievery">历史记录</text>
+					<text class="info" style="color: #ccc;" v-else>历史记录</text>
 				</view>
 			</view>
 			<view class="ul">
@@ -27,9 +28,9 @@
 			<view class="storage-item">
 				<text class="storage-item-left">部&emsp;&emsp;位</text>
 				<view class="storage-item-right" @tap="selectUser">
-					<text class="info-active" v-if="modelData.position">
+					<view class="info-active" v-if="modelData.position">
 						<robby-tags :value="checkTagsList" :enable-del="true" @delete="handleDelete"></robby-tags>
-					</text>
+					</view>
 					<text class="info" v-else>{{modelData.position||'请选择部位'}}</text>
 					<text class="iconfont icon-youjiantou"></text>
 				</view>
@@ -74,7 +75,6 @@
 			<template #content>
 				<view class="popup">
 					<view class="pop-title"><view style="width: 12rpx;height: 32rpx;background-color: #1794D1;margin-right: 6rpx;"></view>选择部位</view>
-					<!-- <view class="pop-search"><span style="width: 124rpx;font-size: 28rpx;">添加部位</span><input type="text" v-model="popInputValue" style="border: 1px solid #ccc;margin: 0 18rpx;flex:1;height: 60rpx;"/><button type="primary" style="width:150rpx;height: 60rpx;font-size: 32rpx;line-height: 60rpx;border-radius: 4rpx;" @click="handlePopPart">添加</button></view> -->
 					<view style="height:74rpx;"></view>
 					<view class="pop-content">
 						<robby-tags :value="tagList" @click="handleTag"></robby-tags>
@@ -227,6 +227,7 @@
 			},
 			goToDelievery(){
 				const {assistId,billNo,existDetail}=this.modelData
+				console.log(assistId,billNo,existDetail)
 				uni.navigateTo({
 					url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}`
 				})
@@ -438,32 +439,12 @@
 					}
 				});
 			},
-			// 保存部位
-			handlePopPart(){
-				Api.outsourcingAddSavePort({partsName:this.popInputValue}).then(res=>{
-					if(res.code!==0){
-						return toasting(res.msg)
-					}
-					this.tagList.unshift({partsName:this.popInputValue,flag:false})
-					this.popInputValue=""
-				})
-			},
 			//打开部位弹窗
 			selectUser(){
-				Api.outsourcingAddGetPort().then(res=>{
-					if(res.code!==0){
-						return toasting(res.msg)
-					}
-					// this.userList=res.data
-					this.tagList=res.data.map(item=>{
-						const flag=this.modelData.position?.split(',').includes(item.partsName)
-						if(flag){
-							return {partsName:item.partsName,flag:true}
-						}else{
-							return {partsName:item.partsName,flag:false}
-						}
-					})
-				})
+				if(this.modelData.position===''){
+					return toasting('请扫描扎包条码')
+				}
+				this.tagList=this.modelData.position.split(',').map(item=>({partsName:item,flag:true}))
 				this.popValue=true
 			},
 			// 点击部位

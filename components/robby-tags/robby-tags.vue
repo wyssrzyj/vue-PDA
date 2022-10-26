@@ -63,7 +63,6 @@
 				this.$emit('input', this.value)
 			}, 
 			delTag: function(e){
-				console.log(e)
 				let delTagText = e.currentTarget.dataset.text
 				let delTagIndex = this.value.map(i=>i.partsName).indexOf(delTagText)
 				this.value.splice(delTagIndex,1)

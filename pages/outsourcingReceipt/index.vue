@@ -7,7 +7,7 @@
 					class="image" @click="bigimage(productionInfoData.image)"></image>
 				<view style="display: flex;margin-top: 5rpx;" @click="downup(list.detailMap)">
 					<text style="margin-right: 8rpx;">详情</text>
-					<u-icon v-if="downupflag" name="arrow-up" size="16px" :bold="true"></u-icon>
+					<u-icon v-if="downupflag"  name="arrow-up" size="16px" :bold="true"></u-icon>
 					<u-icon v-else name="arrow-down" size="16px" :bold="true"></u-icon>
 				</view>
 			</view>
@@ -75,7 +75,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="nav-table" v-if="list.existDetail==1">
+			<view class="nav-table" v-if="list.existDetail!==0">
 				<uni-table border emptyText="暂无更多数据">
 					<!-- 表头行 -->
 					<uni-tr>
@@ -104,19 +104,19 @@
 					</u--input>
 					<view class="">{{list.unit}}</view>
 				</u-form-item>
-				<u-form-item label="部位" borderBottom labelWidth="150"  @tap="selectUser" v-if="list.existDetail != 0">
+				<u-form-item label="部位" borderBottom labelWidth="150"  @tap="selectUser" v-if="list.existDetail !== 0">
 					<!-- <u--input v-model="list.position"  border="none" placeholder="请输入部位" disabled>
 					</u--input> -->
 					<view class="storage-item-right" @tap="selectUser">
-						<text class="info-active" v-if="list.position">
+						<view class="info-active" v-if="list.position">
 							<robby-tags :value="checkTagsList" :enable-del="true" @delete="handleDelete"></robby-tags>
-						</text>
+						</view>
 						<text class="info" v-else>{{'请选择部位'}}</text>
 					</view>
 				</u-form-item>
 			</u--form>
 			<view class="footer-table">
-				<uni-table border emptyText="暂无更多数据" v-if="list.existDetail==1">
+				<uni-table border emptyText="暂无更多数据" v-if="list.existDetail!==0">
 					<!-- 表头行 -->
 					<uni-tr>
 						<uni-th align="center" width="100px">颜色＼尺码</uni-th>
@@ -210,6 +210,7 @@
 				this.switch_value = this.change_list.completeFlag?true:false
 			}
 			this.change_num = num
+			// this.downupflag=true
 			this.getdata(id)
 		},
 		methods: {
@@ -248,24 +249,28 @@
 			},
 			//打开部位弹窗
 			selectUser(){
-				Api.outsourcingAddGetPort().then(res=>{
-					if(res.code!==0){
-						return uni.showToast({
-							title: res.msg,
-							icon: 'error',
-							duration: 3000
-						})
-					}
-					// this.userList=res.data
-					this.tagList=res.data.map(item=>{
-						const flag=this.list.position?.split(',').includes(item.partsName)
-						if(flag){
-							return {partsName:item.partsName,flag:true}
-						}else{
-							return {partsName:item.partsName,flag:false}
-						}
-					})
-				})
+				// Api.outsourcingAddGetPort().then(res=>{
+				// 	if(res.code!==0){
+				// 		return uni.showToast({
+				// 			title: res.msg,
+				// 			icon: 'error',
+				// 			duration: 3000
+				// 		})
+				// 	}
+				// 	// this.userList=res.data
+				// 	this.tagList=res.data.map(item=>{
+				// 		const flag=this.list.position?.split(',').includes(item.partsName)
+				// 		if(flag){
+				// 			return {partsName:item.partsName,flag:true}
+				// 		}else{
+				// 			return {partsName:item.partsName,flag:false}
+				// 		}
+				// 	})
+				// })
+				if(this.list.position===''){
+					return toasting('请扫描扎包条码')
+				}
+				this.tagList=this.list.position.split(',').map(item=>({partsName:item,flag:true}))
 				this.popValue=true
 			},
 			getDictLabel,
@@ -374,7 +379,7 @@
 			},
 			submit() {
 				this.list.receiveNum = this.receiveNum
-				if (this.list.existDetail == 0) {
+				if (this.list.existDetail === 0) {
 					if (!this.list.receiveNum) {
 						uni.$u.toast('请输入收货数量')
 						return
@@ -406,6 +411,7 @@
 				// 编辑
 				if(this.change_num==1) {
 					Api.outsourcingReceiptreceiveUpdate(obj).then(res => {
+						console.log(res)
 						if (res.code !== 0) {
 							toasting(res.msg)
 							return
@@ -416,19 +422,22 @@
 						});
 					})
 					return
+				}else{
+					// 保存
+					console.log(obj)
+					Api.outsourcingReceiptreceiveSave(obj).then(res => {
+						console.log(res)
+						if (res.code !== 0) {
+							toasting(res.msg)
+							this.downup1(this.list.detailMap)
+							return
+						}
+						toasting('保存成功')
+						uni.navigateTo({
+							url: './orderList'
+						});
+					})
 				}
-				// 保存
-				Api.outsourcingReceiptreceiveSave(obj).then(res => {
-					if (res.code !== 0) {
-						toasting(res.msg)
-						this.downup1(this.list.detailMap)
-						return
-					}
-					toasting('保存成功')
-					uni.navigateTo({
-						url: './orderList'
-					});
-				})
 			}
 		}
 	}
