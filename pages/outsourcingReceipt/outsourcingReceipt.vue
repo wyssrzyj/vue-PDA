@@ -176,6 +176,20 @@
 				}
 			})
 		},
+		onBackPress(options){
+			if (options.from === 'navigateBack') {
+					return false;
+			}
+			const {assistId,billNo,existDetail}=this.modelData
+			console.log(assistId,billNo,existDetail)
+			if(assistId!==''&&billNo!==''&&existDetail!==''){
+				uni.redirectTo({
+					url: `/pages/outsourcingReceipt/outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}`
+				})
+				return true;
+			}
+			// 这里使用重定向比较好，不信可以自己多试几种，其余跳转方法在文章底部哦
+		},
 		//页面跳转赋值
 		onLoad(option){
 			this.receiveId=option.receiveId
@@ -207,7 +221,8 @@
 				delieveryList:[],
 				isAll:1,
 				barCode:"",
-				checkTagsList:[]
+				checkTagsList:[],
+				position:"" //当前外协单的部位
 			}
 		},
 		mounted(){
@@ -225,6 +240,7 @@
 				//传值删除
 				this.modelData.position=this.checkTagsList.map(i=>i.partsName).join(',')
 			},
+			//跳转至收获列表页面
 			goToDelievery(){
 				const {assistId,billNo,existDetail}=this.modelData
 				uni.navigateTo({
@@ -251,6 +267,7 @@
 					this.modelData.existDetail=res.data.mesAssistDTO.existDetail    //外协但编号
 					this.modelData.billType=res.data.mesAssistDTO.billType //外协类型
 					this.modelData.position=res.data.mesAssistDTO.position //部位
+					this.position=res.data.mesAssistDTO.position //当前外协单部位
 					this.modelData.billName=getDictLabel(this.$store.state.dicts,'outsourcing_type',res.data.mesAssistDTO.billType) //赋值外发类型
 					this.checkTagsList=this.modelData.position.split(',').map(item=>({partsName:item,flag:true}))
 					this.cartList=res.data.mesAssistOrReceiveVO.tableRow
@@ -285,6 +302,7 @@
 					this.modelData.existDetail=res.data.mesAssistDTO.existDetail    //外协但编号
 					this.modelData.completeFlag=res.data.completeFlag //全部完成
 					this.modelData.position=res.data.position //部位取外协单部位
+					this.position=res.data.position
 					this.checkTagsList=res.data.position.split(',').map(item=>({partsName:item,flag:true}))
 					this.outSourcingList=res.data.barCodeList
 				})
@@ -435,10 +453,17 @@
 			},
 			//打开部位弹窗
 			selectUser(){
-				if(this.modelData.position===''){
+				if(this.position===''){
 					return toasting('请扫描扎包条码')
 				}
-				this.tagList=this.modelData.position.split(',').map(item=>({partsName:item,flag:true}))
+				const arr=this.checkTagsList.map(i=>i.partsName)
+				this.tagList=this.position.split(',').map(item=>{
+					if(arr.includes(item)){
+						return {partsName:item,flag:true}
+					}else{
+						return {partsName:item,flag:false}
+					}
+				})
 				this.popValue=true
 			},
 			// 点击部位
@@ -454,6 +479,9 @@
 			},
 			// 保存收货单
 			handleOutSourcing(){
+				if(this.modelData.position===''){
+					return toasting('请选择部位')
+				}
 				const {assistId,billNo,existDetail}=this.modelData
 				const obj={
 					...this.modelData,

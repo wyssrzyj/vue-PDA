@@ -84,7 +84,7 @@
 				</view>
 			</view>
 			<view class="nav-table" v-if="item.detailMap!=null">
-				<uni-table border emptyText="暂无更多数据">
+				<uni-table border emptyText="暂无更多数据" v-if="item.processData.length>0">
 					<uni-tr>
 						<uni-th align="center" width="100px">颜色＼尺码</uni-th>
 						<uni-th align="center" v-for="(i, index) in item.processData" :key="index">{{i.size}}
@@ -226,7 +226,6 @@
 								this.page = this.page + 1
 							}
 						}
-						
 						return
 					}
 					toasting(res.msg)
@@ -286,7 +285,7 @@
 					uni.navigateTo({
 						url: `./outsourcingReceipt?receiveId=${item.id}`
 					});
-				}else if(item.receiveStatus===1){
+				}else{
 					uni.navigateTo({
 						url: `./index?id=${this.id}&item=${JSON.stringify(item)}&num=${1}`
 					});

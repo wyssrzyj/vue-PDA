@@ -180,6 +180,16 @@
 				show1:false //显示外协类型选择框
 			}
 		},
+		onBackPress(options){
+			if (options.from === 'navigateBack') {
+					return false;
+				}
+				// 这里使用重定向比较好，不信可以自己多试几种，其余跳转方法在文章底部哦
+				uni.redirectTo({ 
+					url: '/pages/outsourcingReceipt/orderList'
+				})
+				return true;
+		},
 		mounted(){
 			this.init() //初始化
 			Api.outsourcingFactory({deptType: 'factory'}).then(res=>{ //获取外发工厂列表
