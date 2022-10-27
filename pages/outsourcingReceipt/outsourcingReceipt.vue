@@ -227,7 +227,6 @@
 			},
 			goToDelievery(){
 				const {assistId,billNo,existDetail}=this.modelData
-				console.log(assistId,billNo,existDetail)
 				uni.navigateTo({
 					url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}`
 				})
@@ -235,11 +234,6 @@
 			getDictLabel,
 			//确认选中的收货单
 			closeScanPort(item){
-				console.log({
-					assistId:this.modelData.assistId,
-					barCode:this.barCode,
-					isAll:this.isAll
-				})
 				Api.scanCodeGoodsAllDetail({
 					assistId:this.modelData.assistId,
 					barCode:this.barCode,

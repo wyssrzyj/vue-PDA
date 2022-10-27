@@ -270,7 +270,9 @@
 				if(this.list.position===''){
 					return toasting('请扫描扎包条码')
 				}
-				this.tagList=this.list.position.split(',').map(item=>({partsName:item,flag:true}))
+				if(this.list.position){
+					this.tagList=this.list.position.split(',').map(item=>({partsName:item,flag:true}))
+				}
 				this.popValue=true
 			},
 			getDictLabel,
@@ -280,6 +282,7 @@
 					assistNO: id,
 					receiveId:this.receiveId
 				}).then(res => {
+					console.log(res)
 					if (res.code !== 0) {
 						toasting(res.msg)
 						return
@@ -411,7 +414,6 @@
 				// 编辑
 				if(this.change_num==1) {
 					Api.outsourcingReceiptreceiveUpdate(obj).then(res => {
-						console.log(res)
 						if (res.code !== 0) {
 							toasting(res.msg)
 							return
@@ -424,9 +426,7 @@
 					return
 				}else{
 					// 保存
-					console.log(obj)
 					Api.outsourcingReceiptreceiveSave(obj).then(res => {
-						console.log(res)
 						if (res.code !== 0) {
 							toasting(res.msg)
 							this.downup1(this.list.detailMap)
