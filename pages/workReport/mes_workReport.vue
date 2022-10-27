@@ -370,8 +370,13 @@
 								this.canSelectUser = false
 								this.canSelectSection = false
 								if(Array.isArray(res.data) && res.data[0].workerType===1){ //返修
-									this.realName = res.data[0].realName + '—' + res.data[0].staffId
-									this.userId = res.data[0].userId
+									if(res.data[0].realName && res.data[0].staffId && res.data[0].userId) {
+										this.realName = res.data[0].realName + '—' + res.data[0].staffId
+										this.userId = res.data[0].userId
+									} else {
+										this.realName = ''
+										this.userId = ''
+									}
 									this.outStorageArr = this.outStorageArr.reverse()
 									uni.showToast({
 										title: '扫描包条码成功！',
@@ -387,8 +392,13 @@
 									})
 									this.outStorageArr = this.outStorageArr.reverse()
 								}else{	//组码
-									this.realName = res.data.realName + '—' + res.data.staffId
-									this.userId = res.data.userId
+									if(res.data.realName && res.data.staffId && res.data.userId) {
+										this.realName = res.data.realName + '—' + res.data.staffId
+										this.userId = res.data.userId
+									} else {
+										this.realName = ''
+										this.userId = ''
+									}
 									this.scanPCSEncapsulation.call(this,res)
 								}
 							} else if(!checkFunc('codeToWork') && checkFunc('packBarCodeReportWork')) { // 只有扎包条码报工
@@ -404,8 +414,13 @@
 									this.canSelectUser = false
 									this.canSelectSection = false
 									if(Array.isArray(res.data) && res.data[0].workerType===1){
-										this.realName = res.data[0].realName + '—' + res.data[0].staffId
-										this.userId = res.data[0].userId
+										if(res.data[0].realName && res.data[0].staffId && res.data[0].userId) {
+											this.realName = res.data[0].realName + '—' + res.data[0].staffId
+											this.userId = res.data[0].userId
+										} else {
+											this.realName = ''
+											this.userId = ''
+										}
 										this.outStorageArr = this.outStorageArr.reverse()
 										uni.showToast({
 											title: '扫描包条码成功！',
@@ -421,8 +436,13 @@
 										})
 										this.outStorageArr = this.outStorageArr.reverse()
 									}else{
-										this.realName = res.data.realName + '—' + res.data.staffId
-										this.userId = res.data.userId
+										if(res.data.realName && res.data.staffId && res.data.userId) {
+											this.realName = res.data.realName + '—' + res.data.staffId
+											this.userId = res.data.userId
+										} else {
+											this.realName = ''
+											this.userId = ''
+										}
 										this.scanPCSEncapsulation.call(this,res)
 									}
 								}
