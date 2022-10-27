@@ -3,11 +3,16 @@
 		<view class="list-header">
 			<view class="list-header-input">
 				<u--input placeholder="输入搜索" prefixIcon="search" prefixIconStyle="font-size: 44rpx;color: #909399"
-					suffixIcon="scan" suffixIconStyle="font-size: 44rpx;color: #909399" v-model="productionid" fontSize="28rpx">
+					suffixIcon="scan" suffixIconStyle="font-size: 44rpx;color: #909399" v-model="keyWord" fontSize="28rpx" :clearable="true">
 				</u--input>
 			</view>
 			<view class="list-header-text" @click="query()">
 				搜索
+			</view>
+			<view style="width: 1px; height: 50rpx; background-color: #fff;"></view>
+			<view @click="queryReceipt" class="scan-icon">
+				<uni-icons type="scan" size="30" color="#fff"></uni-icons>
+				<text>收货</text>
 			</view>
 		</view>
 		<view class="list-list">
@@ -26,16 +31,20 @@
 							<view class="">
 								单号：{{item.billNo}}
 							</view>
-							<view style="position: absolute;right: 40rpx;" @click="item.show = !item.show">
+							<view style="position: absolute;right: 40rpx;" @click="handleShow(item)">
 								<u-icon name="plus-circle" color="#59b7ff" size="44"></u-icon>
-								<view style="background-color: #3c9cff;position: absolute;right: -20rpx;top: 40rpx;"
+								<view style="background-color: #3c9cff;position: absolute;right: -30rpx;top: 40rpx;"
 									v-if="item.show">
 									<view @click="outsourcingReceiptindex(item)" class="button">
-										<view style="margin-top: 7rpx;">外协收货</view>
+										<view>外协收货</view>
 									</view>
 									<u-line dashed></u-line>
 									<view @click="outsourcingReceiptList(item)" class="button">
-										<view style="margin-top: 7rpx;">收货列表</view>
+										<view>收货列表</view>
+									</view>
+									<u-line dashed></u-line>
+									<view @click="updateOutsourcing(item)" class="button">
+										<view>修改</view>
 									</view>
 								</view>
 							</view>
@@ -43,11 +52,11 @@
 						<view class="header-grid-alllist">
 							<view class="header-grid-all-list">
 								<view class="name" style="width: 96rpx;">生产单：</view>
-								<view class="code" style="margin-top: 5rpx;">{{item.productionId}}</view>
+								<view class="code" style="margin-top: 5rpx;">{{item.productionInfo.productOrderNum}}</view>
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">类型：</view>
-								<view class="code">{{item.billType}}</view>
+								<view class="code">{{getDictLabel($store.state.dicts,'outsourcing_type',item.billType)}}</view>
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">工厂：</view>
@@ -72,7 +81,7 @@
 								<view class="name">数量：</view>
 								<view class="code" style="display: flex;align-items: center;margin-top: 5rpx;">
 									<view>{{item.num}}</view>
-									<view v-if="item.existDetail==1"
+									<view v-if="item.existDetail!==0"
 										style="display: flex;margin-left: 10rpx;font-size: 12px;color: #0c99f2;margin-bottom: 3rpx;"
 										@click="downup(item.detailMap,item.id)">
 										<text style="margin-right: 8rpx;font-size: 24rpx;">明细</text>
@@ -120,6 +129,7 @@
 		toasting
 	} from '../../utils/index.js'
 	import Api from '../../service/api'
+	import { getDictLabel } from '../../utils/index.js'
 	import scanCode from "../../components/scan/scan.vue"
 	export default {
 		components: {
@@ -136,7 +146,8 @@
 				processData: [],
 				tableData: [],
 				page: 1,
-				a: 0
+				a: 0,
+				keyWord:""
 			}
 		},
 		onShow() {
@@ -149,19 +160,34 @@
 				_this.productionid = code
 				_this.getData(code, 1)
 			})
-			_this.getData(_this.productionid,1)
+			_this.getData(this.keyWord)
 			_this.api = uni.getStorageSync('pda-api')
 		},
 		// 底部加载
 		async onReachBottom() {
 			uni.showNavigationBarLoading()
-			this.getData(this.productionid);
+			this.getData(this.keyWord);
 			uni.hideNavigationBarLoading()
 		},
 
 		methods: {
+			handleShow(item){
+				this.allList.forEach(i=>{
+					if(i.id===item.id){
+						i.show=!i.show
+					}else{
+						i.show=false
+					}
+				})
+			},
+			getDictLabel,
 			query() {
-				this.getData(this.productionid, 1)
+				this.getData(this.keyWord, 1)
+			},
+			queryReceipt(){
+				uni.navigateTo({
+					url:'/pages/outsourcingReceipt/outsourcingReceipt'
+				})
 			},
 			// 查询 获取data
 			getData(code, num) {
@@ -171,7 +197,7 @@
 				let obj = {
 					limit: 10,
 					page: this.page,
-					productionId: code ? code : ''
+					keyWord:code ? code : '',
 				}
 				Api.outsourcingReceipt(obj).then(res => {
 					if (res.code == 0) {
@@ -314,6 +340,12 @@
 				uni.navigateTo({
 					url: `./outsourcingReceiptList?productionId=${item.id}&id=${item.billNo}&existDetail=${item.existDetail}`
 				});
+			},
+			// 外协收货列表跳转
+			updateOutsourcing(item) {
+				uni.navigateTo({
+					url: `./outsourcingAdd?assistId=${item.id}&assistNO=${item.billNo}`
+				});
 			}
 		}
 	}
@@ -340,7 +372,7 @@
 			margin-top: 1rpx;
 
 			.list-header-input {
-				width: 80%;
+				width: 428rpx;
 				// height: 80%;
 				border-radius: 10rpx;
 				background-color: white;
@@ -348,6 +380,11 @@
 
 			.list-header-text {
 				padding: 0 20rpx;
+				font-weight: bold;
+			}
+			.scan-icon{
+				display: flex;
+				align-items: center;
 				font-weight: bold;
 			}
 		}
@@ -413,11 +450,16 @@
 					}
 					.button {
 						width: 200rpx;
-						height: 60rpx;
+						height: 74rpx;
 						padding: 4rpx 10rpx;
-						text-align: center;
 						color: white;
 						font-weight: normal;
+						view{
+							height: 100%;
+							display: flex;
+							justify-content: center;
+							align-items: center;
+						}
 					}
 				}
 			}

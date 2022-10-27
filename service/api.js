@@ -35,6 +35,9 @@ const Api = {
 	getFunc() {
 	  return requestApi(`${API_ADDRESS}/mes/sysconfigpage/selectAllAuthorization`, 'GET')
 	},
+	getDicts(){
+		return requestApi(`${API_ADDRESS}/sys/dict/type/all`, 'GET')
+	},
 	// 扫描库位
 	getLocation(reqData) {
 	  return requestApi(`${API_ADDRESS}/MesLocationManagement/meslocationmanagement/getLocation`, 'GET', reqData)
@@ -209,9 +212,62 @@ const Api = {
 	outsourcingReceiptheadinfo(reqData){
 		return requestApi(`${API_ADDRESS}/mes/assist/headinfo`, 'GET', reqData)
 	},
+	//获取版本
 	changeVersoin(reqData){
 		return requestApi(`${API_ADDRESS}/mes/softwareversion/getnewver`, 'GET', reqData)
-	}
+	},
+	//添加外协外协工厂
+	outsourcingFactory(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesfactorymanager/list`, 'GET', reqData)
+	},
+	//外协单扫码添加外协记录
+	outsourcingAddGet(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/getdetailbysn`, 'GET', reqData)
+	},
+	//修改外协单
+	outsourcingAddUpdate(reqData){
+		return requestApi(`${API_ADDRESS}//mes/assist/pdaupdate`, 'POST', reqData)
+	},
+	//新增外协单
+	outsourcingAddSave(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/pdasave`, 'POST', reqData)
+	},
+	//获取外协单信息
+	outsourcingAddGetInfo(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/assistinfo`, 'GET', reqData)
+	},
+	//外协保存部位
+	outsourcingAddSavePort(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mespartsinfo/save`, 'POST', reqData)
+	},
+	//外协获取部位
+	outsourcingAddGetPort(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mespartsinfo/getAllPartsInfo`, 'GET', reqData)
+	},
+	//外协收货保存(扫码收货)
+	outsourcingTakeDelieverySave(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/scanCodeReceiveSave`, 'POST', reqData)
+	},
+	//外协收货修改(扫码收货)
+	outsourcingTakeDelieveryUpdate(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/scanCodeReceiveUpdate`, 'POST', reqData)
+	},
+	//外协收货扫码(扫码收货)
+	outsourcingTakeDelieveryPCS(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/scanCodeGoods`, 'GET', reqData)
+	},
+	//外协收货获取数据
+	outsourcingTakeDelieveryGetInfo(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/getScanCodeGoods`, 'GET', reqData)
+	},
+	// 通过条形码获取外协信息列表
+	getScanCodeGoodsList(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/getScanCodeGoodsList`, 'GET', reqData)
+	},
+	// 通过条形码获取外协多条信息
+	scanCodeGoodsAllDetail(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/scanCodeGoodsAllDetail`, 'GET', reqData)
+	},
 }
 
 export default Api

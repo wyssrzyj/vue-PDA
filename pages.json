@@ -80,7 +80,7 @@
 		{
 			"path": "pages/cutWarehouse/mes_cutWarehouse",
 			"style": {
-				"navigationBarTitleText": "裁片仓管理",
+				"navigationBarTitleText": "杰克MES",
 				"backgroundColor": "#FFFFFF"
 			}
 		},
@@ -102,6 +102,20 @@
 			"path": "pages/outsourcingReceipt/orderList",
 			"style": {
 				"navigationBarTitleText": "外协单列表",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/outsourcingReceipt/outsourcingAdd",
+			"style": {
+				"navigationBarTitleText": "添加外协",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/outsourcingReceipt/outsourcingReceipt",
+			"style": {
+				"navigationBarTitleText": "外协收货",
 				"backgroundColor": "#FFFFFF"
 			}
 		},

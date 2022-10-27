@@ -64,6 +64,7 @@ export default {
 			this.$refs.select.showSelect = !this.$refs.select.showSelect
 		}else if(Object.type==='menu'){
 			this.$refs.select1.showSelect = !this.$refs.select1.showSelect
+			this.$refs.select1.getInfo()
 		}
 	},
 	methods:{

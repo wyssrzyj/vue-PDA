@@ -8,7 +8,7 @@
 				<view class="nav-grid-alllist">
 					<view class="nav-grid-all-list">
 						<view class="name">类型：</view>
-						<view class="code">{{list.billType}}</view>
+						<view class="code">{{getDictLabel($store.state.dicts,'outsourcing_type',list.billType)}}</view>
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">工厂：</view>
@@ -16,19 +16,21 @@
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">交期：</view>
-						<view class="code" style="margin-top: 6rpx;">{{datechange(list.deliverTime)}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{datechange(list.deliverTime||'')}}</view>
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">添加：</view>
-						<view class="code" style="margin-top: 6rpx;">{{datechange(list.createDate)}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{datechange(list.createDate||'')}}</view>
 					</view>
 					<view class="nav-grid-all-list">
-						<view class="name">单价：</view>
-						<view class="code" style="margin-top: 6rpx;">{{list.unitPrice}}</view>
-					</view>
-					<view class="nav-grid-all-list">
+<!-- 						<view class="name">单价：</view>
+						<view class="code" style="margin-top: 6rpx;">{{list.unitPrice}}</view> -->
 						<view class="name">数量：</view>
 						<view class="code" style="margin-top: 6rpx;">{{list.num}}</view>
+					</view>
+					<view class="nav-grid-all-list">
+						<view class="name">部位：</view>
+						<view class="code" style="margin-top: 6rpx;">{{list.position}}</view>
 					</view>
 				</view>
 			</view>
@@ -56,7 +58,7 @@
 			<view class="nav-title">
 				<view class="title" style="display: flex;align-items: center;">
 					<view class="">
-						{{datechange(item.createDate)}}
+						{{datechange(item.createDate||'')}}
 					</view>
 					<view class="change" @click="changelist(item)">
 						<u-icon name="share-square" size="20px"></u-icon>
@@ -69,11 +71,15 @@
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">完成：</view>
-						<view class="code">{{item.completeFlag?'是':'否'}}</view>
+						<view class="code">{{item.completeFlag?'完成':'部分收货'}}</view>
 					</view>
 					<view class="nav-grid-all-list">
-						<view class="name" style="width: 110rpx;">收货数：</view>
-						<view class="code" style="margin-top: 6rpx;">{{item.num}}</view>
+						<view class="name" >数量：</view>
+						<view class="code" >{{item.num}}</view>
+					</view>
+					<view class="nav-grid-all-list">
+						<view class="name">部位：</view>
+						<view class="code" >{{item.position}}</view>
 					</view>
 				</view>
 			</view>
@@ -102,6 +108,7 @@
 		toasting
 	} from '../../utils/index.js'
 	import Api from '../../service/api'
+	import { getDictLabel } from '../../utils/index.js'
 	import scanCode from "../../components/scan/scan.vue"
 	export default {
 		components: {
@@ -142,6 +149,7 @@
 			uni.hideNavigationBarLoading()
 		},
 		methods: {
+			getDictLabel,
 			// 获取头部data
 			getHeaderData(id) {
 				Api.outsourcingReceiptassistinfo({
@@ -218,6 +226,7 @@
 								this.page = this.page + 1
 							}
 						}
+						
 						return
 					}
 					toasting(res.msg)
@@ -273,35 +282,22 @@
 			},
 			// 编辑
 			changelist(item) {
-				uni.navigateTo({
-					url: `./index?id=${this.id}&item=${JSON.stringify(item)}&num=${1}`
-				});
+				if(item.receiveStatus===0){
+					uni.navigateTo({
+						url: `./outsourcingReceipt?receiveId=${item.id}`
+					});
+				}else if(item.receiveStatus===1){
+					uni.navigateTo({
+						url: `./index?id=${this.id}&item=${JSON.stringify(item)}&num=${1}`
+					});
+				}
+				
 			}
 		}
 	}
 </script>
 
 <style lang="scss">
-	// .list-header {
-	// 	display: flex;
-	// 	background-color: #0c99f2;
-	// 	color: white;
-	// 	align-items: center;
-	// 	justify-content: space-evenly;
-	// 	font-size: 34rpx;
-	// 	padding: 20rpx;
-	// 	margin-top: 1rpx;
-
-	// 	.list-header-input {
-	// 		width: 80%;
-	// 		border-radius: 10rpx;
-	// 		background-color: white;
-	// 	}
-
-	// 	.list-header-text {
-	// 		padding: 0 20rpx;
-	// 	}
-	// }
 	.nav {
 		width: 100vw;
 		padding: 10rpx;
@@ -350,7 +346,6 @@
 				}
 			}
 		}
-
 		.nav-table {
 			padding: 0;
 			margin: 0;

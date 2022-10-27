@@ -7,7 +7,7 @@
 					class="image" @click="bigimage(productionInfoData.image)"></image>
 				<view style="display: flex;margin-top: 5rpx;" @click="downup(list.detailMap)">
 					<text style="margin-right: 8rpx;">详情</text>
-					<u-icon v-if="downupflag" name="arrow-up" size="16px" :bold="true"></u-icon>
+					<u-icon v-if="downupflag"  name="arrow-up" size="16px" :bold="true"></u-icon>
 					<u-icon v-else name="arrow-down" size="16px" :bold="true"></u-icon>
 				</view>
 			</view>
@@ -22,7 +22,7 @@
 					</view>
 					<view class="header-grid-all-list">
 						<view class="name">数量：</view>
-						<view class="code" style="margin-top: 6rpx;">{{productionInfoData.sum}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{list.num}}</view>
 					</view>
 					<view class="header-grid-all-list">
 						<view class="name">客号：</view>
@@ -34,11 +34,11 @@
 					</view>
 					<view class="header-grid-all-list">
 						<view class="name">添加：</view>
-						<view class="code" style="margin-top: 6rpx;">{{datechange(productionInfoData.createDate)}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{datechange(list.createDate)}}</view>
 					</view>
 					<view class="header-grid-all-list">
 						<view class="name">交期：</view>
-						<view class="code" style="margin-top: 6rpx;">{{datechange(productionInfoData.deliverTime)}}</view>
+						<view class="code" style="margin-top: 6rpx;">{{datechange(list.deliverTime)}}</view>
 					</view>
 				</view>
 			</view>
@@ -51,7 +51,7 @@
 				<view class="nav-grid-alllist">
 					<view class="nav-grid-all-list">
 						<view class="name">类型：</view>
-						<view class="code">{{list.billType}}</view>
+						<view class="code">{{getDictLabel($store.state.dicts,'outsourcing_type',list.billType)}}</view>
 					</view>
 					<view class="nav-grid-all-list">
 						<view class="name">工厂：</view>
@@ -75,7 +75,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="nav-table" v-if="list.existDetail==1">
+			<view class="nav-table" v-if="list.existDetail!==0">
 				<uni-table border emptyText="暂无更多数据">
 					<!-- 表头行 -->
 					<uni-tr>
@@ -95,7 +95,7 @@
 			</view>
 		</view>
 		<view class="footer">
-			<u--form ref="form" :labelStyle="{'font-size':'30rpx','font-weight': 600}">
+			<u--form ref="form" :labelStyle="{'font-size':'30rpx','font-weight': 600}" labelAlign="right">
 				<u-form-item label="全部完成" borderBottom labelWidth="150">
 					<switch :checked="switch_value" class="switch" @change="change()" color="#2979ff !important" style="transform:scale(0.7)" />
 				</u-form-item>
@@ -104,9 +104,19 @@
 					</u--input>
 					<view class="">{{list.unit}}</view>
 				</u-form-item>
+				<u-form-item label="部位" borderBottom labelWidth="150"  @tap="selectUser" v-if="list.existDetail !== 0">
+					<!-- <u--input v-model="list.position"  border="none" placeholder="请输入部位" disabled>
+					</u--input> -->
+					<view class="storage-item-right" @tap="selectUser">
+						<view class="info-active" v-if="list.position">
+							<robby-tags :value="checkTagsList" :enable-del="true" @delete="handleDelete"></robby-tags>
+						</view>
+						<text class="info" v-else>{{'请选择部位'}}</text>
+					</view>
+				</u-form-item>
 			</u--form>
 			<view class="footer-table">
-				<uni-table border emptyText="暂无更多数据" v-if="list.existDetail==1">
+				<uni-table border emptyText="暂无更多数据" v-if="list.existDetail!==0">
 					<!-- 表头行 -->
 					<uni-tr>
 						<uni-th align="center" width="100px">颜色＼尺码</uni-th>
@@ -128,11 +138,25 @@
 		<u-tabbar :fixed="true" :placeholder="true" :safeAreaInsetBottom="true">
 			<view class="button">
 				<view class="button-left">
-					<u-button type="primary" text="保存" @click="submit()"></u-button>
+					<u-button type="primary" text="提交保存" @click="submit()" class="btn"></u-button>
 				</view>
 			</view>
 		</u-tabbar>
-
+		<popup type="3" v-if="popValue" @close="popValue=false" @closePort="closePort">
+			<template #content>
+				<view class="popup">
+					<view class="pop-title"><view style="width: 12rpx;height: 32rpx;background-color: #1794D1;margin-right: 6rpx;"></view>选择部位</view>
+					<view class="pop-search" style="height: 74rpx;">
+						<!-- <span style="width: 124rpx;font-size: 28rpx;">添加部位</span>
+						<input type="text" v-model="popInputValue" style="border: 1px solid #ccc;margin: 0 18rpx;flex:1;height: 60rpx;"/>
+						<button type="primary" style="width:150rpx;height: 60rpx;font-size: 32rpx;line-height: 60rpx;border-radius: 4rpx;" @click="handlePopPart">添加</button> -->
+					</view>
+					<view class="pop-content">
+						<robby-tags :value="tagList" @click="handleTag"></robby-tags>
+					</view>
+				</view>
+			</template>
+		</popup>
 	</view>
 </template>
 
@@ -140,10 +164,13 @@
 	import {
 		toasting
 	} from '../../utils/index.js'
+	import { getDictLabel } from '../../utils/index.js'
 	import Api from '../../service/api'
+	import popup from "../../components/mulSelectionSearch/ge-popup.vue";
 	export default {
 		components: {
-			toasting
+			toasting,
+			popup
 		},
 		data() {
 			return {
@@ -151,7 +178,9 @@
 				num: null,
 				id: '',
 				productionInfoData: {},
-				list: {},
+				list: {
+					position:""
+				},
 				tableData: [],
 				processData: [],
 				tableData1: [],
@@ -159,7 +188,12 @@
 				downupflag: false,
 				switch_value: false,
 				change_list:{},
-				change_num:null
+				change_num:null,
+				popValue:false, //选择部位弹窗
+				tagList:[],
+				popInputValue:"",
+				receiveId:"",
+				checkTagsList:[]
 			}
 		},
 		onLoad(option) {
@@ -172,25 +206,91 @@
 			if(num==1){
 				this.change_list.tableData =this.change_list.tableData.splice(0,this.change_list.tableData.length-1)
 				this.receiveNum = this.change_list.num
+				this.receiveId=this.change_list.id
 				this.switch_value = this.change_list.completeFlag?true:false
-				console.log(this.switch_value);
 			}
 			this.change_num = num
+			// this.downupflag=true
 			this.getdata(id)
 		},
-		onShow() {
-		},
 		methods: {
+			//删除部位
+			handleDelete(currentTag,allTags){
+				this.list.position=this.checkTagsList.map(i=>i.partsName).join(',')
+				const find=this.tagList.find(item=>item.partsName===currentTag)
+				if(find){
+					find.flag=false
+				}
+			},
+			// 点击部位
+			handleTag(e){
+				const find=this.tagList.find(item=>item.partsName===e)
+				find.flag=!find.flag
+			},
+			// 保存部位
+			handlePopPart(){
+				Api.outsourcingAddSavePort({partsName:this.popInputValue}).then(res=>{
+					if(res.code!==0){
+						return uni.showToast({
+							title: res.msg,
+							icon: 'error',
+							duration: 3000
+						})
+					}
+					this.tagList.unshift({partsName:this.popInputValue,flag:false})
+					this.popInputValue=""
+				})
+			},
+			// 关闭部位弹窗
+			closePort(){
+				this.checkTagsList=this.tagList.filter(item=>item.flag===true)
+				this.list.position=this.checkTagsList.map(i=>i.partsName).join(',')
+				this.popValue=false
+			},
+			//打开部位弹窗
+			selectUser(){
+				// Api.outsourcingAddGetPort().then(res=>{
+				// 	if(res.code!==0){
+				// 		return uni.showToast({
+				// 			title: res.msg,
+				// 			icon: 'error',
+				// 			duration: 3000
+				// 		})
+				// 	}
+				// 	// this.userList=res.data
+				// 	this.tagList=res.data.map(item=>{
+				// 		const flag=this.list.position?.split(',').includes(item.partsName)
+				// 		if(flag){
+				// 			return {partsName:item.partsName,flag:true}
+				// 		}else{
+				// 			return {partsName:item.partsName,flag:false}
+				// 		}
+				// 	})
+				// })
+				if(this.list.position===''){
+					return toasting('请扫描扎包条码')
+				}
+				this.tagList=this.list.position.split(',').map(item=>({partsName:item,flag:true}))
+				this.popValue=true
+			},
+			getDictLabel,
 			// 获取信息
 			getdata(id) {
 				Api.outsourcingReceiptassistinfo({
-					assistNO: id
+					assistNO: id,
+					receiveId:this.receiveId
 				}).then(res => {
 					if (res.code !== 0) {
 						toasting(res.msg)
 						return
 					}
 					this.list = res.data
+					// if(this.receiveId){
+					// 	this.list.position=res.data.
+					// }else{
+						
+					// }
+					this.checkTagsList=res.data.position.split(',').map(item=>({partsName:item,flag:true}))
 					this.productionInfoData = res.data.productionInfo
 					this.downup1(this.list.detailMap)
 				})
@@ -279,7 +379,7 @@
 			},
 			submit() {
 				this.list.receiveNum = this.receiveNum
-				if (this.list.existDetail == 0) {
+				if (this.list.existDetail === 0) {
 					if (!this.list.receiveNum) {
 						uni.$u.toast('请输入收货数量')
 						return
@@ -303,6 +403,7 @@
 					"assistId": this.list.id,
 					"completeFlag": this.switch_value?1:0,
 					"detailList": arr,
+					"position":this.list.position,
 					"existDetail": this.list.existDetail,
 					"id": this.change_num==1?this.change_list.id:'',
 					"num": Number(this.list.receiveNum)
@@ -310,6 +411,7 @@
 				// 编辑
 				if(this.change_num==1) {
 					Api.outsourcingReceiptreceiveUpdate(obj).then(res => {
+						console.log(res)
 						if (res.code !== 0) {
 							toasting(res.msg)
 							return
@@ -320,19 +422,22 @@
 						});
 					})
 					return
+				}else{
+					// 保存
+					console.log(obj)
+					Api.outsourcingReceiptreceiveSave(obj).then(res => {
+						console.log(res)
+						if (res.code !== 0) {
+							toasting(res.msg)
+							this.downup1(this.list.detailMap)
+							return
+						}
+						toasting('保存成功')
+						uni.navigateTo({
+							url: './orderList'
+						});
+					})
 				}
-				// 保存
-				Api.outsourcingReceiptreceiveSave(obj).then(res => {
-					if (res.code !== 0) {
-						toasting(res.msg)
-						this.downup1(this.list.detailMap)
-						return
-					}
-					toasting('保存成功')
-					uni.navigateTo({
-						url: './orderList'
-					});
-				})
 			}
 		}
 	}
@@ -347,14 +452,30 @@
 		color: #55aaff !important;
 		z-index: unset !important;
 	}
-
+	.u-input--square{
+		background-color: #fff !important;
+	}
 	page {
 		padding: 0;
 		margin: 0;
 		width: 100vw;
 		height: 100%;
 	}
-
+	.storage-item-right{
+		align-items: center;
+		max-width: 540rpx;
+		.info{
+			max-width: 540rpx !important;
+			color: #ccc;
+			margin-right: 15rpx;
+		}
+		.info-active{
+			max-width: 540rpx !important;
+			color: #000;
+			// line-height: 70rpx;
+			margin-right: 15rpx;
+		}
+	}
 	.header {
 		width: 100%;
 		height: 240rpx;
@@ -384,7 +505,7 @@
 			.title {
 				margin-top: 10rpx;
 				height: 45rpx;
-				width: 200rpx;
+				width: 100%;
 				font-size: 30rpx;
 				font-weight: 600;
 			}
@@ -474,6 +595,7 @@
 		width: 100%;
 		padding: 20rpx;
 		background-color: white;
+		
 	}
 
 	.button {
@@ -481,5 +603,36 @@
 		display: flex;
 		justify-content: space-evenly;
 		align-items: center;
+		.btn{
+			width: 296rpx;
+			height:80rpx;
+			background-color: #1794D1;
+			font-size: 32rpx;
+			color: #FFFFFF;
+			line-height: 80rpx;
+			border-radius:8rpx;
+		}
 	}
+	.popup{
+			.pop-title{
+				font-size: 36rpx;
+				font-weight: blod;
+				display: flex;
+				align-items: center;
+			}
+			.pop-search{
+				display: flex;
+				align-items: center;
+				height: 104rpx;
+				padding: 24rpx 0;
+			}
+			.pop-content{
+				display: flex;
+			}
+			.pop-switch{
+				display: flex;
+				height: 88rpx;
+				align-items: center;
+			}
+		}
 </style>

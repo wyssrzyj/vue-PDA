@@ -141,3 +141,29 @@ export const useDebounce=(func, wait=1500)=> {
 export const checkFunc = (key) => {
 	return store.state.func.includes(key)
 }
+
+// @param dictType  字典类型
+export const getDictDataList = (list, dictType)=> {
+  const type = list.find((element) => element.dictType === dictType);
+  if (type) {
+    return type.dataList;
+  } else {
+    return [];
+  }
+};
+
+
+// 获取字典名称
+export const getDictLabel = (list, dictType,dictValue)=> {
+  const type = list.find((element) => element.dictType === dictType);
+  if (type) {
+    const val = type.dataList.find((element) => element.dictValue === dictValue + "");
+    if (val) {
+      return val.dictLabel;
+    } else {
+      return dictValue;
+    }
+  } else {
+    return dictValue;
+  }
+};

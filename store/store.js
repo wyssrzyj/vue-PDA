@@ -8,7 +8,8 @@ export default new Vuex.Store({
   state: {
 	is_b_link:"",
 	permissions: [],
-	func:[]
+	func:[],
+	dicts:[]
 	},
   mutations: {
 	set_is_b_link(state,val){
@@ -29,13 +30,15 @@ export default new Vuex.Store({
 		},
 		initApp(ctx) {
 		  return Promise.all([
-			Api.getFunc() 		//加载功能配置
-		  ]).then(([func]) => {
+			Api.getFunc(),		//加载功能配置
+			Api.getDicts()
+		  ]).then(([func,dicts]) => {
 			func = func.data?.map((item) => {
 			  return item.authorizationInfo
 			})
 			ctx.commit('updateState', {
-			  func: func || []
+			  func: func || [],
+			  dicts: dicts.data || [],
 			})
 		  })
 		}

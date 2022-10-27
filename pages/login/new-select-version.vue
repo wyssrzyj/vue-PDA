@@ -23,25 +23,28 @@ export default{
 		}
 	},
 	mounted() {
-		Api.changeVersoin({softwareName:'PDA'}).then(res=>{
-			if (res.code === 0) {
-				this.newVersion=res.data.versionNo
-				this.fileUrl=res.data.fileUrl
-			}else {
-				uni.showToast({
-					title: '获取版本失败',
-					icon: 'error',
-					duration: 3000
-				})
-			} 
-		})
-		// 判断本地是否有账号密码，自动填充
-		plus.runtime.getProperty(plus.runtime.appid, (info) => {
-			this.version = info.version;
-			this.versionCode = info.versionCode;
-		});
+		
 	},
 	methods:{
+		getInfo(){
+			Api.changeVersoin({softwareName:'PDA'}).then(res=>{
+				if (res.code === 0) {
+					this.newVersion=res.data.versionNo
+					this.fileUrl=res.data.fileUrl
+				}else {
+					uni.showToast({
+						title: '获取版本失败',
+						icon: 'error',
+						duration: 3000
+					})
+				}
+			})
+			// 判断本地是否有账号密码，自动填充
+			plus.runtime.getProperty(plus.runtime.appid, (info) => {
+				this.version = info.version;
+				this.versionCode = info.versionCode;
+			});
+		},
 		 maskClick(){
 			this.showSelect = false
 		},
