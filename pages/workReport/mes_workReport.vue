@@ -272,6 +272,7 @@
 			sectionSelectClick(e){
 				this.section = e.name
 				this.supplierName = ''
+				this.checkedList = []
 				this.coutryList = []
 				this.sectionAndCoutry[e.name].forEach(item => {
 					this.coutryList.push({name: item, value: item, valid: 1})
@@ -354,6 +355,39 @@
 				//当前员工
 				// this.employeeName=res.data.realName;
 				// 数组去重
+				
+				/**
+				 * 判断是否时第一次扫码，第一次扫码才读取缓存
+				 * 根据不同条码获取不同缓存
+				 * 工段，工序，员工
+				 * 如果被删除了缓存需要清除
+				 */
+				let stateStorage = uni.getStorageSync('productionReport') || {}
+				if (stateStorage.canSelectSection === this.canSelectSection) {
+					if (this.canSelectSection) {
+					  //设置员工
+					  this.userList.find((item)=>{
+						  if(item.id === stateStorage.userId) {
+							  this.userId = stateStorage.userId
+							  this.realName = item.realName + '—' + item.staffId
+							  return true
+						  }
+					  })
+					  
+					  //判断工段是否删除
+					  let sectionList = this.sectionList.map(item => item.name)
+					  if (sectionList.includes(stateStorage.section)) {
+						  this.sectionSelectClick({name:stateStorage.section}) //设置工序列表
+						  // 判断工序是否删除,只把没被删除的工序缓存取出来
+						  let coutryList = this.coutryList.map(item => item.name)
+						  stateStorage.checkedList.forEach(item => {
+							if (coutryList.includes(item.value)) this.checkedList.push({name:item.value,value:item.value})
+						  })
+						  this.supplierName = this.checkedList.map(item=>item.name).join(",")
+						}
+					}
+				}
+				
 				this.outStorageArr = this.outStorageArr.reverse()
 			},
 			// 报工页面前端逻辑
@@ -621,6 +655,16 @@
 					mesEngineeringManagementDTOS,
 				}).then(res => {
 					if (res.code === 0) {
+						// 删除缓存
+						uni.removeStorageSync('productionReport')
+						//设置缓存
+						uni.setStorageSync('productionReport', { 
+							canSelectSection: this.canSelectSection,
+							userId: this.userId,
+							section: this.section,
+							checkedList: this.checkedList 
+						})
+						
 						this.outStorageArr=[]
 						this.productNum = ''
 						this.supplierName=""
