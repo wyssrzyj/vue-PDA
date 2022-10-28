@@ -99,7 +99,7 @@
 				<u-form-item label="全部完成" borderBottom labelWidth="150">
 					<switch :checked="switch_value" class="switch" @change="change()" color="#2979ff !important" style="transform:scale(0.7)" />
 				</u-form-item>
-				<u-form-item label="收货数量" :required="true" borderBottom labelWidth="150" v-if="list.existDetail == 0">
+				<u-form-item label="收货数量" :required="true" borderBottom labelWidth="150" v-if="list.existDetail === 0">
 					<u--input v-model="receiveNum" :clearable="true" border="none" placeholder="请输入数量" type="number">
 					</u--input>
 					<view class="">{{list.unit}}</view>
@@ -193,8 +193,20 @@
 				tagList:[],
 				popInputValue:"",
 				receiveId:"",
-				checkTagsList:[]
+				checkTagsList:[],
+				position:""
 			}
+		},
+		onBackPress(options){
+			if (options.from === 'navigateBack') {
+					return false;
+				}
+				const {id,billNo,existDetail}=this.list
+				// 这里使用重定向比较好，不信可以自己多试几种，其余跳转方法在文章底部哦
+				uni.redirectTo({ 
+					url: `./outsourcingReceiptList?productionId=${id}&id=${billNo}&existDetail=${existDetail}`
+				})
+				return true;
 		},
 		onLoad(option) {
 			const {
@@ -249,28 +261,17 @@
 			},
 			//打开部位弹窗
 			selectUser(){
-				// Api.outsourcingAddGetPort().then(res=>{
-				// 	if(res.code!==0){
-				// 		return uni.showToast({
-				// 			title: res.msg,
-				// 			icon: 'error',
-				// 			duration: 3000
-				// 		})
-				// 	}
-				// 	// this.userList=res.data
-				// 	this.tagList=res.data.map(item=>{
-				// 		const flag=this.list.position?.split(',').includes(item.partsName)
-				// 		if(flag){
-				// 			return {partsName:item.partsName,flag:true}
-				// 		}else{
-				// 			return {partsName:item.partsName,flag:false}
-				// 		}
-				// 	})
-				// })
-				if(this.list.position===''){
-					return toasting('请扫描扎包条码')
+				if(this.position===''){
+					return toasting('请扫描扎包条码',()=>{},3000)
 				}
-				this.tagList=this.list.position.split(',').map(item=>({partsName:item,flag:true}))
+				const arr=this.checkTagsList.map(i=>i.partsName)
+				this.tagList=this.position.split(',').map(item=>{
+					if(arr.includes(item)){
+						return {partsName:item,flag:true}
+					}else{
+						return {partsName:item,flag:false}
+					}
+				})
 				this.popValue=true
 			},
 			getDictLabel,
@@ -281,16 +282,15 @@
 					receiveId:this.receiveId
 				}).then(res => {
 					if (res.code !== 0) {
-						toasting(res.msg)
+						toasting(res.msg,()=>{},3000)
 						return
 					}
 					this.list = res.data
 					// if(this.receiveId){
 					// 	this.list.position=res.data.
-					// }else{
-						
 					// }
 					this.checkTagsList=res.data.position.split(',').map(item=>({partsName:item,flag:true}))
+					this.position=res.data.position //当前外协单部位
 					this.productionInfoData = res.data.productionInfo
 					this.downup1(this.list.detailMap)
 				})
@@ -378,6 +378,9 @@
 				this.switch_value = !this.switch_value
 			},
 			submit() {
+				if(this.list.position===''){
+					return toasting('请选择部位',()=>{},3000)
+				}
 				this.list.receiveNum = this.receiveNum
 				if (this.list.existDetail === 0) {
 					if (!this.list.receiveNum) {
@@ -411,31 +414,28 @@
 				// 编辑
 				if(this.change_num==1) {
 					Api.outsourcingReceiptreceiveUpdate(obj).then(res => {
-						console.log(res)
 						if (res.code !== 0) {
-							toasting(res.msg)
+							toasting(res.msg,()=>{},3000)
 							return
 						}
-						toasting('编辑成功')
-						uni.navigateTo({
+						toasting('编辑成功',()=>{},3000)
+						uni.redirectTo({
 							url: './orderList'
-						});
+						})
 					})
 					return
 				}else{
 					// 保存
-					console.log(obj)
 					Api.outsourcingReceiptreceiveSave(obj).then(res => {
-						console.log(res)
 						if (res.code !== 0) {
-							toasting(res.msg)
+							toasting(res.msg,()=>{},3000)
 							this.downup1(this.list.detailMap)
 							return
 						}
-						toasting('保存成功')
-						uni.navigateTo({
+						toasting('保存成功',()=>{},3000)
+						uni.redirectTo({
 							url: './orderList'
-						});
+						})
 					})
 				}
 			}

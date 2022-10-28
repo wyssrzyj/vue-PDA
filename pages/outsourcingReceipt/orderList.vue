@@ -15,7 +15,7 @@
 				<text>收货</text>
 			</view>
 		</view>
-		<view class="list-list">
+		<view class="list-list" @click="handleClick">
 			<view style="margin-bottom: 16rpx;height: 100%;" v-for="item in allList" :key="item.billNo">
 				<view class="header">
 					<view class="header-image">
@@ -31,7 +31,7 @@
 							<view class="">
 								单号：{{item.billNo}}
 							</view>
-							<view style="position: absolute;right: 40rpx;" @click="handleShow(item)">
+							<view style="position: absolute;right: 40rpx;" @click.stop="handleShow(item)">
 								<u-icon name="plus-circle" color="#59b7ff" size="44"></u-icon>
 								<view style="background-color: #3c9cff;position: absolute;right: -30rpx;top: 40rpx;"
 									v-if="item.show">
@@ -171,6 +171,9 @@
 		},
 
 		methods: {
+			handleClick(){
+				this.allList.forEach(i=>i.show=false)
+			},
 			handleShow(item){
 				this.allList.forEach(i=>{
 					if(i.id===item.id){
@@ -185,7 +188,7 @@
 				this.getData(this.keyWord, 1)
 			},
 			queryReceipt(){
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'/pages/outsourcingReceipt/outsourcingReceipt'
 				})
 			},
@@ -210,7 +213,7 @@
 							if (num == 1) {
 								this.allList = []
 							}
-							toasting('暂无更多数据')
+							toasting('暂无更多数据',()=>{},3000)
 						} else {
 							this.a++
 							let new_list = list.map(item => {
@@ -227,7 +230,7 @@
 							}
 						}
 					} else {
-						toasting(res.msg)
+						toasting(res.msg,()=>{},3000)
 					}
 				})
 			},
@@ -331,21 +334,21 @@
 			},
 			// 外协收货跳转
 			outsourcingReceiptindex(item) {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: `./index?id=${item.billNo}`
-				});
+				})
 			},
 			// 外协收货列表跳转
 			outsourcingReceiptList(item) {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: `./outsourcingReceiptList?productionId=${item.id}&id=${item.billNo}&existDetail=${item.existDetail}`
-				});
+				})
 			},
 			// 外协收货列表跳转
 			updateOutsourcing(item) {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: `./outsourcingAdd?assistId=${item.id}&assistNO=${item.billNo}`
-				});
+				})
 			}
 		}
 	}

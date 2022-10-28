@@ -158,7 +158,7 @@
 					if(this.outSourcingList.length===0){
 						Api.getScanCodeGoodsList({barCode:String(decodeURI(data.code))}).then(res=>{
 							if(res.code!==0){
-								return toasting(res.msg)
+								return toasting(res.msg,()=>{},3000)
 							}
 							this.scanPopValue=true
 							this.delieveryList=res.data.mesAssistDtoList
@@ -172,9 +172,28 @@
 						this.handleScanPCS(decodeURI(data.code))
 					}
 				}catch(err){
-					return toasting('扫码失败')
+					return toasting('扫码失败',()=>{},3000)
 				}
 			})
+		},
+		onBackPress(options){
+			if (options.from === 'navigateBack') {
+					return false;
+			}
+			const {assistId,billNo,existDetail}=this.modelData
+			console.log(assistId,billNo,existDetail)
+			if(assistId!==''&&billNo!==''&&existDetail!==''){
+				uni.redirectTo({
+					url: `/pages/outsourcingReceipt/outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}`
+				})
+				return true;
+			}else{
+				uni.redirectTo({
+					url: `/pages/outsourcingReceipt/orderList`
+				})
+				return true;
+			}
+			// 这里使用重定向比较好，不信可以自己多试几种，其余跳转方法在文章底部哦
 		},
 		//页面跳转赋值
 		onLoad(option){
@@ -207,7 +226,8 @@
 				delieveryList:[],
 				isAll:1,
 				barCode:"",
-				checkTagsList:[]
+				checkTagsList:[],
+				position:"" //当前外协单的部位
 			}
 		},
 		mounted(){
@@ -225,28 +245,23 @@
 				//传值删除
 				this.modelData.position=this.checkTagsList.map(i=>i.partsName).join(',')
 			},
+			//跳转至收获列表页面
 			goToDelievery(){
 				const {assistId,billNo,existDetail}=this.modelData
-				console.log(assistId,billNo,existDetail)
-				uni.navigateTo({
+				uni.redirectTo({
 					url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}`
 				})
 			},
 			getDictLabel,
 			//确认选中的收货单
 			closeScanPort(item){
-				console.log({
-					assistId:this.modelData.assistId,
-					barCode:this.barCode,
-					isAll:this.isAll
-				})
 				Api.scanCodeGoodsAllDetail({
 					assistId:this.modelData.assistId,
 					barCode:this.barCode,
 					isAll:this.isAll
 				}).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg)
+						return toasting(res.msg,()=>{},3000)
 					}
 					if(this.isAll===1){
 						this.outSourcingList=res.data.mesOrderSubpackageItemsList
@@ -257,6 +272,7 @@
 					this.modelData.existDetail=res.data.mesAssistDTO.existDetail    //外协但编号
 					this.modelData.billType=res.data.mesAssistDTO.billType //外协类型
 					this.modelData.position=res.data.mesAssistDTO.position //部位
+					this.position=res.data.mesAssistDTO.position //当前外协单部位
 					this.modelData.billName=getDictLabel(this.$store.state.dicts,'outsourcing_type',res.data.mesAssistDTO.billType) //赋值外发类型
 					this.checkTagsList=this.modelData.position.split(',').map(item=>({partsName:item,flag:true}))
 					this.cartList=res.data.mesAssistOrReceiveVO.tableRow
@@ -280,7 +296,7 @@
 					receiveId:this.receiveId
 				}).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg)
+						return toasting(res.msg,()=>{},3000)
 					}
 					this.cartList=res.data.mesAssistOrReceiveVO.tableRow 
 					this.modelData={...res.data.mesAssistDTO}
@@ -291,6 +307,7 @@
 					this.modelData.existDetail=res.data.mesAssistDTO.existDetail    //外协但编号
 					this.modelData.completeFlag=res.data.completeFlag //全部完成
 					this.modelData.position=res.data.position //部位取外协单部位
+					this.position=res.data.position
 					this.checkTagsList=res.data.position.split(',').map(item=>({partsName:item,flag:true}))
 					this.outSourcingList=res.data.barCodeList
 				})
@@ -337,17 +354,17 @@
 					assistId:this.modelData.assistId,
 				}).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg)
+						return toasting(res.msg,()=>{},3000)
 					}
 					if(!this.modelData.position){
 						this.modelData.position=res.data.mesAssistDTO.position
 					}
 					if(this.modelData.assistId!==res.data.mesAssistDTO.id&&this.outSourcingList.length>0){
-						return toasting('请扫描同一外协单的扎包条码')
+						return toasting('请扫描同一外协单的扎包条码',()=>{},3000)
 					}else{
 						const barcodeFind=this.outSourcingList.find(item=>item.barcode===res.data.mesOrderSubpackageItems.barcode)
 						if(barcodeFind){
-							return toasting('相同的扎包条码不能重复扫描')
+							return toasting('相同的扎包条码不能重复扫描',()=>{},3000)
 						}else{
 							//外协单id
 							this.modelData.billNo=res.data.mesAssistDTO.billNo    //外协但编号
@@ -441,10 +458,17 @@
 			},
 			//打开部位弹窗
 			selectUser(){
-				if(this.modelData.position===''){
-					return toasting('请扫描扎包条码')
+				if(this.position===''){
+					return toasting('请扫描扎包条码',()=>{},3000)
 				}
-				this.tagList=this.modelData.position.split(',').map(item=>({partsName:item,flag:true}))
+				const arr=this.checkTagsList.map(i=>i.partsName)
+				this.tagList=this.position.split(',').map(item=>{
+					if(arr.includes(item)){
+						return {partsName:item,flag:true}
+					}else{
+						return {partsName:item,flag:false}
+					}
+				})
 				this.popValue=true
 			},
 			// 点击部位
@@ -460,6 +484,9 @@
 			},
 			// 保存收货单
 			handleOutSourcing(){
+				if(this.modelData.position===''){
+					return toasting('请选择部位',()=>{},3000)
+				}
 				const {assistId,billNo,existDetail}=this.modelData
 				const obj={
 					...this.modelData,
@@ -468,7 +495,7 @@
 				const that=this.receiveId?Api.outsourcingTakeDelieveryUpdate:Api.outsourcingTakeDelieverySave
 				that(obj).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg)
+						return toasting(res.msg,()=>{},3000)
 					}else{
 						uni.showToast({
 							title: '保存成功',
@@ -478,7 +505,7 @@
 								this.modelData={}
 								this.cartList=[{color:'颜色/尺码'}]
 								this.outSourcingList=[]
-								uni.navigateTo({
+								uni.redirectTo({
 									url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}`
 								})
 							}

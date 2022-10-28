@@ -3,23 +3,28 @@
 		<view class="storage">
 			<view class="storage-item">
 				<text class="storage-item-left"><text style="color:red">*</text>外协类型</text>
-				<hpy-form-select :dataList="sectionList" text="dictLabel" name="dictValue" v-model="modelData.billType" @change="sectionSelectClick" islot="true">
-					<view class="storage-item-right">
+				<!-- <hpy-form-select :dataList="sectionList" text="dictLabel" name="dictValue" v-model="modelData.billType" @change="sectionSelectClick" islot="true"> -->
+					<view class="storage-item-right" @tap="show1=true">
 						<text class="info-active" v-if="modelData.billName">{{modelData.billName}}</text>
 						<text class="info" v-else>{{'请选择类型'}}</text>
 						<text class="iconfont icon-youjiantou"></text>
 					</view>
-				</hpy-form-select>
+				<!-- </hpy-form-select> -->
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left"><text style="color:red">*</text>外协工厂</text>
-				<hpy-form-select :dataList="sectionList1" text="name" name="id" v-model="modelData.customerName" @change="sectionSelectClick1" islot="true">
+				<!-- <hpy-form-select :dataList="sectionList1" text="name" name="id" v-model="modelData.customerName" @change="sectionSelectClick1" islot="true">
 					<view class="storage-item-right" style="display: flex;">
 						<text class="info-active" v-if="modelData.customerName">{{modelData.customerName}}</text>
 						<text class="info" v-else>{{'请选择工厂'}}</text>
 						<text class="iconfont icon-youjiantou"></text>
 					</view>
-				</hpy-form-select>
+				</hpy-form-select> -->
+				<view class="storage-item-right" style="display: flex;" @tap="show=true">
+					<text class="info-active" v-if="modelData.customerName">{{modelData.customerName}}</text>
+					<text class="info" v-else>{{'请选择工厂'}}</text>
+					<text class="iconfont icon-youjiantou"></text>
+				</view>
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left"><text style="color:red">*</text>期望交期</text>
@@ -32,9 +37,9 @@
 			<view class="storage-item">
 				<text class="storage-item-left"><text style="color:red">*</text>部&emsp;&emsp;位</text>
 				<view class="storage-item-right" @tap="selectUser">
-					<text class="info-active" v-if="modelData.position">
+					<view class="info-active" v-if="modelData.position">
 						<robby-tags :value="checkTagsList" :enable-del="true" @delete="handleDelete"></robby-tags>
-					</text>
+					</view>
 					<text class="info" v-else>{{'请选择部位'}}</text>
 					<text class="iconfont icon-youjiantou"></text>
 				</view>
@@ -103,6 +108,8 @@
 			</template>
 		</popup>
 		<scan-code></scan-code>
+		<u-picker v-if="show" :show="show" :columns="[[...sectionList1]]" @confirm="sectionSelectClick1" keyName="name" :itemHeight="100" @cancel="show=false"></u-picker>
+		<u-picker v-if="show1" :show="show1" :columns="[[...sectionList]]" @confirm="sectionSelectClick" keyName="dictLabel" :itemHeight="100" @cancel="show1=false"></u-picker>
 	</view>
 </template>
 <script>
@@ -125,7 +132,7 @@
 				try{
 					this.handleScanPCS(decodeURI(data.code))
 				}catch(err){
-					return toasting('扫码失败',null,3000)
+					return toasting('扫码失败',()=>{},3000)
 				}
 			})
 		},
@@ -168,14 +175,16 @@
 				popInputValue:"", //弹出框数据
 				tagList:[], //弹出框部位列表
 				tableVisible:true, //是否显示详情
-				checkTagsList:[] //选中的部位数组
+				checkTagsList:[], //选中的部位数组
+				show:false,  //显示工厂隐藏
+				show1:false //显示外协类型选择框
 			}
 		},
 		mounted(){
 			this.init() //初始化
 			Api.outsourcingFactory({deptType: 'factory'}).then(res=>{ //获取外发工厂列表
 				if(res.code!==0){
-					return toasting(res.msg,null,3000)
+					return toasting(res.msg,()=>{},3000)
 				}
 				this.sectionList1=res.data
 			})
@@ -208,7 +217,7 @@
 					assistNO:this.assistNO
 				}).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg,null,)
+						return toasting(res.msg,()=>{},3000)
 					}
 					this.modelData={...res.data} //赋值form
 					this.checkTagsList=res.data.position.split(',').map(item=>({partsName:item,flag:true}))
@@ -219,13 +228,17 @@
 			},
 			//选中外协类型
 			sectionSelectClick(e){
-				this.modelData.billName=e.data.dictLabel
-				this.modelData.billType=e.data.dictValue
+				const {value}=e
+				this.modelData.billName=value[0].dictLabel
+				this.modelData.billType=value[0].dictValue
+				this.show1=false
 			},
 			//选中外协工厂
 			sectionSelectClick1(e){
-				this.modelData.customerName=e.data.name
-				this.modelData.customerId=e.data.id
+				const {value}=e
+				this.modelData.customerName=value[0].name
+				this.modelData.customerId=value[0].id
+				this.show=false
 			},
 			// 打开picker
 			openDatetimePicker() {
@@ -239,7 +252,7 @@
 			selectUser(e){
 				Api.outsourcingAddGetPort().then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg)
+						return toasting(res.msg,()=>{},3000)
 					}
 					this.userList=res.data
 					this.tagList=res.data.map(item=>{
@@ -257,7 +270,7 @@
 			handlePopPart(){
 				Api.outsourcingAddSavePort({partsName:this.popInputValue}).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg)
+						return toasting(res.msg,()=>{},3000)
 					}
 					this.tagList.unshift({partsName:this.popInputValue,flag:false})
 					this.popInputValue=""
@@ -282,17 +295,17 @@
 			handleScanPCS(barCode){
 				Api.outsourcingAddGet({barCode:String(barCode)}).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg)
+						return toasting(res.msg,()=>{},3000)
 					}
 					//控制同一生产单
 					const produceFind=this.outSourcingList.find(item=>item.productionId===res.data.productionId)
 					if(!produceFind&&this.outSourcingList.length>0){
-						return toasting('请扫描同一生产单的扎包条码')
+						return toasting('请扫描同一生产单的扎包条码',()=>{},3000)
 					}else{
 						//控制不同的扎包条码
 						const barcodeFind=this.outSourcingList.find(item=>item.barcode===res.data.barcode)
 						if(barcodeFind){
-							return toasting('相同的扎包条码不能重复扫描')
+							return toasting('相同的扎包条码不能重复扫描',()=>{},3000)
 						}else{
 							//添加扎单条码
 							this.outSourcingList.push({...res.data})
@@ -387,7 +400,7 @@
 			//保存修改外协单
 			handleOutSourcing(){
 				if(!this.valid()){
-					return toasting('请输入必填项')
+					return toasting('请输入必填项',()=>{},3000)
 				}
 				const obj={
 					...this.modelData,
@@ -398,7 +411,7 @@
 				const that=this.assistId?Api.outsourcingAddUpdate:Api.outsourcingAddSave
 				that(obj).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg)
+						return toasting(res.msg,()=>{},3000)
 					}else{
 						uni.showToast({
 							title: '保存成功',
@@ -408,7 +421,7 @@
 								this.modelData={}
 								this.cartList=[{color:'颜色/尺码'}]
 								this.outSourcingList=[]
-								uni.navigateTo({
+								uni.redirectTo({
 									url:'/pages/outsourcingReceipt/orderList'
 								})
 							}
