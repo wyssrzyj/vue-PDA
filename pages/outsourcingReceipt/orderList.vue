@@ -188,7 +188,7 @@
 				this.getData(this.keyWord, 1)
 			},
 			queryReceipt(){
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'/pages/outsourcingReceipt/outsourcingReceipt'
 				})
 			},
@@ -213,7 +213,7 @@
 							if (num == 1) {
 								this.allList = []
 							}
-							toasting('暂无更多数据')
+							toasting('暂无更多数据',()=>{},3000)
 						} else {
 							this.a++
 							let new_list = list.map(item => {
@@ -230,7 +230,7 @@
 							}
 						}
 					} else {
-						toasting(res.msg)
+						toasting(res.msg,()=>{},3000)
 					}
 				})
 			},
@@ -334,21 +334,21 @@
 			},
 			// 外协收货跳转
 			outsourcingReceiptindex(item) {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: `./index?id=${item.billNo}`
-				});
+				})
 			},
 			// 外协收货列表跳转
 			outsourcingReceiptList(item) {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: `./outsourcingReceiptList?productionId=${item.id}&id=${item.billNo}&existDetail=${item.existDetail}`
-				});
+				})
 			},
 			// 外协收货列表跳转
 			updateOutsourcing(item) {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: `./outsourcingAdd?assistId=${item.id}&assistNO=${item.billNo}`
-				});
+				})
 			}
 		}
 	}

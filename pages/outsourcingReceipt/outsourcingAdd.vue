@@ -132,7 +132,7 @@
 				try{
 					this.handleScanPCS(decodeURI(data.code))
 				}catch(err){
-					return toasting('扫码失败',null,3000)
+					return toasting('扫码失败',()=>{},3000)
 				}
 			})
 		},
@@ -180,21 +180,11 @@
 				show1:false //显示外协类型选择框
 			}
 		},
-		onBackPress(options){
-			if (options.from === 'navigateBack') {
-					return false;
-				}
-				// 这里使用重定向比较好，不信可以自己多试几种，其余跳转方法在文章底部哦
-				uni.redirectTo({ 
-					url: '/pages/outsourcingReceipt/orderList'
-				})
-				return true;
-		},
 		mounted(){
 			this.init() //初始化
 			Api.outsourcingFactory({deptType: 'factory'}).then(res=>{ //获取外发工厂列表
 				if(res.code!==0){
-					return toasting(res.msg,null,3000)
+					return toasting(res.msg,()=>{},3000)
 				}
 				this.sectionList1=res.data
 			})
@@ -227,7 +217,7 @@
 					assistNO:this.assistNO
 				}).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg,null,)
+						return toasting(res.msg,()=>{},3000)
 					}
 					this.modelData={...res.data} //赋值form
 					this.checkTagsList=res.data.position.split(',').map(item=>({partsName:item,flag:true}))
@@ -262,7 +252,7 @@
 			selectUser(e){
 				Api.outsourcingAddGetPort().then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg)
+						return toasting(res.msg,()=>{},3000)
 					}
 					this.userList=res.data
 					this.tagList=res.data.map(item=>{
@@ -280,7 +270,7 @@
 			handlePopPart(){
 				Api.outsourcingAddSavePort({partsName:this.popInputValue}).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg)
+						return toasting(res.msg,()=>{},3000)
 					}
 					this.tagList.unshift({partsName:this.popInputValue,flag:false})
 					this.popInputValue=""
@@ -305,17 +295,17 @@
 			handleScanPCS(barCode){
 				Api.outsourcingAddGet({barCode:String(barCode)}).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg)
+						return toasting(res.msg,()=>{},3000)
 					}
 					//控制同一生产单
 					const produceFind=this.outSourcingList.find(item=>item.productionId===res.data.productionId)
 					if(!produceFind&&this.outSourcingList.length>0){
-						return toasting('请扫描同一生产单的扎包条码')
+						return toasting('请扫描同一生产单的扎包条码',()=>{},3000)
 					}else{
 						//控制不同的扎包条码
 						const barcodeFind=this.outSourcingList.find(item=>item.barcode===res.data.barcode)
 						if(barcodeFind){
-							return toasting('相同的扎包条码不能重复扫描')
+							return toasting('相同的扎包条码不能重复扫描',()=>{},3000)
 						}else{
 							//添加扎单条码
 							this.outSourcingList.push({...res.data})
@@ -410,7 +400,7 @@
 			//保存修改外协单
 			handleOutSourcing(){
 				if(!this.valid()){
-					return toasting('请输入必填项')
+					return toasting('请输入必填项',()=>{},3000)
 				}
 				const obj={
 					...this.modelData,
@@ -421,7 +411,7 @@
 				const that=this.assistId?Api.outsourcingAddUpdate:Api.outsourcingAddSave
 				that(obj).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg)
+						return toasting(res.msg,()=>{},3000)
 					}else{
 						uni.showToast({
 							title: '保存成功',
@@ -431,7 +421,7 @@
 								this.modelData={}
 								this.cartList=[{color:'颜色/尺码'}]
 								this.outSourcingList=[]
-								uni.navigateTo({
+								uni.redirectTo({
 									url:'/pages/outsourcingReceipt/orderList'
 								})
 							}

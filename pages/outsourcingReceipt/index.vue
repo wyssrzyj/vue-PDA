@@ -202,7 +202,6 @@
 					return false;
 				}
 				const {id,billNo,existDetail}=this.list
-				console.log(id,billNo,existDetail)
 				// 这里使用重定向比较好，不信可以自己多试几种，其余跳转方法在文章底部哦
 				uni.redirectTo({ 
 					url: `./outsourcingReceiptList?productionId=${id}&id=${billNo}&existDetail=${existDetail}`
@@ -263,7 +262,7 @@
 			//打开部位弹窗
 			selectUser(){
 				if(this.position===''){
-					return toasting('请扫描扎包条码')
+					return toasting('请扫描扎包条码',()=>{},3000)
 				}
 				const arr=this.checkTagsList.map(i=>i.partsName)
 				this.tagList=this.position.split(',').map(item=>{
@@ -283,7 +282,7 @@
 					receiveId:this.receiveId
 				}).then(res => {
 					if (res.code !== 0) {
-						toasting(res.msg)
+						toasting(res.msg,()=>{},3000)
 						return
 					}
 					this.list = res.data
@@ -380,7 +379,7 @@
 			},
 			submit() {
 				if(this.list.position===''){
-					return toasting('请选择部位')
+					return toasting('请选择部位',()=>{},3000)
 				}
 				this.list.receiveNum = this.receiveNum
 				if (this.list.existDetail === 0) {
@@ -416,11 +415,11 @@
 				if(this.change_num==1) {
 					Api.outsourcingReceiptreceiveUpdate(obj).then(res => {
 						if (res.code !== 0) {
-							toasting(res.msg)
+							toasting(res.msg,()=>{},3000)
 							return
 						}
-						toasting('编辑成功')
-						uni.navigateTo({
+						toasting('编辑成功',()=>{},3000)
+						uni.redirectTo({
 							url: './orderList'
 						})
 					})
@@ -429,14 +428,14 @@
 					// 保存
 					Api.outsourcingReceiptreceiveSave(obj).then(res => {
 						if (res.code !== 0) {
-							toasting(res.msg)
+							toasting(res.msg,()=>{},3000)
 							this.downup1(this.list.detailMap)
 							return
 						}
-						toasting('保存成功')
-						uni.navigateTo({
+						toasting('保存成功',()=>{},3000)
+						uni.redirectTo({
 							url: './orderList'
-						});
+						})
 					})
 				}
 			}

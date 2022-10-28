@@ -130,6 +130,16 @@
 				page:1
 			}
 		},
+		onBackPress(options){
+			if (options.from === 'navigateBack') {
+				return false;
+			}
+			// 这里使用重定向比较好，不信可以自己多试几种，其余跳转方法在文章底部哦
+			uni.redirectTo({
+				url: '/pages/outsourcingReceipt/orderList'
+			})
+			return true;
+		},
 		onLoad(option) {
 			const {
 				productionId,
@@ -160,7 +170,7 @@
 						this.downup(this.list.detailMap)
 						return;
 					}
-					toasting(res.msg)
+					toasting(res.msg,()=>{},3000)
 				})
 			},
 			// 获取列表data
@@ -179,7 +189,7 @@
 							list
 						} = res.data
 						if (list.length == 0) {
-							toasting('暂无更多数据')
+							toasting('暂无更多数据',()=>{},3000)
 						} else {
 							this.a++
 							for (let I = 0; I < list.length; I++) {
@@ -228,7 +238,7 @@
 						}
 						return
 					}
-					toasting(res.msg)
+					toasting(res.msg,()=>{},3000)
 				})
 			},
 			// 时间截取
@@ -282,15 +292,14 @@
 			// 编辑
 			changelist(item) {
 				if(item.receiveStatus===0){
-					uni.navigateTo({
+					uni.redirectTo({
 						url: `./outsourcingReceipt?receiveId=${item.id}`
-					});
+					})
 				}else{
-					uni.navigateTo({
+					uni.redirectTo({
 						url: `./index?id=${this.id}&item=${JSON.stringify(item)}&num=${1}`
-					});
+					})
 				}
-				
 			}
 		}
 	}
