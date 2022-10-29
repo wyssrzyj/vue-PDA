@@ -254,7 +254,6 @@
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
-					this.userList=res.data
 					this.tagList=res.data.map(item=>{
 						const flag=this.modelData.position?.split(',').includes(item.partsName)
 						if(flag){

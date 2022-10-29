@@ -307,7 +307,7 @@
 					this.modelData.existDetail=res.data.mesAssistDTO.existDetail    //外协但编号
 					this.modelData.completeFlag=res.data.completeFlag //全部完成
 					this.modelData.position=res.data.position //部位取外协单部位
-					this.position=res.data.position
+					this.position=res.data.position //历史
 					this.checkTagsList=res.data.position.split(',').map(item=>({partsName:item,flag:true}))
 					this.outSourcingList=res.data.barCodeList
 				})
@@ -458,9 +458,9 @@
 			},
 			//打开部位弹窗
 			selectUser(){
-				if(this.position===''){
-					return toasting('请扫描扎包条码',()=>{},3000)
-				}
+				// if(this.position===''){
+				// 	return toasting('请扫描扎包条码',()=>{},3000)
+				// }
 				const arr=this.checkTagsList.map(i=>i.partsName)
 				this.tagList=this.position.split(',').map(item=>{
 					if(arr.includes(item)){
