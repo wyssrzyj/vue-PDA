@@ -181,7 +181,7 @@
 					return false;
 			}
 			const {assistId,billNo,existDetail}=this.modelData
-			if(assistId!==''&&billNo!==''&&existDetail!==''){
+			if(billNo!=undefined&&existDetail!=undefined){
 				uni.redirectTo({
 					url: `/pages/outsourcingReceipt/outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}`
 				})
