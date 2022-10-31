@@ -385,6 +385,9 @@
 						  })
 						  this.supplierName = this.checkedList.map(item=>item.name).join(",")
 						}
+					} else {
+						this.checkedList = stateStorage.checkedList
+						this.supplierName = stateStorage.supplierName
 					}
 				}
 				
@@ -662,7 +665,8 @@
 							canSelectSection: this.canSelectSection,
 							userId: this.userId,
 							section: this.section,
-							checkedList: this.checkedList 
+							checkedList: this.checkedList,
+							supplierName: this.supplierName
 						})
 						
 						this.outStorageArr=[]
