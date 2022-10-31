@@ -161,7 +161,8 @@
 					customerName:"", //外协工厂名称
 					deliverTime:'', //期望交期
 					id:undefined, //外协单id
-					unit:"" //单位
+					unit:"", //单位
+					bedNum:"" //床号
 				},
 				cartList:[
 					{color:'颜色/尺码'},
@@ -177,7 +178,8 @@
 				tableVisible:true, //是否显示详情
 				checkTagsList:[], //选中的部位数组
 				show:false,  //显示工厂隐藏
-				show1:false //显示外协类型选择框
+				show1:false, //显示外协类型选择框
+				bedNumList:[] //床号数组
 			}
 		},
 		mounted(){
@@ -308,6 +310,10 @@
 						}else{
 							//添加扎单条码
 							this.outSourcingList.unshift({...res.data})
+							if(this.bedNumList.indexOf(res.data.bedNum)===-1){
+								this.bedNumList.push(res.data.bedNum)
+							}
+							this.modelData.bedNum=this.bedNumList.join(',') //赋值床号
 							let sizeKey=res.data.size
 							//编辑二维表格
 							const find=this.cartList.find(item=>item.color===res.data.color) //寻找相同颜色

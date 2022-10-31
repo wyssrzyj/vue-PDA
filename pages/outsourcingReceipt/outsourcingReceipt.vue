@@ -181,7 +181,6 @@
 					return false;
 			}
 			const {assistId,billNo,existDetail}=this.modelData
-			console.log(assistId,billNo,existDetail)
 			if(assistId!==''&&billNo!==''&&existDetail!==''){
 				uni.redirectTo({
 					url: `/pages/outsourcingReceipt/outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}`
@@ -261,7 +260,6 @@
 					barCode:this.barCode,
 					isAll:this.isAll
 				}).then(res=>{
-					console.log(res)
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
@@ -297,7 +295,6 @@
 				Api.outsourcingTakeDelieveryGetInfo({
 					receiveId:this.receiveId
 				}).then(res=>{
-					console.log(res)
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
@@ -356,7 +353,6 @@
 					barCode:String(barCode),
 					assistId:this.modelData.assistId,
 				}).then(res=>{
-					console.log(res)
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
