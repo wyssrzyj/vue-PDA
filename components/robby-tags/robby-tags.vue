@@ -95,7 +95,8 @@
 	.tagItem{
 		padding: 10upx 20upx;
 		margin: 10upx;
-		height: 26px;
+		min-height: 52rpx;
+		line-height: 52rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -103,11 +104,16 @@
 		background-color:  white !important;
 		color: rgba(0, 0, 0, 0.5) !important;
 		min-width:150rpx;
+		max-width: 400rpx;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space:nowrap;
 	}
 	.tagItemActive{
 		padding: 10upx 20upx;
 		margin: 10upx;
-		height: 26px;
+		min-height: 52rpx;
+		line-height: 52rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -115,6 +121,10 @@
 		background-color: #E3F5FE !important;
 		color: #1794D1 !important;
 		min-width:150rpx;
+		max-width: 400rpx;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space:nowrap;
 	}
 	.tagBgDefault{
 		background-color: #cfcfcf;

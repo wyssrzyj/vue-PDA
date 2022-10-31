@@ -13,7 +13,7 @@
 					暂无数据
 				</view>
 				<view class="li" v-for="(item,index) in outSourcingList">
-					{{index+1}}、{{item.color}}-{{item.size}}-{{item.num}}件
+					{{outSourcingList.length-index-1}}、{{item.color}}-{{item.size}}-{{item.num}}件
 					<uni-icons type="trash-filled" size="20" style="color: red" @tap="deleteSubpackage(item)"/>
 				</view>
 			</view>
@@ -208,6 +208,7 @@
 			return {
 				outSourcingList:[], //扎包条码列表
 				modelData:{
+					//收货单信息
 					billType:"",  //外协类型
 					billName:"", //外协类型
 					assistId:"", //外协编号
@@ -260,6 +261,7 @@
 					barCode:this.barCode,
 					isAll:this.isAll
 				}).then(res=>{
+					console.log(res)
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
@@ -271,7 +273,7 @@
 					this.modelData.billNo=res.data.mesAssistDTO.billNo    //外协但编号
 					this.modelData.existDetail=res.data.mesAssistDTO.existDetail    //外协但编号
 					this.modelData.billType=res.data.mesAssistDTO.billType //外协类型
-					this.modelData.position=res.data.mesAssistDTO.position //部位
+					this.modelData.position=res.data.mesAssistDTO.position //收货单部位
 					this.position=res.data.mesAssistDTO.position //当前外协单部位
 					this.modelData.billName=getDictLabel(this.$store.state.dicts,'outsourcing_type',res.data.mesAssistDTO.billType) //赋值外发类型
 					this.checkTagsList=this.modelData.position.split(',').map(item=>({partsName:item,flag:true}))
@@ -295,6 +297,7 @@
 				Api.outsourcingTakeDelieveryGetInfo({
 					receiveId:this.receiveId
 				}).then(res=>{
+					console.log(res)
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
@@ -307,7 +310,7 @@
 					this.modelData.existDetail=res.data.mesAssistDTO.existDetail    //外协但编号
 					this.modelData.completeFlag=res.data.completeFlag //全部完成
 					this.modelData.position=res.data.position //部位取外协单部位
-					this.position=res.data.position //历史
+					this.position=res.data.mesAssistDTO.position //历史
 					this.checkTagsList=res.data.position.split(',').map(item=>({partsName:item,flag:true}))
 					this.outSourcingList=res.data.barCodeList
 				})
@@ -353,6 +356,7 @@
 					barCode:String(barCode),
 					assistId:this.modelData.assistId,
 				}).then(res=>{
+					console.log(res)
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
@@ -370,7 +374,7 @@
 							this.modelData.billNo=res.data.mesAssistDTO.billNo    //外协但编号
 							this.modelData.existDetail=res.data.mesAssistDTO.existDetail    //外协但编号
 							this.modelData.assistId=res.data.mesAssistDTO.id
-							this.outSourcingList.push({...res.data.mesOrderSubpackageItems})
+							this.outSourcingList.unshift({...res.data.mesOrderSubpackageItems})
 							let sizeKey=res.data.mesOrderSubpackageItems.size
 							const find=this.cartList.find(item=>item.color===res.data.mesOrderSubpackageItems.color) //寻找相同颜色
 							if(find){ //相同颜色

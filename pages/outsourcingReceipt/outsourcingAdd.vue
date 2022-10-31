@@ -57,7 +57,7 @@
 					暂无数据
 				</view>
 				<view class="li" v-for="(item,index) in outSourcingList" v-else>
-					{{index+1}}、{{item.color}}-{{item.size}}-{{item.num}}件
+					{{outSourcingList.length-index}}、{{item.color}}-{{item.size}}-{{item.num}}件
 					<uni-icons type="trash-filled" size="20" style="color: red" @tap="deleteSubpackage(item)"/>
 				</view>
 			</view>
@@ -307,7 +307,7 @@
 							return toasting('相同的扎包条码不能重复扫描',()=>{},3000)
 						}else{
 							//添加扎单条码
-							this.outSourcingList.push({...res.data})
+							this.outSourcingList.unshift({...res.data})
 							let sizeKey=res.data.size
 							//编辑二维表格
 							const find=this.cartList.find(item=>item.color===res.data.color) //寻找相同颜色
@@ -410,7 +410,7 @@
 				const that=this.assistId?Api.outsourcingAddUpdate:Api.outsourcingAddSave
 				that(obj).then(res=>{
 					if(res.code!==0){
-						return toasting(res.msg,()=>{},3000)
+						return toasting(res.msg,()=>{},5000)
 					}else{
 						uni.showToast({
 							title: '保存成功',
@@ -547,7 +547,7 @@
 				width: 296rpx;
 				height:80rpx;
 				background-color: #1794D1;
-				font-size: 32rpx;
+				font-size: 36rpx;
 				color: #FFFFFF;
 				line-height: 80rpx;
 				border-radius:8rpx;

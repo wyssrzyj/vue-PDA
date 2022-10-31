@@ -3,7 +3,7 @@
 		<view class="list-header">
 			<view class="list-header-input">
 				<u--input placeholder="输入搜索" prefixIcon="search" prefixIconStyle="font-size: 44rpx;color: #909399"
-					suffixIcon="scan" suffixIconStyle="font-size: 44rpx;color: #909399" v-model="keyWord" fontSize="28rpx" :clearable="true">
+					suffixIcon="scan" suffixIconStyle="font-size: 44rpx;color: #909399" v-model="key" fontSize="28rpx" :clearable="true">
 				</u--input>
 			</view>
 			<view class="list-header-text" @click="query()">
@@ -33,7 +33,7 @@
 							</view>
 							<view style="position: absolute;right: 40rpx;" @click.stop="handleShow(item)">
 								<u-icon name="plus-circle" color="#59b7ff" size="44"></u-icon>
-								<view style="background-color: #3c9cff;position: absolute;right: -30rpx;top: 40rpx;"
+								<view style="position: absolute;right: -30rpx;top: 40rpx;"
 									v-if="item.show">
 									<view @click="outsourcingReceiptindex(item)" class="button">
 										<view>外协收货</view>
@@ -43,7 +43,10 @@
 										<view>收货列表</view>
 									</view>
 									<u-line dashed></u-line>
-									<view @click="updateOutsourcing(item)" class="button">
+									<view @click="updateOutsourcing(item)" class="button" v-if="item.existDetail===2">
+										<view>修改</view>
+									</view>
+									<view class="de-button" v-else>
 										<view>修改</view>
 									</view>
 								</view>
@@ -147,7 +150,7 @@
 				tableData: [],
 				page: 1,
 				a: 0,
-				keyWord:""
+				key:""
 			}
 		},
 		onShow() {
@@ -160,13 +163,13 @@
 				_this.productionid = code
 				_this.getData(code, 1)
 			})
-			_this.getData(this.keyWord)
+			_this.getData(this.key)
 			_this.api = uni.getStorageSync('pda-api')
 		},
 		// 底部加载
 		async onReachBottom() {
 			uni.showNavigationBarLoading()
-			this.getData(this.keyWord);
+			this.getData(this.key);
 			uni.hideNavigationBarLoading()
 		},
 
@@ -185,7 +188,7 @@
 			},
 			getDictLabel,
 			query() {
-				this.getData(this.keyWord, 1)
+				this.getData(this.key, 1)
 			},
 			queryReceipt(){
 				uni.redirectTo({
@@ -200,7 +203,7 @@
 				let obj = {
 					limit: 10,
 					page: this.page,
-					keyWord:code ? code : '',
+					key:code ? code : '',
 				}
 				Api.outsourcingReceipt(obj).then(res => {
 					if (res.code == 0) {
@@ -457,6 +460,21 @@
 						padding: 4rpx 10rpx;
 						color: white;
 						font-weight: normal;
+						background-color: #3c9cff;
+						view{
+							height: 100%;
+							display: flex;
+							justify-content: center;
+							align-items: center;
+						}
+					}
+					.de-button{
+						width: 200rpx;
+						height: 74rpx;
+						padding: 4rpx 10rpx;
+						color: white;
+						font-weight: normal;
+						background-color: #ccc;
 						view{
 							height: 100%;
 							display: flex;
