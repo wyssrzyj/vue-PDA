@@ -13,7 +13,7 @@
 					暂无数据
 				</view>
 				<view class="li" v-for="(item,index) in outSourcingList">
-					{{outSourcingList.length-index-1}}、{{item.color}}-{{item.size}}-{{item.num}}件
+					{{outSourcingList.length-index}}、{{item.color}}-{{item.size}}-{{item.num}}件
 					<uni-icons type="trash-filled" size="20" style="color: red" @tap="deleteSubpackage(item)"/>
 				</view>
 			</view>
@@ -295,6 +295,7 @@
 				Api.outsourcingTakeDelieveryGetInfo({
 					receiveId:this.receiveId
 				}).then(res=>{
+					console.log(res)
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
@@ -490,7 +491,7 @@
 				const {assistId,billNo,existDetail}=this.modelData
 				const obj={
 					...this.modelData,
-					barCodeList:this.outSourcingList.map((item,index)=>({...item,sort:index+1}))
+					barCodeList:this.outSourcingList.map((item,index)=>({...item,sort:this.outSourcingList.length-index}))
 				}
 				const that=this.receiveId?Api.outsourcingTakeDelieveryUpdate:Api.outsourcingTakeDelieverySave
 				that(obj).then(res=>{

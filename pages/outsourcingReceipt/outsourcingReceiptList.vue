@@ -291,6 +291,7 @@
 			},
 			// 编辑
 			changelist(item) {
+				console.log(item)
 				if(item.receiveStatus===0){
 					uni.redirectTo({
 						url: `./outsourcingReceipt?receiveId=${item.id}`

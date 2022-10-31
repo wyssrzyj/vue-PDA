@@ -136,6 +136,15 @@
 				}
 			})
 		},
+		onBackPress(options){
+			if (options.from === 'navigateBack') {
+					return false;
+			}
+			uni.redirectTo({
+				url: `/pages/outsourcingReceipt/orderList`
+			})
+			return true;
+		},
 		onLoad(option){ //初始化获取外协单号和外协id
 			this.assistId=option.assistId
 			this.assistNO=option.assistNO
@@ -208,6 +217,7 @@
 			},
 			//初始化
 			init(){
+				this.outSourcingList=[]
 				if(this.assistId){
 					this.getInfo(this.assistId)
 				}
@@ -410,7 +420,7 @@
 				const obj={
 					...this.modelData,
 					unit:'件',
-					barCodeList:this.outSourcingList.map((item,index)=>({...item,sort:index+1,unit:'件'}))
+					barCodeList:this.outSourcingList.map((item,index)=>({...item,sort:this.outSourcingList.length-index,unit:'件'}))
 				}
 				// 修改和保存
 				const that=this.assistId?Api.outsourcingAddUpdate:Api.outsourcingAddSave
