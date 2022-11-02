@@ -50,7 +50,7 @@
 				</view>
 				<view class="nav-grid-alllist">
 					<view class="nav-grid-all-list">
-						<view class="name">类型：</view>
+						<view class="name"><text style="color: red">*</text>类型：</view>
 						<view class="code">{{getDictLabel($store.state.dicts,'outsourcing_type',list.billType)}}</view>
 					</view>
 					<view class="nav-grid-all-list">
@@ -104,9 +104,14 @@
 					</u--input>
 					<view class="">{{list.unit}}</view>
 				</u-form-item>
-				<u-form-item label="部位" borderBottom labelWidth="150"  @tap="selectUser" v-if="list.existDetail !== 0">
+				<u-form-item borderBottom labelWidth="150"  @tap="selectUser" v-if="list.existDetail !== 0" :required="true">
 					<!-- <u--input v-model="list.position"  border="none" placeholder="请输入部位" disabled>
 					</u--input> -->
+					<template #label>
+						<div style="display: flex;align-items: center;width: 130rpx;font-size: 30rpx;font-weight: 600;justify-content: flex-end;padding: 10rpx;">
+							<span style="color: red;">*</span>部位
+						</div>
+					</template>
 					<view class="storage-item-right" @tap="selectUser">
 						<view class="info-active" v-if="list.position">
 							<robby-tags :value="checkTagsList" :enable-del="true" @delete="handleDelete"></robby-tags>
@@ -145,7 +150,10 @@
 		<popup type="3" v-if="popValue" @close="popValue=false" @closePort="closePort">
 			<template #content>
 				<view class="popup">
-					<view class="pop-title"><view style="width: 12rpx;height: 32rpx;background-color: #1794D1;margin-right: 6rpx;"></view>选择部位</view>
+					<view class="pop-title">
+						<view style="width: 12rpx;height: 32rpx;background-color: #1794D1;margin-right: 6rpx;">*</view>
+						选择部位
+					</view>
 					<view class="pop-search" style="height: 74rpx;">
 						<!-- <span style="width: 124rpx;font-size: 28rpx;">添加部位</span>
 						<input type="text" v-model="popInputValue" style="border: 1px solid #ccc;margin: 0 18rpx;flex:1;height: 60rpx;"/>
@@ -522,6 +530,7 @@
 
 					.name {
 						width: 84rpx;
+						text-align: right;
 					}
 
 					.code {
