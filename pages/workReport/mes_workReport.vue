@@ -652,7 +652,7 @@
 				}
 				let mesEngineeringManagementDTOS=this.outStorageArr.map(item=>{
 					// return {...item,section:findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
-					return {...item,section:this.section,productName:this.supplierName,engineeringManagementDate:formateDate(),userId:this.userId}
+					return {...item,section:this.section,productName:this.supplierName,engineeringManagementDate:null,userId:this.userId}
 				});
 				Api.productionReporting({
 					mesEngineeringManagementDTOS,
