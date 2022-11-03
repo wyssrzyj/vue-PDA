@@ -386,8 +386,12 @@
 						  this.supplierName = this.checkedList.map(item=>item.name).join(",")
 						}
 					} else {
-						this.checkedList = stateStorage.checkedList
-						this.supplierName = stateStorage.supplierName
+						// 判断工序是否可选
+						let checkedList = stateStorage.checkedList.map(item => item.name)
+						this.coutryList.forEach((item)=>{
+							if(checkedList.includes(item.name) && item.valid === 1) this.checkedList.push({name:item.value,value:item.value})
+						})
+						this.supplierName = this.checkedList.map(item=>item.name).join(",")
 					}
 				}
 				
