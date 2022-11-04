@@ -1,10 +1,18 @@
 {
-    "id": "term-picker",
-    "name": "年-月-日 时间范围控件",
-    "version": "1.0.0",
-    "description": "日期范围选择，颗粒度为年-月-日",
+    "id": "lzc-picker",
+    "displayName": "picker选择框带有搜索功能",
+    "version": "1.0.2",
+    "description": "一个支持搜索功能的picker选择框，解决数据过多时需要滑动很长时间的问题",
     "keywords": [
-        "年月日",
-        "日期范围"
-    ]
+        "picker",
+        "select",
+        "搜索",
+        "选择"
+    ],
+    "dcloudext": {
+        "category": [
+            "前端组件",
+            "通用组件"
+        ]
+    }
 }

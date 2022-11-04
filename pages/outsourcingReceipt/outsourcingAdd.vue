@@ -20,12 +20,13 @@
 						<text class="iconfont icon-youjiantou"></text>
 					</view>
 				</hpy-form-select> -->
-				<view class="storage-item-right" style="display: flex;" @tap="show=true">
+				<view class="storage-item-right" style="display: flex;" @tap="handleTap">
 					<text class="info-active" v-if="modelData.customerName">{{modelData.customerName}}</text>
 					<text class="info" v-else>{{'请选择工厂'}}</text>
 					<text class="iconfont icon-youjiantou"></text>
 				</view>
 			</view>
+			<j-picker ref="jpicker" :options="sectionList1" showKey="name" valKey="id" :val="modelData.customerName" position="middle" @sure="sectionSelectClick1" sureColor="#3c9cff"></j-picker>
 			<view class="storage-item">
 				<text class="storage-item-left"><text style="color:red">*</text>期望交期</text>
 				<view class="storage-item-right" @tap="openDatetimePicker">
@@ -108,7 +109,7 @@
 			</template>
 		</popup>
 		<scan-code></scan-code>
-		<u-picker v-if="show" :show="show" :columns="[[...sectionList1]]" @confirm="sectionSelectClick1" keyName="name" :itemHeight="100" @cancel="show=false"></u-picker>
+		<!-- <u-picker v-if="show" :show="show" :columns="[[...sectionList1]]" @confirm="sectionSelectClick1" keyName="name" :itemHeight="100" @cancel="show=false"></u-picker> -->
 		<u-picker v-if="show1" :show="show1" :columns="[[...sectionList]]" @confirm="sectionSelectClick" keyName="dictLabel" :itemHeight="100" @cancel="show1=false"></u-picker>
 	</view>
 </template>
@@ -116,6 +117,7 @@
 	import Api from "../../service/api.js"
 	import { useDebounce,getDictDataList,formateDateHour,getDictLabel,toasting } from '../../utils/index.js'
 	import scanCode from "../../components/scan/scan.vue"
+	import JPicker from "../../components/J-Picker/jPicker.vue"
 	import popup from "../../components/mulSelectionSearch/ge-popup.vue";
 	import robbyTags from '@/components/robby-tags/robby-tags.vue'
 	import SimpleDateTimePicker from "uni_modules/buuug7-simple-datetime-picker/components/buuug7-simple-datetime-picker/buuug7-simple-datetime-picker.vue";
@@ -124,7 +126,8 @@
 			scanCode, //pda扫描
 			SimpleDateTimePicker,//日期选择器
 			popup, //部位弹出框
-			robbyTags //标签
+			robbyTags,//标签
+			JPicker
 		},
 		onShow() {
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
@@ -186,9 +189,11 @@
 				tagList:[], //弹出框部位列表
 				tableVisible:true, //是否显示详情
 				checkTagsList:[], //选中的部位数组
-				show:false,  //显示工厂隐藏
+				// show:false,  //显示工厂隐藏
 				show1:false, //显示外协类型选择框
-				bedNumList:[] //床号数组
+				bedNumList:[], //床号数组
+				selectValue:"",
+				selectList:[],
 			}
 		},
 		mounted(){
@@ -203,6 +208,12 @@
 			this.handleOutSourcing = useDebounce(this.handleOutSourcing); //防抖
 		},
 		methods:{
+			sureComfirm(val){
+				console.log(val)
+			},
+			handleTap(){
+				this.$refs.jpicker.showPicker()
+			},
 			//删除部位
 			handleDelete(currentTag,allTags){
 				this.modelData.position=this.checkTagsList.map(i=>i.partsName).join(',')
@@ -246,11 +257,10 @@
 				this.show1=false
 			},
 			//选中外协工厂
-			sectionSelectClick1(e){
-				const {value}=e
-				this.modelData.customerName=value[0].name
-				this.modelData.customerId=value[0].id
-				this.show=false
+			sectionSelectClick1(obj){
+				this.modelData.customerName=obj.name
+				this.modelData.customerId=obj.id
+				// this.show=false
 			},
 			// 打开picker
 			openDatetimePicker() {
