@@ -763,19 +763,19 @@
 			
 			}
 			.storageItem {
-				height: 214rpx;
+				// height: 214rpx;
 				width: 100%;
 				display: flex;
 				margin: 10rpx 0;
-				padding: 0 30rpx ;
+				padding: 20rpx 30rpx;
 				background-color: #FFFFFF;
-				overflow: hidden;
+				// overflow: hidden;
 				.serialNumber{
 					font-size: 36rpx;
 					font-weight: bold;
 					color: #333333;
-					line-height: 214rpx;
-					margin-right: 30rpx;
+					margin: auto;
+					padding-right: 30rpx;
 				}
 				.storageInfo{
 					font-size: 34rpx;
@@ -789,7 +789,7 @@
 						display: flex;
 						justify-content: space-between;
 						.number{
-							width: 320rpx;
+							// width: 320rpx;
 							text:first-child{
 								font-weight: bold;
 							}
@@ -798,7 +798,7 @@
 							}
 						}
 						.count{
-							width: 360rpx;
+							// width: 360rpx;
 							display: flex;
 							text:first-child{
 								font-weight: bold;
