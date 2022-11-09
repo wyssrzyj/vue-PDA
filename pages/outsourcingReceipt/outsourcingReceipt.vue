@@ -4,7 +4,7 @@
 			<view class="storage-item">
 				<text class="storage-item-left">请扫包条码</text>
 				<view class="storage-item-right">
-					<text class="info" v-if="modelData.assistId" @tap="goToDelievery">历史记录</text>
+					<text class="info" v-if="modelData.assistId&&modelData.billNo&&modelData.existDetail" @tap="goToDelievery">历史记录</text>
 					<text class="info" style="color: #ccc;" v-else>历史记录</text>
 				</view>
 			</view>
@@ -248,6 +248,7 @@
 			//跳转至收获列表页面
 			goToDelievery(){
 				const {assistId,billNo,existDetail}=this.modelData
+				console.log(assistId,billNo,existDetail)
 				uni.redirectTo({
 					url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}`
 				})
