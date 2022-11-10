@@ -55,13 +55,13 @@
 				</view>
 			</view>
 		</view>
-		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:messpreadcloth:blanketDataCollect')">
+		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:assist:page')||checkPermission($store.state.permissions,'mes:assist:save')">
 			<view class="text">
 				外协收货
 			</view>
 			<view class="factoryAccess blanket" >
 				<view v-for="(item, index) in outsourcingDataList" :key="index" @tap="toList(item)" >
-					<view class="factoryAccessItem" >
+					<view class="factoryAccessItem" v-if="checkPermission($store.state.permissions,item.permissions)">
 						<image :src="item.src" class="image"></image>
 						<text class="titleItem">{{ item.title }}</text>
 					</view>
