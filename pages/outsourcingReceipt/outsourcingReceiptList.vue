@@ -127,7 +127,8 @@
 				a:0,
 				productionId:'',
 				existDetail:null,
-				page:1
+				page:1,
+				receiptFlag:false
 			}
 		},
 		onBackPress(options){
@@ -135,20 +136,24 @@
 				return false;
 			}
 			// 这里使用重定向比较好，不信可以自己多试几种，其余跳转方法在文章底部哦
-			uni.redirectTo({
-				url: '/pages/outsourcingReceipt/orderList'
-			})
-			return true;
+			if(!this.receiptFlag){
+				uni.redirectTo({
+					url: '/pages/outsourcingReceipt/orderList'
+				})
+				return true;
+			}
 		},
 		onLoad(option) {
 			const {
 				productionId,
 				id,
-				existDetail
+				existDetail,
+				receiptFlag
 			} = option
 			this.id = id
 			this.productionId = productionId
 			this.existDetail = existDetail
+			this.receiptFlag=receiptFlag
 			this.getHeaderData(id)
 			this.getListData(productionId, existDetail)
 		},
@@ -291,7 +296,6 @@
 			},
 			// 编辑
 			changelist(item) {
-				console.log(item)
 				if(item.receiveStatus===0){
 					uni.redirectTo({
 						url: `./outsourcingReceipt?receiveId=${item.id}`

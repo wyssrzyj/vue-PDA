@@ -208,9 +208,9 @@
 			this.handleOutSourcing = useDebounce(this.handleOutSourcing); //防抖
 		},
 		methods:{
-			sureComfirm(val){
-				console.log(val)
-			},
+			// sureComfirm(val){
+			// 	console.log(val)
+			// },
 			handleTap(){
 				this.$refs.jpicker.showPicker()
 			},

@@ -248,9 +248,8 @@
 			//跳转至收获列表页面
 			goToDelievery(){
 				const {assistId,billNo,existDetail}=this.modelData
-				console.log(assistId,billNo,existDetail)
-				uni.redirectTo({
-					url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}`
+				uni.navigateTo({
+					url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}&receiptFlag=${true}`
 				})
 			},
 			getDictLabel,
@@ -296,7 +295,7 @@
 				Api.outsourcingTakeDelieveryGetInfo({
 					receiveId:this.receiveId
 				}).then(res=>{
-					console.log(res)
+					// console.log(res)
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
