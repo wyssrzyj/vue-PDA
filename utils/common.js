@@ -76,3 +76,16 @@ export const outsourcingDataList = [
 // 		link: '/pages/qualityTesting/mes-repairList'
 // 	}
 // ]
+
+export const ManualReportingList = [
+	{
+		title: '颜色尺码报工',
+		src: '../../static/workReport/workReport.png',
+		link: '/pages/ManualReporting/ManualReporting?type=1'
+	},
+	{
+		title: '数量报工',
+		src: '../../static/outwardProcessing/outSourcingReceipt.png',
+		link: '/pages/ManualReporting/ManualReporting?type=0'
+	}
+]

@@ -90,7 +90,6 @@ export default {
 					username: username,
 					password: password,
 				}).then(res => {
-					// console.log(res)
 					if (res.code === 0) {
 						toasting('登录成功')
 						uni.removeStorageSync('token')
@@ -115,9 +114,9 @@ export default {
 						// uni.switchTab({
 						// 	url:'/pages/cutWarehouse/cutWarehouse'
 						// })
-					}else{
-						toasting('账号或密码错误')
 					}
+				}).catch(res=>{
+					console.log(res)
 				})
 			} catch (error) {
 				console.log(error)

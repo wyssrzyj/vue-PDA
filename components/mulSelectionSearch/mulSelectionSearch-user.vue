@@ -127,7 +127,6 @@
 					this.debuglog('this.searchKey')
 					this.debuglog('this.defaultVal.picker.pickerList')
 					for(let i=0;i<=this.defaultVal.picker.pickerList.length-1;i++){
-						debugger
 						let searchVal=this.defaultVal.picker.pickerList[i].realName.toString()
 						if(searchVal.indexOf(this.searchKey)!=-1){
 							this.pickerList.push(this.defaultVal.picker.pickerList[i])

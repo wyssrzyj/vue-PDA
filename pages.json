@@ -141,6 +141,13 @@
 					"titleNView":false
 				}
 			} 
+		},
+		{
+		    "path" : "pages/ManualReporting/ManualReporting",
+			"style": {
+				"navigationBarTitleText": "手动报工",
+				"backgroundColor": "#FFFFFF"
+			}
 		}
 	],
 	"globalStyle": {
