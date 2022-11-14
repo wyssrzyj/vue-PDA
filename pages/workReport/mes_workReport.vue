@@ -30,7 +30,6 @@
 					</view>
 				</view>
 			</view>
-			<u-picker :show="show" :visibleItemCount="4" :itemHeight="92" :columns="columns" @confirm="handleConfirm" @cancel="handleCancel"></u-picker>
 		</view>
 		<view class="pannelContent">
 			<view class="storageItem" v-for="(item,index) in outStorageArr" :key="index" :class="index == 0?'selectStorage':''">
@@ -73,11 +72,11 @@
 			<view class="errorImage"></view>
 			<view style="margin-left: 30rpx;">{{ showErrorMessage }}</view>
 		</view>
-		<select-code-multiple :visible="showM" :checkedValue="checkedList" :optionList="coutryList"@confirm="getCodeMu"></select-code-multiple>
+		<select-code-multiple :visible="showM" :checkedValue="checkedList" :optionList="coutryList" @confirm="getCodeMu"></select-code-multiple>
 		<u-action-sheet :actions="sectionList" :show="showSection" @select="sectionSelectClick" :closeOnClickOverlay="true" :closeOnClickAction="true" @close="showSection=false"></u-action-sheet>
 		<scan-code></scan-code>
 		<!-- 选择用户 -->
-		<mpv ref="mpv" v-model='realName' :list="userList" @selectSure="selectSure" />
+		<searchSelect ref="userSearchSelect" :options="userList" valKey="id" :showKey="'showKey'" @sure="userSelectSure" />
 	</view>
 </template>
 
@@ -87,7 +86,7 @@
 	import scanCode from "@/components/scan/scan.vue"
 	import selectCodeMultiple from '@/components/mulSelection/mulSelection.vue'
 	import {KEY_MAP} from "../../constant/index.js"
-	import mpv from "@/components/mulSelectionSearch/mulSelectionSearch-user.vue"
+	import searchSelect from "@/components/J-Picker/jPicker.vue"
 	// const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
 	var timer;
 	var preKeyCode = '';
@@ -96,7 +95,7 @@
 		components: {
 			selectCodeMultiple,
 			scanCode,
-			mpv
+			searchSelect
 		},
 		// onLoad() {
 		// 	this.setOnKeyEventListener();
@@ -116,7 +115,7 @@
 			Api.getAlluser().then(res => {
 				if(res.code=="0"){
 					this.userList = res.data.map(item => {
-						return {id: item.id, staffId: item.staffId, realName: item.realName}
+						return {id: item.id,showKey:`${item.realName}-${item.staffId}`}
 					})
 				}
 			})
@@ -135,13 +134,10 @@
 				showSuccessMessage: '',
 				showErrorMessage: '',
 				productNum: '',
-				supplierName:'',
 				supplierId:'',
 				outStorageArr: [],
 				PCSData:[],
 				selectIndex: 0,
-				columns:[],
-				show:false,
 				userId:null,//用户id
 				realName:'', //前端用户名称
 				userList:[], //用户列表
@@ -154,7 +150,7 @@
 				sectionList: [],//工段列表
 				sectionAndCoutry: {},//工段工序组合数据
 				//选中的值
-				checkedList: [],
+				checkedList: [], //选中的工序列表
 				workshopObj:{},
 				// 更多组件
 				showMore:false,
@@ -230,26 +226,8 @@
 			//获取多选的值
 			getCodeMu(event) {
 				this.checkedList=[]
-				event.forEach(item=>{
-					this.checkedList.push({name:item.value,value:item.value})
-				})
-				this.supplierName=this.checkedList.map(item=>item.name).join(",")
+				this.checkedList = event
 				this.showM = false
-			},
-			async handleConfirm(e){	//报工工段确认
-				if(this.productNum!==e.value[0]){
-					this.supplierName=""
-					this.checkedList=[]
-				}
-				this.productNum=e.value[0]
-				const res=await Api.productionReportingGetProcess({ //获取工序
-					productId:this.productId,
-					section:findKey(this.workshopObj,this.productNum)
-				})
-				this.coutryList=res.data.map(item=>{
-					return {value:item.productName,name:item.productName}
-				})
-				this.show=false
 			},
 			handleCancel(){		//报工工段取消
 				this.show=false
@@ -271,21 +249,21 @@
 			//选择不同的工段
 			sectionSelectClick(e){
 				this.section = e.name
-				this.supplierName = ''
 				this.checkedList = []
 				this.coutryList = []
 				this.sectionAndCoutry[e.name].forEach(item => {
-					this.coutryList.push({name: item, value: item, valid: 1})
+					this.coutryList.push({name: item.productName, value: item.productName, valid: 1, ...item})
 				})
 			},
 			// 选择用户弹窗
 			selectUser(){
 				if(!this.canSelectUser) return
-				this.$refs.mpv.toggle('bottom')
+				this.$refs.userSearchSelect.showPicker()
 			},
-			// 选择了某个值
-			selectSure(val){
+			// 选择了某个用户
+			userSelectSure(val){
 				this.userId = val.id
+				this.realName = val.showKey
 			},
 			handleInput(e,item){
 				if(Number(e.target.value)<=Number(item.limitCount)&&e.target.value){
@@ -332,8 +310,8 @@
 				
 				// 扎包报工工序
 				if (res.data.pcsType==0) {
-					this.sectionAndCoutry = res.data.sectionsAndProcessList || {}
-					this.sectionList = Object.keys(res.data.sectionsAndProcessList).map(item => {
+					this.sectionAndCoutry = res.data.sectionsAndProcess || {}
+					this.sectionList = Object.keys(res.data.sectionsAndProcess).map(item => {
 						return {name: item}
 					})
 				// 组码报工工序
@@ -381,17 +359,15 @@
 						  // 判断工序是否删除,只把没被删除的工序缓存取出来
 						  let coutryList = this.coutryList.map(item => item.name)
 						  stateStorage.checkedList.forEach(item => {
-							if (coutryList.includes(item.value)) this.checkedList.push({name:item.value,value:item.value})
+							if (coutryList.includes(item.name)) this.checkedList.push(item)
 						  })
-						  this.supplierName = this.checkedList.map(item=>item.name).join(",")
 						}
 					} else {
 						// 判断工序是否可选
 						let checkedList = stateStorage.checkedList.map(item => item.name)
 						this.coutryList.forEach((item)=>{
-							if(checkedList.includes(item.name) && item.valid === 1) this.checkedList.push({name:item.value,value:item.value})
+							if(checkedList.includes(item.name) && item.valid === 1) this.checkedList.push(item)
 						})
-						this.supplierName = this.checkedList.map(item=>item.name).join(",")
 					}
 				}
 				
@@ -603,13 +579,11 @@
 					this.outStorageArr = []
 					this.coutryList=[]
 					this.productNum = ''
-					this.supplierName=""
 					this.checkedList=[]
 					this.section=''
 					this.sectionAndCoutry={}
 					this.sectionList=[]
 					this.canSelectSection=false
-					this.columns=[]
 					this.realName = ''
 					this.userId = null
 					this.canSelectUser = false
@@ -626,7 +600,7 @@
 					}, 2000)
 					return;
 				}
-				if(!this.supplierName){ //工序必填
+				if(this.checkedList.length === 0){ //工序必填
 					this.showErrorMessage = '请选择报工工序'
 					this.showErrorPop = true
 					let timer = setTimeout(() => {
@@ -656,7 +630,7 @@
 				}
 				let mesEngineeringManagementDTOS=this.outStorageArr.map(item=>{
 					// return {...item,section:findKey(this.workshopObj,this.productNum),productName:this.supplierName,engineeringManagementDate:formateDate()}
-					return {...item,section:this.section,productName:this.supplierName,engineeringManagementDate:null,userId:this.userId}
+					return {...item,section:this.section,processVoList:this.checkedList,engineeringManagementDate:null,userId:this.userId}
 				});
 				Api.productionReporting({
 					mesEngineeringManagementDTOS,
@@ -669,16 +643,13 @@
 							canSelectSection: this.canSelectSection,
 							userId: this.userId,
 							section: this.section,
-							checkedList: this.checkedList,
-							supplierName: this.supplierName
+							checkedList: this.checkedList
 						})
 						
 						this.outStorageArr=[]
 						this.productNum = ''
-						this.supplierName=""
 						this.checkedList=[]
 						this.coutryList=[]
-						this.columns=[]
 						this.section = ''
 						this.sectionAndCoutry= {}
 						this.sectionList = []

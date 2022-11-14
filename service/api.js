@@ -268,6 +268,10 @@ const Api = {
 	scanCodeGoodsAllDetail(reqData){
 		return requestApi(`${API_ADDRESS}/mes/assist/scanCodeGoodsAllDetail`, 'GET', reqData)
 	},
+	// 获取所有生产单
+	allProduce(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesproduceorder/listWithProNum`, 'GET', reqData)
+	},
 }
 
 export default Api
