@@ -93,7 +93,8 @@
 		overflow-y: auto;
 	}
 	.tagItem{
-		padding: 10rpx 20rpx;
+		padding: 4rpx 8rpx;
+		border-radius: 4rpx;
 		margin: 10upx;
 		min-height: 52rpx;
 		line-height: 52rpx;
@@ -107,7 +108,8 @@
 		white-space: nowrap;
 	}
 	.tagItemActive{
-		padding: 10upx 20upx;
+		padding: 4rpx 8rpx;
+		border-radius: 4rpx;
 		margin: 10upx;
 		min-height: 52rpx;
 		line-height: 52rpx;
@@ -115,7 +117,7 @@
 		border: 1px solid #1794D1;
 		background-color: #E3F5FE !important;
 		color: #1794D1 !important;
-		min-width:150rpx;
+		min-width:100rpx;
 		max-width: 400rpx;
 		overflow: hidden;
 		text-overflow: ellipsis;

@@ -3,23 +3,14 @@
 		<view class="storage">
 			<view class="storage-item">
 				<text class="storage-item-left"><text style="color:red">*</text>外协类型</text>
-				<!-- <hpy-form-select :dataList="sectionList" text="dictLabel" name="dictValue" v-model="modelData.billType" @change="sectionSelectClick" islot="true"> -->
 					<view class="storage-item-right" @tap="show1=true">
 						<text class="info-active" v-if="modelData.billName">{{modelData.billName}}</text>
 						<text class="info" v-else>{{'请选择类型'}}</text>
 						<text class="iconfont icon-youjiantou"></text>
 					</view>
-				<!-- </hpy-form-select> -->
 			</view>
 			<view class="storage-item">
 				<text class="storage-item-left"><text style="color:red">*</text>外协工厂</text>
-				<!-- <hpy-form-select :dataList="sectionList1" text="name" name="id" v-model="modelData.customerName" @change="sectionSelectClick1" islot="true">
-					<view class="storage-item-right" style="display: flex;">
-						<text class="info-active" v-if="modelData.customerName">{{modelData.customerName}}</text>
-						<text class="info" v-else>{{'请选择工厂'}}</text>
-						<text class="iconfont icon-youjiantou"></text>
-					</view>
-				</hpy-form-select> -->
 				<view class="storage-item-right" style="display: flex;" @tap="handleTap">
 					<text class="info-active" v-if="modelData.customerName">{{modelData.customerName}}</text>
 					<text class="info" v-else>{{'请选择工厂'}}</text>
@@ -67,7 +58,7 @@
 			<table class="cart-table" v-if="tableVisible&&outSourcingList.length>0">
 			  <thead>
 				<tr>
-				  <th class="cart-table-th" v-for="(tdItem,ind) in Object.keys(cartList[0])" v-if="tdItem!=='total'">{{cartList[0][tdItem]}}</th>
+				  <th style="min-width: 160rpx;" class="cart-table-th" v-for="(tdItem,ind) in Object.keys(cartList[0])" v-if="tdItem!=='total'">{{cartList[0][tdItem]}}</th>
 				  <th class="cart-table-th">小计</th>
 				</tr>
 			  </thead>
@@ -109,7 +100,6 @@
 			</template>
 		</popup>
 		<scan-code></scan-code>
-		<!-- <u-picker v-if="show" :show="show" :columns="[[...sectionList1]]" @confirm="sectionSelectClick1" keyName="name" :itemHeight="100" @cancel="show=false"></u-picker> -->
 		<u-picker v-if="show1" :show="show1" :columns="[[...sectionList]]" @confirm="sectionSelectClick" keyName="dictLabel" :itemHeight="100" @cancel="show1=false"></u-picker>
 	</view>
 </template>
@@ -143,10 +133,12 @@
 			if (options.from === 'navigateBack') {
 					return false;
 			}
-			uni.redirectTo({
-				url: `/pages/outsourcingReceipt/orderList`
-			})
-			return true;
+			if(this.assistId){
+				uni.redirectTo({
+					url: `/pages/outsourcingReceipt/orderList`
+				})
+				return true;
+			}
 		},
 		onLoad(option){ //初始化获取外协单号和外协id
 			this.assistId=option.assistId
@@ -189,7 +181,6 @@
 				tagList:[], //弹出框部位列表
 				tableVisible:true, //是否显示详情
 				checkTagsList:[], //选中的部位数组
-				// show:false,  //显示工厂隐藏
 				show1:false, //显示外协类型选择框
 				bedNumList:[], //床号数组
 				selectValue:"",
@@ -208,9 +199,6 @@
 			this.handleOutSourcing = useDebounce(this.handleOutSourcing); //防抖
 		},
 		methods:{
-			// sureComfirm(val){
-			// 	console.log(val)
-			// },
 			handleTap(){
 				this.$refs.jpicker.showPicker()
 			},
@@ -260,7 +248,6 @@
 			sectionSelectClick1(obj){
 				this.modelData.customerName=obj.name
 				this.modelData.customerId=obj.id
-				// this.show=false
 			},
 			// 打开picker
 			openDatetimePicker() {

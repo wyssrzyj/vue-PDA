@@ -20,13 +20,13 @@
 		</view>
 		<view class="storage">
 			<view class="storage-item">
-				<text class="storage-item-left">类&emsp;&emsp;型</text>
+				<text class="storage-item-left">类型</text>
 				<view class="storage-item-right">
 					<text class="info-active">{{modelData.billName}}</text>
 				</view>
 			</view>
 			<view class="storage-item">
-				<text class="storage-item-left">部&emsp;&emsp;位</text>
+				<text class="storage-item-left">部位</text>
 				<view class="storage-item-right" @tap="selectUser">
 					<view class="info-active" v-if="modelData.position">
 						<robby-tags :value="checkTagsList" :enable-del="true" @delete="handleDelete"></robby-tags>
@@ -36,7 +36,7 @@
 				</view>
 			</view>
 			<view class="storage-item">
-				<text class="storage-item-left">全部完成</text>
+				<text class="storage-item-left">完成</text>
 				<view class="storage-item-right">
 					<evan-switch v-model="modelData.completeFlag" :active-value="1" :inactive-value="0" inactive-color="#C5C5C5" :size="20"></evan-switch>
 				</view>
@@ -46,7 +46,7 @@
 			<table class="cart-table" v-if="cartList.length>1">
 			  <thead>
 				<tr>
-				  <th class="cart-table-th" v-for="(tdItem,ind) in Object.keys(cartList[0])" v-if="tdItem!=='total'">{{cartList[0][tdItem]}}</th>
+				  <th style="min-width: 160rpx;" class="cart-table-th" v-for="(tdItem,ind) in Object.keys(cartList[0])" v-if="tdItem!=='total'">{{cartList[0][tdItem]}}</th>
 				  <th class="cart-table-th">小计</th>
 				</tr>
 			  </thead>
@@ -92,9 +92,9 @@
 									<image
 										:src="item.productionInfo?getimage(item.productionInfo):'../../static/qualityTesting/default.png'"
 										class="image" @click="bigimage(item)"></image>
-										<view style="font-size: 28rpx;color: #85da29;" v-if="item.billState===0">外发中</view>
-										<view style="font-size: 28rpx;color: #59b7ff;" v-else-if="item.billState===1">部分收货</view>
-										<view style="font-size: 28rpx;color: #e02020;" v-else-if="item.billState===2">已完成</view>
+										<view style="font-size: 28rpx;color: #85da29;text-align: center;" v-if="item.billState===0">外发中</view>
+										<view style="font-size: 28rpx;color: #59b7ff;text-align: center;" v-else-if="item.billState===1">部分收货</view>
+										<view style="font-size: 28rpx;color: #e02020;text-align: center;" v-else-if="item.billState===2">已完成</view>
 								</view>
 								<view class="header-title">
 									<view class="title">
@@ -180,15 +180,16 @@
 			if (options.from === 'navigateBack') {
 					return false;
 			}
-			const {assistId,billNo,existDetail}=this.modelData
-			if(billNo!=undefined&&existDetail!=undefined){
+			// const {assistId,billNo,existDetail}=this.modelData
+			// if(!this.receiveId){
+			// 	uni.redirectTo({
+			// 		url: `/pages/outsourcingReceipt/orderList`
+			// 	})
+			// 	return true;
+			// }else
+			if(this.receiveId){
 				uni.redirectTo({
-					url: `/pages/outsourcingReceipt/outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}`
-				})
-				return true;
-			}else{
-				uni.redirectTo({
-					url: `/pages/outsourcingReceipt/orderList`
+					url: `/pages/outsourcingReceipt/outsourcingReceiptList`
 				})
 				return true;
 			}
@@ -223,10 +224,10 @@
 				popInputValue:"", //部位输入框
 				tagList:[], //tags列表
 				receiveId:"" ,//收货单id,
-				delieveryList:[],
-				isAll:1,
-				barCode:"",
-				checkTagsList:[],
+				delieveryList:[], //带出所有的外协单
+				isAll:1, //是否完成
+				barCode:"",  //二维码信息
+				checkTagsList:[], //选中的部位
 				position:"" //当前外协单的部位
 			}
 		},
@@ -459,9 +460,9 @@
 			},
 			//打开部位弹窗
 			selectUser(){
-				// if(this.position===''){
-				// 	return toasting('请扫描扎包条码',()=>{},3000)
-				// }
+				if(this.outSourcingList.length===0){
+					return toasting('请扫描扎包条码',()=>{},3000)
+				}
 				const arr=this.checkTagsList.map(i=>i.partsName)
 				this.tagList=this.position.split(',').map(item=>{
 					if(arr.includes(item)){
@@ -528,21 +529,20 @@
 				height: 100%;
 			}
 			.storage-item-left{
-				width: 140rpx;
+				width: 70rpx;
 				display: flex;
-				justify-content: center;
 				align-items: center;
 			}
 			.storage-item-right{
 				align-items: center;
-				max-width: 478rpx;
+				max-width: 600rpx;
 				.info{
-					max-width: 478rpx;
+					max-width: 600rpx;
 					color: #ccc;
 					margin-right: 15rpx;
 				}
 				.info-active{
-					max-width: 478rpx;
+					max-width: 600rpx;
 					color: #000;
 					margin-right: 15rpx;
 				}
@@ -582,8 +582,8 @@
 					display: flex;
 					justify-content: space-between;
 					height: 60rpx;
-					line-height: 48rpx;
-					padding: 6rpx 0rpx;
+					align-items: center;
+					padding: 0rpx 15rpx;
 					font-size: 28rpx;
 					background:#eee;
 					border-bottom: 1px dashed #D8D8D8;
@@ -666,9 +666,9 @@
 				border-bottom: 1px dashed #ccc;
 				.header-image {
 					display: flex;
+					flex-direction: column;
 					flex-wrap: wrap;
 					width: 140rpx;
-					height: 140rpx;
 					justify-content: center;
 
 					.image {
@@ -679,30 +679,32 @@
 				}
 				
 				.header-title {
+					width: 100%;
 					display: flex;
 					flex-wrap: wrap;
 					margin-left: 20rpx;
 
 					.title {
-						height: 45rpx;
 						width: 100%;
+						height: 45rpx;
 						font-size: 30rpx;
 						font-weight: 600;
 					}
 
 					.header-grid-alllist {
 						width: 100%;
-						display: grid;
-						grid-template-columns: repeat(2, 50%);
-
+						display: flex;
+						flex-wrap: wrap;
 
 						.header-grid-all-list {
+							width: 50%;
 							display: flex;
 							margin-top: 3rpx;
 							font-size: 24rpx;
 							align-items: center;
 
 							.name {
+								color: #999;
 								width: 96rpx;
 							}
 

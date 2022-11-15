@@ -11,7 +11,8 @@
 			</view>
 			<view style="width: 1px; height: 50rpx; background-color: #fff;"></view>
 			<view @click="queryReceipt" class="scan-icon">
-				<uni-icons type="scan" size="30" color="#fff"></uni-icons>
+				<!-- <uni-icons type="scan" size="30" color="#fff"></uni-icons> -->
+				<u-icon name="scan" color="#fff" size="70" :bold="true"></u-icon>
 				<text>收货</text>
 			</view>
 		</view>
@@ -21,7 +22,8 @@
 					<view class="header-image">
 						<image
 							:src="item.productionInfo?getimage(item.productionInfo):'../../static/qualityTesting/default.png'"
-							class="image" @click="bigimage(item)"></image>
+							class="image" @click="bigimage(item)">
+						</image>
 						<view :class="billStateColor(item.billState)" style="font-size: 32rpx;">
 							{{getbillState(item.billState)}}
 						</view>
@@ -108,7 +110,7 @@
 					<uni-table border emptyText="暂无更多数据">
 						<!-- 表头行 -->
 						<uni-tr>
-							<uni-th align="center" width="100px">颜色＼尺码</uni-th>
+							<uni-th align="center" width="100px">颜色\尺码</uni-th>
 							<uni-th align="center" v-for="(item, index) in processData" :key="index">{{item.size}}
 							</uni-th>
 							<uni-th align="center">小计</uni-th>
@@ -191,7 +193,7 @@
 				this.getData(this.key, 1)
 			},
 			queryReceipt(){
-				uni.redirectTo({
+				uni.navigateTo({
 					url:'/pages/outsourcingReceipt/outsourcingReceipt'
 				})
 			},
@@ -372,14 +374,12 @@
 			background-color: #0c99f2;
 			color: white;
 			align-items: center;
-			justify-content: space-evenly;
+			justify-content: space-between;
 			font-size: 34rpx;
 			padding: 20rpx;
-			margin-top: 1rpx;
 
 			.list-header-input {
 				width: 428rpx;
-				// height: 80%;
 				border-radius: 10rpx;
 				background-color: white;
 			}
@@ -397,17 +397,16 @@
 
 		.list-list {
 			.header {
-				width: 100%;
+				width: 750rpx;
 				padding: 20rpx;
 				display: flex;
 				background-color: white;
 
 				.header-image {
-					display: flex;
-					flex-wrap: wrap;
 					width: 160rpx;
-					height: 160rpx;
-					justify-content: center;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
 
 					.image {
 						margin-bottom: 5rpx;
@@ -417,6 +416,7 @@
 				}
 
 				.header-title {
+					width: 570rpx;
 					display: flex;
 					flex-wrap: wrap;
 					margin-left: 20rpx;
@@ -431,17 +431,19 @@
 
 					.header-grid-alllist {
 						width: 100%;
-						display: grid;
-						grid-template-columns: repeat(2, 50%);
-
+						display: flex;
+						flex-wrap: wrap;
 
 						.header-grid-all-list {
+							width: 50%;
 							display: flex;
+							flex-direction: row;
 							margin-top: 3rpx;
 							font-size: 24rpx;
 							align-items: center;
 
 							.name {
+								color: #999;
 								width: 72rpx;
 							}
 

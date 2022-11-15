@@ -28,7 +28,7 @@
 						<rich-text :nodes="content"></rich-text>
 					</view> -->
 					<slot name="content"></slot>
-					<view class="btn"  @click="closePort">保存</view>
+					<view class="btn"  @click="closePort">确定</view>
 				</view>
 				<view class="close" @click="close"><icon type="clear" size="30"/></view>
 			</view>

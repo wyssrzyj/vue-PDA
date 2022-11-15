@@ -53,6 +53,13 @@ export default {
 		'new-select-version':newSelectVersion
 	},
 	onLoad() {
+		// uni.getSystemInfo({
+		// 	success: (res) => {
+		// 		// uni.setStorageSync('screenWidth',res.screenWidth)
+		// 		// uni.setStorageSync('screenHeight',res.screenHeight)
+		// 		console.log(res)
+		// 	}
+		// })
 		if(uni.getStorageSync('username')) this.username = uni.getStorageSync('username')
 		if(uni.getStorageSync('password')) this.password = uni.getStorageSync('password')
 	},

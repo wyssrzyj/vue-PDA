@@ -28,12 +28,18 @@ export default {
             main = plus.android.runtimeMainActivity();//获取activity 
             var IntentFilter = plus.android.importClass('android.content.IntentFilter');   
             filter = new IntentFilter();
-            filter.addAction("com.scanner.broadcast"); // 换你的广播动作  
+            filter.addAction("com.barcode.sendBroadcast"); // 换你的广播动作(大PDA广播地址) 
+			filter.addAction("com.scanner.broadcast"); // 换你的广播动作(小PDA广播地址) 
             receiver = plus.android.implements('io.dcloud.feature.internal.reflect.BroadcastReceiver',{
             onReceive : function(context, intent) {
-                plus.android.importClass(intent);     
-                let code = intent.getStringExtra("data");// 换你的广播标签 
-                _this.queryCode(code);    
+                plus.android.importClass(intent);  
+				let code;
+				if(intent.getStringExtra("BARCODE")){
+					code = intent.getStringExtra("BARCODE");// 换你的广播标签(大的PDA)
+				}else{
+					code = intent.getStringExtra("data");// 换你的广播标签 (小的PDA)
+				}
+                _this.queryCode(code);
             }});    
         },    
         startScan(){    

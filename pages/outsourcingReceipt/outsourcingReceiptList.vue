@@ -38,7 +38,7 @@
 				<uni-table border emptyText="暂无更多数据">
 					<!-- 表头行 -->
 					<uni-tr>
-						<uni-th align="center" width="100px">颜色＼尺码</uni-th>
+						<uni-th align="center">颜色\尺码</uni-th>
 						<uni-th align="center" v-for="(item, index) in processData" :key="index">{{item.size}}
 						</uni-th>
 						<uni-th align="center">小计</uni-th>
@@ -61,7 +61,8 @@
 						{{datechange(item.createDate||'')}}
 					</view>
 					<view class="change" @click="changelist(item)">
-						<u-icon name="share-square" size="20px"></u-icon>
+						<!-- <u-icon name="edit-pen" size="20px"></u-icon> -->
+						<uni-icons type="compose" size="20" style="color: #aaa;"></uni-icons>
 					</view>
 				</view>
 				<view class="nav-grid-alllist">
@@ -86,7 +87,7 @@
 			<view class="nav-table" v-if="item.detailMap!=null">
 				<uni-table border emptyText="暂无更多数据" v-if="item.processData.length>0">
 					<uni-tr>
-						<uni-th align="center" width="100px">颜色＼尺码</uni-th>
+						<uni-th align="center" width="100px">颜色\尺码</uni-th>
 						<uni-th align="center" v-for="(i, index) in item.processData" :key="index">{{i.size}}
 						</uni-th>
 						<uni-th align="center">小计</uni-th>
@@ -338,15 +339,17 @@
 
 			.nav-grid-alllist {
 				width: 100%;
-				display: grid;
-				grid-template-columns: repeat(2, 50%);
+				display: flex;
+				flex-wrap: wrap;
 
 				.nav-grid-all-list {
+					width: 50%;
 					display: flex;
 					margin-top: 6rpx;
 					align-items: center;
 
 					.name {
+						color: #999;
 						width: 75rpx;
 					}
 
