@@ -50,23 +50,27 @@
 		</view>
 		
 		<view class="main-info" v-else>
-			<view style="width: 100%;overflow-x: scroll;" v-if="skuList[0]">
+			<view style="width: 100%;overflow-x: scroll;position: relative;" v-if="skuList[0]">
 				<table class="cart-table">
 				  <thead>
 					<tr>
-						<th class="cart-table-th" style="position: fixed;width: 220rpx;">颜色 / 尺码</th>
+						<!-- <th class="cart-table-th" style="position: fixed;width: 220rpx;z-index: 1;">颜色 / 尺码</th> -->
+						<th class="cart-table-th">颜色 / 尺码</th>
 						<!-- 占位 -->
-						<td class="cart-table-th" style="width: 220rpx;" />
+						<!-- <td class="cart-table-th" style="width: 220rpx;" /> -->
 						<th class="cart-table-th" v-for="(item,index) in Object.keys(skuList[0].size)" :key="index">{{item}}</th>
 					</tr>
 				  </thead>
 				  <tbody>
 					<tr v-for="(item,index) in skuList" :key="index">
-					  <td class="cart-table-td" style="position: fixed;width: 220rpx;">
-						  <view>{{item.colorName}}</view>
+						<!--<td class="cart-table-td" style="position: fixed;width: 220rpx;z-index: 1;">
+						  <view>水电费快速开发商蓝黛科技番窠倒臼漏打卡</view>
+					  </td> -->
+					  <td class="cart-table-td">
+					  		<view>{{item.colorName}}</view>
 					  </td>
 					  <!-- 占位列 -->
-					  <td class="cart-table-td" style="width: 220rpx;" />
+					  <!-- <td class="cart-table-td" style="width: 220rpx;" /> -->
 					  <template v-if="item.size">
 						  <td class="cart-table-td" v-for="(i,indey) in Object.keys(skuList[0].size)" :key="indey">
 							  <input type="text" v-model="item.size[i]" style="border: 1px solid #aaa;width:100%;height: 70rpx;" @input="(e)=>handleInput(e,item,i)">
@@ -82,8 +86,8 @@
 		
 		<!-- 底部 -->
 		<view class="bottomBtns">
-			<button class="bottom-btn" @click="handleSubmit('return')">保存并返回</button>
-			<button class="bottom-btn" @click="handleSubmit('continue')">保存并继续</button>
+			<button class="bottom-btn" :loading="loading" :disabled="loading" @click="handleSubmit('return')">保存并返回</button>
+			<button class="bottom-btn" :loading="loading" :disabled="loading" @click="handleSubmit('continue')">保存并继续</button>
 		</view>
 		
 
@@ -103,11 +107,13 @@
 	import Api from '../../service/api'
 	import selectCodeMultiple from '@/components/mulSelection/mulSelection.vue'
 	import searchSelect from "@/components/J-Picker/jPicker.vue"
+	import WyhTable from "@/uni_modules/wyh-table/components/wyh-table/wyh-table.vue"
 	let message = (msg) => uni.showToast({icon:'none', duration:3000, title: msg})
 	export default{
 		components: {
 			selectCodeMultiple,
-			searchSelect
+			searchSelect,
+			WyhTable
 		},
 		onLoad(option) {
 			this.type = option.type
@@ -124,6 +130,7 @@
 		data(){
 			return{
 				type:null, //报工方式 1颜色尺码报工，0数量报工
+				loading:false,
 				
 				produce:{}, //选择的生产单
 				produceList:[],	//生产单可选列表
@@ -152,7 +159,7 @@
 		},
 		methods:{
 			//获取本地缓存
-			getLocalStorage(){
+			async getLocalStorage(){
 				let stateStorage = uni.getStorageSync('manualReporting') || {}
 				if(Object.keys(stateStorage).length === 0) return
 				//设置员工
@@ -165,11 +172,11 @@
 				})
 				
 				// 判断生产单是否被删除，选择生产单
-				let p = this.produceList.find(item => item.id = stateStorage.produce.id)
+				let p = this.produceList.find(item => item.id === stateStorage.produce.id)
 				//生产单被删除缓存中断
 				if (!p) return
 				// 选择生产单，获取sku和工段
-				this.produceSelectSure({...stateStorage.produce,showKey:`${stateStorage.produce.productOrderNum}(${stateStorage.produce.proNum})`})
+				await this.produceSelectSure({...stateStorage.produce,showKey:`${stateStorage.produce.productOrderNum}(${stateStorage.produce.proNum})`})
 				
 				//判断工段是否删除
 				let sectionList = this.sectionList.map(item => item.name)
@@ -185,7 +192,6 @@
 			
 			// 获取所有生产单列表和人员列表
 			async getProduceListAndUserList(){
-				// 生产单
 				let produceRes = await Api.allProduce()
 				if(produceRes.code === 0){
 					this.produceList = produceRes.data.map(item => {
@@ -216,33 +222,36 @@
 			},
 			//选择了某个生产单
 			async produceSelectSure(val){
+				this.sectionAndCoutry = {}
+				this.section = ''
+				this.sectionList = []
+				this.checkedList = []
+				this.coutryList = []
+				this.skuList = []
 				this.produce = {id:val.id,productOrderNum:val.productOrderNum,proNum:val.proNum,}
 				this.showProduce = val.showKey
 				
 				// 获取颜色尺码数据
-				if(this.type == '1'){
-					let skuRes = await Api.produceSku({id:val.id})
-					if(skuRes.code === 0) {
-						// type=1处理sku
-						// 数据格式：[{colorName:'黑色',size:{S:'',M:'',L:'',XL:'',XXL:''}}]
-						let size = {}
-						skuRes.data.size.forEach(i => {
-							size[i.name] = null
-						})
-						this.skuList = skuRes.data.color.map(item => {
-							return {colorName: item.name, size:{...size}}
-						})
-					} else {
-						message(skuRes.msg)
-					}
+				let skuRes = await Api.produceSku({id:val.id})
+				if(skuRes.code === 0) {
+					// type=1处理sku
+					// 数据格式：[{colorName:'黑色',size:{S:'',M:'',L:'',XL:'',XXL:''}}]
+					let size = {}
+					skuRes.data.size.forEach(i => {
+						size[i.name] = null
+					})
+					this.skuList = skuRes.data.color.map(item => {
+						return {colorName: item.name, size:{...size}}
+					})
+				} else {
+					message(skuRes.msg)
 				}
 				
 				// 获取工段
 				let sectionRes = await Api.produceSection({id:val.id})
 				if(sectionRes.code === 0) {
-					console.log('工段：',sectionRes)
 					this.sectionAndCoutry = sectionRes.data || {}
-					this.sectionList = Object.keys(sectionRes.data).map(item => {
+					this.sectionList = Object.keys(this.sectionAndCoutry).map(item => {
 						return {name: item}
 					})
 				} else {
@@ -344,31 +353,31 @@
 			
 			// 保存
 			handleSubmit(type){
-				//工段必填
+				//生产单
 				if(!this.showProduce){ 
 					return message('请选择生产单!')
 				}
-				//工段必填
+				//工段
 				if(!this.section){ 
 					return message('请选择工段!')
 				}
-				//工序必填
+				//工序
 				if(this.checkedList.length === 0){ 
 					return message('请选择工序!')
 				}
-				//员工必填
+				//员工
 				if(!this.userId){ 
 					return message('请选择报工人员!')
 				}
-				//员工必填
+				//数量
 				if(this.type == '0' && !this.count){ 
 					return message('请输入数量!')
 				}
-				
+				this.loading = true
 				// 传输数据
 				let dataForm = {
 						produceOrderId: this.produce.id,
-						produceOrderNum: this.produce.produceOrderNum,
+						productOrderNum: this.produce.productOrderNum,
 						proNum: this.produce.proNum,
 						section: this.section,
 						processVoList: this.checkedList,
@@ -397,7 +406,10 @@
 						} else if(type === 'continue') {
 							this.getLocalStorage()
 						}
+						this.loading = false
+						message('报工成功！')
 					} else {
+						this.loading = false
 						message(res.msg)
 					}
 				})
@@ -492,8 +504,8 @@
 				margin: 20rpx 0;
 				.cart-table-th{
 					min-width: 220rpx;
-					height: 100rpx;
-					line-height: 90rpx;
+					// height: 100rpx;
+					// line-height: 90rpx;
 					box-sizing: border-box;
 					color: #666666;
 					border: solid 1px #666666;
@@ -501,24 +513,25 @@
 					font-size: 30rpx;
 					text-align: center;
 					background-color: #f1f1f1;
+					padding: 20rpx 0;
 					overflow: scroll;
 				}
 				.cart-table-td{
 					background-color: #ffffff;
-					height: 100rpx;
-					line-height: 80rpx;
+					// height: 100rpx;
+					// line-height: 80rpx;
 					text-align: center;
 					border: solid 1px #666666;
 					color: #666666;
 					padding: 10rpx;
 					vertical-align: center;
 					box-sizing: border-box;
-					overflow: scroll;
 				}
 			}
 		}
 		.bottomBtns{
 			position: fixed;
+			z-index: 2;
 			left: 0;
 			bottom: 0;
 			width: 100%;
