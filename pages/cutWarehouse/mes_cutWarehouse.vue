@@ -81,7 +81,7 @@
 				</view>
 			</view>
 		</view> -->
-<!-- 		<view class="tabBoxItem">
+		<view class="tabBoxItem">
 			<view class="text">
 				手动报工
 			</view>
@@ -93,7 +93,7 @@
 					</view>
 				</view>
 			</view>
-		</view> -->
+		</view>
 	</view>
 </template>
 

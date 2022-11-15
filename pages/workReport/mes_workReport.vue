@@ -347,7 +347,7 @@
 					  this.userList.find((item)=>{
 						  if(item.id === stateStorage.userId) {
 							  this.userId = stateStorage.userId
-							  this.realName = item.realName + '—' + item.staffId
+							  this.realName = item.showKey
 							  return true
 						  }
 					  })

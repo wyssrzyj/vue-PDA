@@ -73,6 +73,11 @@
 }
 .storage > .storage-item > .storage-item-right > .info{
 	margin-right: 15rpx;
+	// 新加样式
+	width: 420rpx;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: right;
 }
 .storage > .storage-item > .storage-item-right > .input{
 	height: 100rpx;

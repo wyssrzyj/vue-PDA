@@ -272,6 +272,18 @@ const Api = {
 	allProduce(reqData){
 		return requestApi(`${API_ADDRESS}/mes/mesproduceorder/listWithProNum`, 'GET', reqData)
 	},
+	// 获取sku颜色尺码
+	produceSku(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesordersubpackage/getSku`, 'GET', reqData)
+	},
+	// 获取生产单工段工序
+	produceSection(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mespdproductprocess/getProcessByProduce`, 'GET', reqData)
+	},
+	// 保存手动报工
+	submitManualReporting(url,reqData){
+		return requestApi(`${API_ADDRESS}${url}`, 'POST', reqData)
+	}
 }
 
 export default Api
