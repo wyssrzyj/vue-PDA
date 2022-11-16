@@ -40,7 +40,7 @@
 			<!-- 数量 -->
 			<view class="main-info-num">
 				<text class="main-info-label"><text class="requier">*</text>数量</text>
-				<input class="main-info-input" type="text" placeholder="请输入数量" v-model="count" @input="(e)=>handleInput(e,'count')">
+				<input class="main-info-input" type="number" placeholder="请输入数量" v-model="count" @input="(e)=>handleInput(e,'count')">
 				<view class="main-info-unit" id="unit1" @click="showUnitList = !showUnitList">{{unit}}</view>
 			</view>
 			<!-- 单位 -->
@@ -239,7 +239,7 @@ import { nextTick } from "vue"
 					// {text: 'S', fixed: false, dataKey: 'S'}
 					let obj = {}
 					skuRes.data.size.forEach(item => {
-						this.thList.push({text: item.name, fixed: false, dataKey: item.name,isInput:true ,inputWidth:'100%', inputHeight:'60rpx'})
+						this.thList.push({text: item.name, fixed: false, dataKey: item.name,isInput:true ,inputWidth:'100%', inputHeight:'60rpx', inputType: 'number'})
 						obj[item.name] = null
 					})
 					// {name: '黑色', S: null, ...}
@@ -325,6 +325,12 @@ import { nextTick } from "vue"
 							})
 						}
 					})
+				}else{
+					if(type !== "count") {
+						nextTick(()=>{
+							this.list[type][i] = Number(e.detail.value)
+						})
+					}
 				}
 			},
 			
@@ -401,7 +407,7 @@ import { nextTick } from "vue"
 						skuList: this.type == '1' ? skuList : undefined
 					}
 				let url = this.type == '0' ? '/mes/mesengineeringmanagement/saveMaterialsReporting' : '/mes/mesengineeringmanagement/saveEngineeringManual'
-				Api.submitManualReporting(url, dataForm).then(res => {
+				Api.submitManualReporting(url, dataForm).then(async res => {
 					if (res.code === 0) {
 						// 删除缓存
 						uni.removeStorageSync('manualReporting')
@@ -417,7 +423,7 @@ import { nextTick } from "vue"
 						if(type === 'return') {
 							uni.navigateBack()
 						} else if(type === 'continue') {
-							this.getLocalStorage()
+							await this.getLocalStorage()
 						}
 						this.loading = false
 						message('报工成功！')
