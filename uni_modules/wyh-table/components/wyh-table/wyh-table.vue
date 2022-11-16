@@ -34,9 +34,10 @@
 					<template v-for="(th, index) in thList">
 						<view class="td" v-if="!th.fixed" :key="index" :style="{width: th.width||'220rpx'}">
 							<view class="mark" v-if="th.markKey && item[th.markKey]">{{item[th.markKey]}}</view>
+							<!-- <view v-if="th.markKey && item[th.markKey]" v-html="item[th.markKey]"></view> -->
 							<input class="val" :type="th.inputType" v-model="item[th.dataKey]" :placeholder="th.inputPlaceholder" @confirm="bindInput(ind)"  v-if="th.isInput" :style="{width: th.inputWidth||'80rpx', height: th.inputHeight||'44rpx', fontSize: th.inputSize||'28rpx', color: th.inputColor||'#333'}"/>
 							<!-- <uni-easyinput class="val" :type="th.inputType" v-model="th.unit" :placeholder="th.inputPlaceholder" :clearable="th.inputClearable" v-if="th.isInput"/> -->
-							<text v-else>{{ th.dataKey == 'index'?ind+1 : item[th.dataKey] }}</text>
+							<text v-else v-html="th.dataKey == 'index'?ind+1 : item[th.dataKey]"></text>
 							<text class="unit" v-if="th.unit">{{th.unit}}</text>
 						</view>
 					</template>
@@ -244,6 +245,7 @@
 				left: 0;
 				width: 100%;
 				border-bottom: 1px solid #f4f4f4;
+				// border-top: none;
 			}
 			&.disabled {
 				opacity: 0.5;
@@ -251,14 +253,15 @@
 			.td {
 				flex-shrink: 0;
 				display: flex;
+				font-weight: blod;
 				align-items: center;
 				justify-content: center;
 				height: 80rpx;
-				font-size: 24rpx;
+				font-size: 28rpx;
 				color: #333;
 				padding: 0 14rpx;
 				box-sizing: border-box;
-				border-bottom: 1px solid #f4f4f4;
+				border: 1px solid #f4f4f4;
 				.mark {
 					display: flex;
 					align-items: center;
@@ -296,7 +299,9 @@
 		}
 		.th {
 			.td {
-				color: #8A8F99;
+				font-weight: blod;
+				color: #666;
+				font-size: 32rpx;
 				text-align: center;
 				.ic {
 					width: 28rpx;
