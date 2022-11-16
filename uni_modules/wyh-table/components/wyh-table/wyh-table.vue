@@ -35,7 +35,7 @@
 						<view class="td" v-if="!th.fixed" :key="index" :style="{width: th.width||'220rpx'}">
 							<view class="mark" v-if="th.markKey && item[th.markKey]">{{item[th.markKey]}}</view>
 							<!-- <view v-if="th.markKey && item[th.markKey]" v-html="item[th.markKey]"></view> -->
-							<input class="val" :type="th.inputType" v-model="item[th.dataKey]" :placeholder="th.inputPlaceholder" @confirm="bindInput(ind)"  v-if="th.isInput" :style="{width: th.inputWidth||'80rpx', height: th.inputHeight||'44rpx', fontSize: th.inputSize||'28rpx', color: th.inputColor||'#333'}"/>
+							<input class="val" :type="th.inputType" v-model="item[th.dataKey]" :placeholder="th.inputPlaceholder" @confirm="bindConfirm(ind)" @input="(e)=>bindInput(e,ind,th.dataKey)"  v-if="th.isInput" :style="{width: th.inputWidth||'80rpx', height: th.inputHeight||'44rpx', fontSize: th.inputSize||'28rpx', color: th.inputColor||'#333'}"/>
 							<!-- <uni-easyinput class="val" :type="th.inputType" v-model="th.unit" :placeholder="th.inputPlaceholder" :clearable="th.inputClearable" v-if="th.isInput"/> -->
 							<text v-else v-html="th.dataKey == 'index'?ind+1 : item[th.dataKey]"></text>
 							<text class="unit" v-if="th.unit">{{th.unit}}</text>
@@ -115,8 +115,11 @@
 			};
 		},
 		watch: {
-			items: function (ret) {
-				this.list = ret;
+			items: {
+				handler(ret, oldValue) {
+					this.list = ret;
+				},
+				deep: true //深度侦听
 			},
 			sort: function (ret) {
 				this.nSort = ret;
@@ -163,11 +166,18 @@
 				this.list = _list;
 				this.$emit('onSelect',this.list[ind]);
 			},
-			//输入
-			bindInput(ind){
+			//输入confirm事件
+			bindConfirm(ind){
 				let _list = this.list;
 				let obj = this.list[ind];
 				this.$emit('onSetting',obj);
+			},
+			//输入input事件
+			bindInput(e,ind,itemKey){
+				let _list = this.list;
+				// let obj = this.list[ind];
+				// e: input $event事件，ind: 整行对象的index，itemKey: 修改的这一行的key
+				this.$emit('onInput',e, ind, itemKey);
 			},
 			bindClick(item) {
 				if(this.isClick) {

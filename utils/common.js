@@ -80,11 +80,13 @@ export const outsourcingDataList = [
 export const ManualReportingList = [
 	{
 		title: '颜色尺码报工',
+		permissions: 'mes:mesengineeringmanagement:saveEngineeringManualPda',
 		src: '../../static/workReport/workReport.png',
 		link: '/pages/ManualReporting/ManualReporting?type=1'
 	},
 	{
 		title: '数量报工',
+		permissions: 'mes:mesengineeringmanagement:saveMaterialsReportingPda',
 		src: '../../static/outwardProcessing/outSourcingReceipt.png',
 		link: '/pages/ManualReporting/ManualReporting?type=0'
 	}

@@ -81,19 +81,19 @@
 				</view>
 			</view>
 		</view> -->
-<!-- 		<view class="tabBoxItem">
+		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:mesengineeringmanagement:saveEngineeringManualPda') || checkPermission($store.state.permissions,'mes:mesengineeringmanagement:saveMaterialsReportingPda')">
 			<view class="text">
 				手动报工
 			</view>
 			<view class="factoryAccess blanket" >
 				<view v-for="(item, index) in ManualReportingList" :key="index" @tap="toList(item)" >
-					<view class="factoryAccessItem" >
+					<view class="factoryAccessItem" v-if="checkPermission($store.state.permissions,item.permissions)">
 						<image :src="item.src" class="image"></image>
 						<text class="titleItem">{{ item.title }}</text>
 					</view>
 				</view>
 			</view>
-		</view> -->
+		</view>
 	</view>
 </template>
 

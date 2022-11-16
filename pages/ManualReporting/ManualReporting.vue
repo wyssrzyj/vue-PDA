@@ -50,27 +50,19 @@
 		</view>
 		
 		<view class="main-info" v-else>
-			<view style="width: 100%;overflow-x: scroll;position: relative;" v-if="skuList[0]">
+<!-- 			<view style="width: 100%;overflow-x: scroll;position: relative;" v-if="skuList[0]">
 				<table class="cart-table">
 				  <thead>
 					<tr>
-						<!-- <th class="cart-table-th" style="position: fixed;width: 220rpx;z-index: 1;">颜色 / 尺码</th> -->
 						<th class="cart-table-th">颜色 / 尺码</th>
-						<!-- 占位 -->
-						<!-- <td class="cart-table-th" style="width: 220rpx;" /> -->
 						<th class="cart-table-th" v-for="(item,index) in Object.keys(skuList[0].size)" :key="index">{{item}}</th>
 					</tr>
 				  </thead>
 				  <tbody>
 					<tr v-for="(item,index) in skuList" :key="index">
-						<!--<td class="cart-table-td" style="position: fixed;width: 220rpx;z-index: 1;">
-						  <view>水电费快速开发商蓝黛科技番窠倒臼漏打卡</view>
-					  </td> -->
 					  <td class="cart-table-td">
 					  		<view>{{item.colorName}}</view>
 					  </td>
-					  <!-- 占位列 -->
-					  <!-- <td class="cart-table-td" style="width: 220rpx;" /> -->
 					  <template v-if="item.size">
 						  <td class="cart-table-td" v-for="(i,indey) in Object.keys(skuList[0].size)" :key="indey">
 							  <input type="text" v-model="item.size[i]" style="border: 1px solid #aaa;width:100%;height: 70rpx;" @input="(e)=>handleInput(e,item,i)">
@@ -80,10 +72,11 @@
 					</tr>
 				  </tbody>
 				</table>
-			</view>
+			</view> -->
+			<wyh-table :thList="thList" :items="list" v-if="list.length > 0" @onInput="handleInput" />
 			<view v-else style="font-size: 30rpx;font-weight: bold;color: #ff6262;">请选择生产单</view>
 		</view>
-		
+				
 		<!-- 底部 -->
 		<view class="bottomBtns">
 			<button class="bottom-btn" :loading="loading" :disabled="loading" @click="handleSubmit('return')">保存并返回</button>
@@ -108,6 +101,7 @@
 	import selectCodeMultiple from '@/components/mulSelection/mulSelection.vue'
 	import searchSelect from "@/components/J-Picker/jPicker.vue"
 	import WyhTable from "@/uni_modules/wyh-table/components/wyh-table/wyh-table.vue"
+import { nextTick } from "vue"
 	let message = (msg) => uni.showToast({icon:'none', duration:3000, title: msg})
 	export default{
 		components: {
@@ -154,7 +148,14 @@
 				showUnitList: false,
 				count: '', //数量
 				
-				skuList: []//颜色尺码报工数据
+				//颜色尺码报工数据
+				thList: [{
+                    text: '颜色 / 尺码',
+                    fixed: true,        //固定在前的列   一般设置1-2项
+                    dataKey: 'name',    //该列渲染的数据字段 
+                    width: '200rpx'
+                }],
+                list: []
 			}
 		},
 		methods:{
@@ -227,21 +228,23 @@
 				this.sectionList = []
 				this.checkedList = []
 				this.coutryList = []
-				this.skuList = []
+				this.thList = [{text: '颜色 / 尺码',fixed: true, dataKey: 'name',  width: '200rpx'}],
+				this.list = []
 				this.produce = {id:val.id,productOrderNum:val.productOrderNum,proNum:val.proNum,}
 				this.showProduce = val.showKey
 				
 				// 获取颜色尺码数据
 				let skuRes = await Api.produceSku({id:val.id})
 				if(skuRes.code === 0) {
-					// type=1处理sku
-					// 数据格式：[{colorName:'黑色',size:{S:'',M:'',L:'',XL:'',XXL:''}}]
-					let size = {}
-					skuRes.data.size.forEach(i => {
-						size[i.name] = null
+					// {text: 'S', fixed: false, dataKey: 'S'}
+					let obj = {}
+					skuRes.data.size.forEach(item => {
+						this.thList.push({text: item.name, fixed: false, dataKey: item.name,isInput:true ,inputWidth:'100%', inputHeight:'60rpx'})
+						obj[item.name] = null
 					})
-					this.skuList = skuRes.data.color.map(item => {
-						return {colorName: item.name, size:{...size}}
+					// {name: '黑色', S: null, ...}
+					this.list = skuRes.data.color.map(item => {
+						return {name: item.name,...obj}
 					})
 				} else {
 					message(skuRes.msg)
@@ -317,7 +320,9 @@
 						if(type === "count") {
 							this.count= null
 						} else {
-							type.size[i] = null
+							nextTick(()=>{
+								this.list[type][i] = null
+							})
 						}
 					})
 				}
@@ -348,7 +353,6 @@
 				this.showName = ''
 				this.unit = '件'
 				this.count = ''
-				this.skuList = []
 			},
 			
 			// 保存
@@ -374,6 +378,15 @@
 					return message('请输入数量!')
 				}
 				this.loading = true
+				
+				// 处理sku数据
+				let skuList = []
+				if(this.type == '1') {
+					skuList = this.list.map(item => {
+						return {colorName: item.name,size:{...item, name: undefined}}
+					})
+				}
+				
 				// 传输数据
 				let dataForm = {
 						produceOrderId: this.produce.id,
@@ -385,7 +398,7 @@
 						
 						count: this.type == '0' ? this.count : undefined,
 						unit: this.type == '0' ? this.unit : undefined,
-						skuList: this.type == '1' ? this.skuList : undefined
+						skuList: this.type == '1' ? skuList : undefined
 					}
 				let url = this.type == '0' ? '/mes/mesengineeringmanagement/saveMaterialsReporting' : '/mes/mesengineeringmanagement/saveEngineeringManual'
 				Api.submitManualReporting(url, dataForm).then(res => {
@@ -456,13 +469,17 @@
 					font-size: 30rpx;
 					width: 200rpx;
 					height: 80rpx;
+					line-height: 80rpx;
 					text-align: center;
 					border-radius: 10rpx;
 					border: 1px solid #d0d0d0;
 					margin-right: 20rpx;
 				}
 				.main-info-unit{
-					line-height: 80rpx;
+					height: 80rpx;
+					display: flex;
+					justify-content: center;
+					align-items: center;
 					padding: 0 30rpx;
 					border-radius: 12rpx;
 					background-color: #1794d1;
@@ -483,13 +500,15 @@
 				flex-wrap: wrap;
 				.unit-item{
 					height: 80rpx;
-					line-height: 80rpx;
 					padding: 0 30rpx;
 					background-color: #d6d6d6;
 					border-radius: 12rpx;
 					margin-right: 30rpx;
 					margin-bottom: 20rpx;
 					color: #000;
+					display: flex;
+					justify-content: center;
+					align-items: center;
 				}
 				.unit-select{
 					background-color: #1794d1;
