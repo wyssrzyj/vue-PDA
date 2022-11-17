@@ -2,19 +2,19 @@ export const cutWarehouseList = [
   {
     title: '裁片入库',
 	permissions: 'mes:mespiecesmarket:cutInStorage',
-    src: '../../static/menuIcon/裁片入库.svg',
+    src: '../../static/menuIcon/mes_cutInStorage.svg',
     link: '/pages/cutWarehouse/mes_cutInStorage'
   },
   {
     title: '裁片出库',
 	permissions: 'mes:mespiecesmarket:cutOutStorage',
-    src: '../../static/menuIcon/裁片出库.svg',
+    src: '../../static/menuIcon/mes_cutOutStorage.svg',
     link: '/pages/cutWarehouse/mes_cutOutStorage'
   },
   {
     title: '撤销裁片入库',
 	permissions: 'mes:mespiecesmarket:repealCutInStorage',
-    src: '../../static/menuIcon/撤销裁片入库.svg',
+    src: '../../static/menuIcon/mes_repealCutInStorage.svg',
     link: '/pages/cutWarehouse/mes_repealCutInStorage'
   }
 ]
@@ -22,13 +22,13 @@ export const outwardProcessingList = [
   {
     title: '外发加工入库',
 	permissions: 'mes:mespiecesmarket:outsourcingReceipt',
-    src: '../../static/menuIcon/外发加工入库.svg',
+    src: '../../static/menuIcon/mes_outsourcingReceipt.svg',
     link: '/pages/outwardProcessing/mes_outsourcingReceipt'
   },
   {
     title: '外发加工出库',
 	permissions: 'mes:mespiecesmarket:outsourcingDelivery',
-    src: '../../static/menuIcon/外发加工出库.svg',
+    src: '../../static/menuIcon/mes_outsourcingDelivery.svg',
     link: '/pages/outwardProcessing/mes_outsourcingDelivery'
   }
 ]
@@ -36,7 +36,7 @@ export const workReportList=[
 	{
 		title:"按包报工",
 		permissions: 'mes:mesengineeringmanagement:workReport',
-		src: '../../static/menuIcon/按包报工.svg',
+		src: '../../static/menuIcon/mes_workReport.svg',
 		link: '/pages/workReport/mes_workReport'
 	},
 ]
@@ -44,7 +44,7 @@ export const blanketDataList = [
 	{
 		title: '铺布数据采集',
 		permissions: 'mes:messpreadcloth:blanketDataCollect',
-		src: '../../static/menuIcon/铺布数据采集.svg',
+		src: '../../static/menuIcon/blanketDataCollect.svg',
 		link: '/pages/blanket/blanketDataCollect'
 	}
 ]
@@ -52,13 +52,13 @@ export const outsourcingDataList = [
 	{
 		title: '添加外协',
 		permissions: 'mes:assist:save',
-		src: '../../static/menuIcon/添加外协.svg',
+		src: '../../static/menuIcon/outsourcingAdd.svg',
 		link: '/pages/outsourcingReceipt/outsourcingAdd'
 	},
 	{
 		title: '外协收货',
 		permissions: 'mes:assist:page',
-		src: '../../static/menuIcon/外协收货.svg',
+		src: '../../static/menuIcon/orderList.svg',
 		link: '/pages/outsourcingReceipt/orderList'
 	}
 ]
