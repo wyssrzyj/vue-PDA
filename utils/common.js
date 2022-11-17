@@ -66,13 +66,13 @@ export const outsourcingDataList = [
 // 	{
 // 		title: '质检',
 // 		// permissions: 'mes:messpreadcloth:blanketDataCollect',
-// 		src: '../../static/workReport/workReport.png',
+// 		src: '../../static/menuIcon/qualityTesting.svg',
 // 		link: '/pages/qualityTesting/mes-qualityTesting'
 // 	},
 // 	{
 // 		title: '返修',
 // 		// permissions: 'mes:messpreadcloth:blanketDataCollect',
-// 		src: '../../static/outwardProcessing/outSourcingReceipt.png',
+// 		src: '../../static/menuIcon/repairList.svg',
 // 		link: '/pages/qualityTesting/mes-repairList'
 // 	}
 // ]
