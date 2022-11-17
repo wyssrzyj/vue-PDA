@@ -81,13 +81,13 @@ export const ManualReportingList = [
 	{
 		title: '颜色尺码报工',
 		permissions: 'mes:mesengineeringmanagement:saveEngineeringManualPda',
-		src: '../../static/menuIcon/颜色尺码报工.svg',
+		src: '../../static/menuIcon/ManualReportingType1.svg',
 		link: '/pages/ManualReporting/ManualReporting?type=1'
 	},
 	{
 		title: '数量报工',
 		permissions: 'mes:mesengineeringmanagement:saveMaterialsReportingPda',
-		src: '../../static/menuIcon/数量报工.svg',
+		src: '../../static/menuIcon/ManualReportingType2.svg',
 		link: '/pages/ManualReporting/ManualReporting?type=0'
 	}
 ]
