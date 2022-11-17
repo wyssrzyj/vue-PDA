@@ -497,6 +497,9 @@
 			}
 			.ul{
 				background-color: #FAFAFA;
+				border: 1px solid #EAEAEA;
+				border-bottom: none;
+				border-top: none;
 				min-height: 90rpx;
 				max-height: 180rpx;
 				overflow-y: auto;
@@ -554,6 +557,7 @@
 			height: 112rpx;
 			background-color: #fff;
 			display: flex;
+			box-shadow: 0 -8rpx 10rpx #ddd;
 			justify-content: center;
 			align-items: center;
 			.btn{

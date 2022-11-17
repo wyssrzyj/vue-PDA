@@ -180,13 +180,6 @@
 			if (options.from === 'navigateBack') {
 					return false;
 			}
-			// const {assistId,billNo,existDetail}=this.modelData
-			// if(!this.receiveId){
-			// 	uni.redirectTo({
-			// 		url: `/pages/outsourcingReceipt/orderList`
-			// 	})
-			// 	return true;
-			// }else
 			if(this.receiveId){
 				uni.redirectTo({
 					url: `/pages/outsourcingReceipt/outsourcingReceiptList`
@@ -199,11 +192,6 @@
 		onLoad(option){
 			this.receiveId=option.receiveId
 		},
-		// computed:{
-		// 	dicts(){
-		// 		return this.$store.state.dicts
-		// 	}
-		// },
 		data(){
 			return {
 				outSourcingList:[], //扎包条码列表
@@ -345,7 +333,6 @@
 				if (image == null) {
 					return '../../static/qualityTesting/default.png'
 				}
-				// `http://${this.api}/upload${image.split('upload')[1]}`
 				return image
 			},
 			//扫描扎包条码
@@ -550,14 +537,13 @@
 		}
 		.outsouring-add-content{
 			background-color: #FFFFFF;
-			padding: 0 30rpx 40rpx;
+			padding: 0 30rpx;
 			.storage-item{
 				height: 100rpx;
 				display: flex;
 				justify-content: space-between;
 				font-size: 34rpx;
 				line-height: 100rpx;
-				border-bottom: 1px solid #EAEAEA;
 				.storage-item-left{
 					font-weight: 900;
 				}
@@ -570,6 +556,8 @@
 				min-height: 90rpx;
 				max-height: 180rpx;
 				background-color: #FAFAFA;
+				border: 1px solid #EAEAEA;
+				border-bottom: none;
 				overflow-y: auto;
 				.ul-white{
 					display: flex;
@@ -625,6 +613,7 @@
 			height: 112rpx;
 			background-color: #fff;
 			display: flex;
+			box-shadow: 0 -8rpx 10rpx #ddd;
 			justify-content: center;
 			align-items: center;
 			.btn{

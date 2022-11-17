@@ -11,7 +11,6 @@
 			</view>
 			<view style="width: 1px; height: 50rpx; background-color: #fff;"></view>
 			<view @click="queryReceipt" class="scan-icon">
-				<!-- <uni-icons type="scan" size="30" color="#fff"></uni-icons> -->
 				<u-icon name="scan" color="#fff" size="70" :bold="true"></u-icon>
 				<text>收货</text>
 			</view>
@@ -107,22 +106,7 @@
 				</view>
 				<scan-code></scan-code>
 				<view class="nav-table" v-if="item.show1">
-					<uni-table border emptyText="暂无更多数据">
-						<!-- 表头行 -->
-						<uni-tr>
-							<uni-th align="center" width="100px">颜色\尺码</uni-th>
-							<uni-th align="center" v-for="(item, index) in processData" :key="index">{{item.size}}
-							</uni-th>
-							<uni-th align="center">小计</uni-th>
-						</uni-tr>
-						<!-- 表格数据行 -->
-						<uni-tr v-for="(item, index) in tableData" :key="index">
-							<uni-td align="center">{{item.name}}</uni-td>
-							<uni-td align="center" v-for="(i, index) in processData" :key="index">{{item[i.size]}}
-							</uni-td>
-							<uni-td align="center">{{allnum(item)}}</uni-td>
-						</uni-tr>
-					</uni-table>
+					<wyh-table :rightBorder="true" :items="tableData" :thList="processData"></wyh-table>
 				</view>
 			</view>
 		</view>
@@ -148,13 +132,14 @@
 				productionid: '',
 				allList: [],
 				api: '',
-				processData: [],
-				tableData: [],
+				processData: [], //表头数组
+				tableData: [], //表身数组
 				page: 1,
 				a: 0,
-				key:""
+				key:"",
 			}
 		},
+		//设定扫码事件
 		onShow() {
 			const _this = this
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器  
@@ -174,11 +159,12 @@
 			this.getData(this.key);
 			uni.hideNavigationBarLoading()
 		},
-
 		methods: {
+			//事件委托
 			handleClick(){
 				this.allList.forEach(i=>i.show=false)
 			},
+			//显示每一条数据菜单
 			handleShow(item){
 				this.allList.forEach(i=>{
 					if(i.id===item.id){
@@ -188,10 +174,13 @@
 					}
 				})
 			},
+			//获取字典值
 			getDictLabel,
+			//列表页搜索
 			query() {
 				this.getData(this.key, 1)
 			},
+			//扫码收货
 			queryReceipt(){
 				uni.navigateTo({
 					url:'/pages/outsourcingReceipt/outsourcingReceipt'
@@ -207,6 +196,7 @@
 					page: this.page,
 					key:code ? code : '',
 				}
+				//下一个修改的人也别看，我也是接手别人的
 				Api.outsourcingReceipt(obj).then(res => {
 					if (res.code == 0) {
 						const o_list = this.allList
@@ -257,6 +247,7 @@
 				// 表格
 				this.downupflag = !this.downupflag
 				this.tableData = []
+				this.processData=[]
 				let processList = []
 				for (let i in obj) {
 					processList.push(...JSON.parse(JSON.stringify(obj[i])))
@@ -266,8 +257,11 @@
 						tempObj.name = x.color
 						tempObj[x.size] = x.num
 					}
-					this.tableData.push(tempObj)
+					this.tableData.push({...tempObj,total:this.allnum(tempObj)})
 				}
+				this.processData=this.processData.map(i=>({...i,dataKey:i.size,text:i.size}))
+				this.processData.unshift({dataKey:'name',text:'颜色\\尺码',fixed:true})
+				this.processData.push({dataKey:'total',text:'小计'})
 				// 小计
 				let obj1 = {
 					name: '小计'
@@ -283,7 +277,7 @@
 						}
 					})
 				})
-				this.tableData.push(obj1)
+				this.tableData.push({...obj1,total:this.allnum(obj1)})
 			},
 			// 小计
 			allnum(obj) {

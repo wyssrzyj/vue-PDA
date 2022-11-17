@@ -109,7 +109,7 @@
 	}
 	.tagItemActive{
 		padding: 4rpx 8rpx;
-		border-radius: 4rpx;
+		border-radius: 8rpx;
 		margin: 10upx;
 		min-height: 52rpx;
 		line-height: 52rpx;

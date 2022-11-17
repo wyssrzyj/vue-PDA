@@ -23,8 +23,6 @@
 						<view class="code" style="margin-top: 6rpx;">{{datechange(list.createDate||'')}}</view>
 					</view>
 					<view class="nav-grid-all-list">
-<!-- 						<view class="name">单价：</view>
-						<view class="code" style="margin-top: 6rpx;">{{list.unitPrice}}</view> -->
 						<view class="name">数量：</view>
 						<view class="code" style="margin-top: 6rpx;">{{list.num}}</view>
 					</view>
@@ -35,71 +33,47 @@
 				</view>
 			</view>
 			<view class="nav-table" v-if="list.existDetail==1">
-				<uni-table border emptyText="暂无更多数据">
-					<!-- 表头行 -->
-					<uni-tr>
-						<uni-th align="center">颜色\尺码</uni-th>
-						<uni-th align="center" v-for="(item, index) in processData" :key="index">{{item.size}}
-						</uni-th>
-						<uni-th align="center">小计</uni-th>
-					</uni-tr>
-					<!-- 表格数据行 -->
-					<uni-tr v-for="(item, index) in tableData" :key="index">
-						<uni-td align="center">{{item.name}}</uni-td>
-						<uni-td align="center" v-for="(i, index) in processData" :key="index">{{item[i.size]}}
-						</uni-td>
-						<uni-td align="center">{{allnum(item)}}</uni-td>
-					</uni-tr>
-				</uni-table>
+				<wyh-table :rightBorder="true" :items="tableData" :thList="processData"></wyh-table>
 			</view>
 		</view>
 		<!-- 列表 -->
-		<view class="nav" style="margin-top: 20rpx;" v-for="(item,index) in arrlist" :key="index">
-			<view class="nav-title">
-				<view class="title" style="display: flex;align-items: center;">
-					<view class="">
-						{{datechange(item.createDate||'')}}
+		<view v-if="arrlist.length>0">
+			<view class="nav" style="margin-top: 20rpx;" v-for="(item,index) in arrlist" :key="index">
+				<view class="nav-title">
+					<view class="title" style="display: flex;align-items: center;">
+						<view class="">
+							{{datechange(item.createDate||'')}}
+						</view>
+						<view class="change" @click="changelist(item)">
+							<uni-icons type="compose" size="20" style="color: #aaa;"></uni-icons>
+						</view>
 					</view>
-					<view class="change" @click="changelist(item)">
-						<!-- <u-icon name="edit-pen" size="20px"></u-icon> -->
-						<uni-icons type="compose" size="20" style="color: #aaa;"></uni-icons>
+					<view class="nav-grid-alllist">
+						<view class="nav-grid-all-list">
+							<view class="name" style="width: 110rpx;">收货人：</view>
+							<view class="code">{{item.updaterName}}</view>
+						</view>
+						<view class="nav-grid-all-list">
+							<view class="name">完成：</view>
+							<view class="code">{{item.completeFlag?'完成':'部分收货'}}</view>
+						</view>
+						<view class="nav-grid-all-list">
+							<view class="name" >数量：</view>
+							<view class="code" >{{item.num}}</view>
+						</view>
+						<view class="nav-grid-all-list">
+							<view class="name">部位：</view>
+							<view class="code" >{{item.position}}</view>
+						</view>
 					</view>
 				</view>
-				<view class="nav-grid-alllist">
-					<view class="nav-grid-all-list">
-						<view class="name" style="width: 110rpx;">收货人：</view>
-						<view class="code">{{item.updaterName}}</view>
-					</view>
-					<view class="nav-grid-all-list">
-						<view class="name">完成：</view>
-						<view class="code">{{item.completeFlag?'完成':'部分收货'}}</view>
-					</view>
-					<view class="nav-grid-all-list">
-						<view class="name" >数量：</view>
-						<view class="code" >{{item.num}}</view>
-					</view>
-					<view class="nav-grid-all-list">
-						<view class="name">部位：</view>
-						<view class="code" >{{item.position}}</view>
-					</view>
+				<view class="nav-table" v-if="item.detailMap!=null">
+					<wyh-table :rightBorder="true" :items="item.tableData" :thList="item.processData"></wyh-table>
 				</view>
 			</view>
-			<view class="nav-table" v-if="item.detailMap!=null">
-				<uni-table border emptyText="暂无更多数据" v-if="item.processData.length>0">
-					<uni-tr>
-						<uni-th align="center" width="100px">颜色\尺码</uni-th>
-						<uni-th align="center" v-for="(i, index) in item.processData" :key="index">{{i.size}}
-						</uni-th>
-						<uni-th align="center">小计</uni-th>
-					</uni-tr>
-					<uni-tr v-for="(t, index) in item.tableData" :key="index">
-						<uni-td align="center">{{t.name}}</uni-td>
-						<uni-td align="center" v-for="(x, index) in item.processData" :key="index">{{t[x.size]}}
-						</uni-td>
-						<uni-td align="center">{{allnum(t)}}</uni-td>
-					</uni-tr>
-				</uni-table>
-			</view>
+		</view>
+		<view v-else style="height: 500rpx;display: flex;align-items: center;justify-content: center;">
+			<u-empty mode="data" :textSize="36" iconSize="100" text="收货记录为空"></u-empty>
 		</view>
 	</view>
 </template>
@@ -210,7 +184,7 @@
 										tempObj.name = x.color
 										tempObj[x.size] = x.num
 									}
-									tableData.push(tempObj)
+									tableData.push({...tempObj,total:this.allnum(tempObj)})
 								}
 								// 小计
 								let obj1 = {
@@ -227,7 +201,11 @@
 										}
 									})
 								})
-								tableData.push(obj1)
+								
+								tableData.push({...obj1,total:this.allnum(obj1)})
+								processData=processData.map(i=>({...i,dataKey:i.size,text:i.size}))
+								processData.unshift({dataKey:'name',text:'颜色\\尺码',fixed:true})
+								processData.push({dataKey:'total',text:'小计'})
 								list[I] = {
 									...list[I],
 									processData: processData,
@@ -266,7 +244,7 @@
 						tempObj.name = x.color
 						tempObj[x.size] = x.num
 					}
-					this.tableData.push(tempObj)
+					this.tableData.push({...tempObj,total:this.allnum(tempObj)})
 				}
 				// 小计
 				let obj1 = {
@@ -283,7 +261,10 @@
 						}
 					})
 				})
-				this.tableData.push(obj1)
+				this.tableData.push({...obj1,total:this.allnum(obj1)})
+				this.processData=this.processData.map(i=>({...i,dataKey:i.size,text:i.size}))
+				this.processData.unshift({dataKey:'name',text:'颜色\\尺码',fixed:true})
+				this.processData.push({dataKey:'total',text:'小计'})
 			},
 			// 小计
 			allnum(obj) {

@@ -50,7 +50,7 @@
 				</view>
 				<view class="nav-grid-alllist">
 					<view class="nav-grid-all-list">
-						<view class="name"><text style="color: red">*</text>类型：</view>
+						<view class="name">类型：</view>
 						<view class="code">{{getDictLabel($store.state.dicts,'outsourcing_type',list.billType)}}</view>
 					</view>
 					<view class="nav-grid-all-list">
@@ -76,22 +76,7 @@
 				</view>
 			</view>
 			<view class="nav-table" v-if="list.existDetail!==0">
-				<uni-table border emptyText="暂无更多数据">
-					<!-- 表头行 -->
-					<uni-tr>
-						<uni-th align="center" width="100px">颜色＼尺码</uni-th>
-						<uni-th align="center" v-for="(item, index) in processData" :key="index">{{item.size}}
-						</uni-th>
-						<uni-th align="center">小计</uni-th>
-					</uni-tr>
-					<!-- 表格数据行 -->
-					<uni-tr v-for="(item, index) in tableData" :key="index">
-						<uni-td align="center">{{item.name}}</uni-td>
-						<uni-td align="center" v-for="(i, index) in processData" :key="index">{{item[i.size]}}
-						</uni-td>
-						<uni-td align="center">{{allnum(item)}}</uni-td>
-					</uni-tr>
-				</uni-table>
+				<wyh-table :rightBorder="true" :items="tableData" :thList="processData"></wyh-table>
 			</view>
 		</view>
 		<view class="footer">
@@ -105,8 +90,6 @@
 					<view class="">{{list.unit}}</view>
 				</u-form-item>
 				<u-form-item borderBottom labelWidth="150"  @tap="selectUser" v-if="list.existDetail !== 0" :required="true">
-					<!-- <u--input v-model="list.position"  border="none" placeholder="请输入部位" disabled>
-					</u--input> -->
 					<template #label>
 						<div style="display: flex;align-items: center;width: 130rpx;font-size: 30rpx;font-weight: 600;justify-content: flex-end;padding: 10rpx;">
 							<span style="color: red;">*</span>部位
@@ -121,14 +104,12 @@
 				</u-form-item>
 			</u--form>
 			<view class="footer-table">
-				<uni-table border emptyText="暂无更多数据" v-if="list.existDetail!==0">
-					<!-- 表头行 -->
+				<!-- <uni-table border emptyText="暂无更多数据" v-if="list.existDetail!==0">
 					<uni-tr>
-						<uni-th align="center" width="100px">颜色＼尺码</uni-th>
+						<uni-th align="center" width="100px">颜色\尺码</uni-th>
 						<uni-th align="center" v-for="(item, index) in change_num==1?change_list.processData:processData1" :key="index">{{item.size}}
 						</uni-th>
 					</uni-tr>
-					<!-- 表格数据行 -->
 					<uni-tr v-for="(item, index) in change_num==1?change_list.tableData:tableData1" :key="index">
 						<uni-td align="center">{{item.name}}</uni-td>
 						<uni-td align="center" v-for="(i, index) in change_num==1?change_list.processData:processData1" :key="index">
@@ -137,27 +118,23 @@
 							</view>
 						</uni-td>
 					</uni-tr>
-				</uni-table>
+				</uni-table> -->
+				<wyh-table :rightBorder="true" :items="change_num==1?change_list.tableData:tableData1" :thList="change_num==1?change_list.processData:processData1"></wyh-table>
 			</view>
 		</view>
 		<u-tabbar :fixed="true" :placeholder="true" :safeAreaInsetBottom="true">
 			<view class="button">
-				<view class="button-left">
-					<u-button type="primary" text="提交保存" @click="submit()" class="btn"></u-button>
-				</view>
+				<u-button type="primary" text="提交保存" @click="submit()" class="btn"></u-button>
 			</view>
 		</u-tabbar>
 		<popup type="3" v-if="popValue" @close="popValue=false" @closePort="closePort">
 			<template #content>
 				<view class="popup">
 					<view class="pop-title">
-						<view style="width: 12rpx;height: 32rpx;background-color: #1794D1;margin-right: 6rpx;">*</view>
+						<view style="width: 12rpx;height: 32rpx;background-color: #1794D1;margin-right: 6rpx;"></view>
 						选择部位
 					</view>
 					<view class="pop-search" style="height: 74rpx;">
-						<!-- <span style="width: 124rpx;font-size: 28rpx;">添加部位</span>
-						<input type="text" v-model="popInputValue" style="border: 1px solid #ccc;margin: 0 18rpx;flex:1;height: 60rpx;"/>
-						<button type="primary" style="width:150rpx;height: 60rpx;font-size: 32rpx;line-height: 60rpx;border-radius: 4rpx;" @click="handlePopPart">添加</button> -->
 					</view>
 					<view class="pop-content">
 						<robby-tags :value="tagList" @click="handleTag"></robby-tags>
@@ -169,9 +146,7 @@
 </template>
 
 <script>
-	import {
-		toasting
-	} from '../../utils/index.js'
+	import {toasting} from '../../utils/index.js'
 	import { getDictLabel } from '../../utils/index.js'
 	import Api from '../../service/api'
 	import popup from "../../components/mulSelectionSearch/ge-popup.vue";
@@ -202,35 +177,39 @@
 				popInputValue:"",
 				receiveId:"",
 				checkTagsList:[],
-				position:""
+				position:"",
 			}
 		},
 		onBackPress(options){
 			if (options.from === 'navigateBack') {
 					return false;
 				}
-				const {id,billNo,existDetail}=this.list
-				// 这里使用重定向比较好，不信可以自己多试几种，其余跳转方法在文章底部哦
-				uni.redirectTo({ 
+			const {id,billNo,existDetail}=this.list
+			// 这里使用重定向比较好，不信可以自己多试几种，其余跳转方法在文章底部哦
+			if(id&&billNo&&existDetail){
+				uni.redirectTo({
 					url: `./outsourcingReceiptList?productionId=${id}&id=${billNo}&existDetail=${existDetail}`
 				})
 				return true;
+			}
 		},
 		onLoad(option) {
-			const {
-				id,
-				num,
-				item
-			} = option
+			const {id,num,item} = option
 			this.change_list = item?JSON.parse(item):''
 			if(num==1){
+				this.change_list.processData=this.change_list.processData.filter(i=>i.dataKey!=='total').map(item=>{
+					if(item.dataKey!=='total'&&item.dataKey!=='name'){
+						return {...item,isInput:true,inputWidth:'100%',inputHeight:'80%'}
+					}else{
+						return item
+					}
+				})
 				this.change_list.tableData =this.change_list.tableData.splice(0,this.change_list.tableData.length-1)
 				this.receiveNum = this.change_list.num
 				this.receiveId=this.change_list.id
 				this.switch_value = this.change_list.completeFlag?true:false
 			}
 			this.change_num = num
-			// this.downupflag=true
 			this.getdata(id)
 		},
 		methods: {
@@ -294,9 +273,6 @@
 						return
 					}
 					this.list = res.data
-					// if(this.receiveId){
-					// 	this.list.position=res.data.
-					// }
 					this.checkTagsList=res.data.position.split(',').map(item=>({partsName:item,flag:true}))
 					this.position=res.data.position //当前外协单部位
 					this.productionInfoData = res.data.productionInfo
@@ -326,6 +302,16 @@
 					}
 					this.tableData1.push(tempObj)
 				}
+				this.processData1=this.processData1.filter(i=>i.dataKey!=='total').map(item=>{
+					if(item.dataKey!=='total'&&item.dataKey!=='name'){
+						return {...item,isInput:true,inputWidth:'100%',inputHeight:'80%',dataKey:item.size,text:item.size}
+					}else{
+						return item
+					}
+				})
+				if(this.processData1.length>0){
+					this.processData1.unshift({dataKey:'name',text:'颜色\\尺码',fixed:true})
+				}
 			},
 			// 详情表格
 			downup(obj) {
@@ -340,24 +326,27 @@
 						tempObj.name = x.color
 						tempObj[x.size] = x.num
 					}
-					this.tableData.push(tempObj)
+					this.tableData.push({...tempObj,total:this.allnum(tempObj)})
 				}
+				this.processData=this.processData.map(i=>({...i,dataKey:i.size,text:i.size}))
+				this.processData.unshift({dataKey:'name',text:'颜色\\尺码',fixed:true})
+				this.processData.push({dataKey:'total',text:'小计'})
 				// 小计
-					let obj1 = {
-						name: '小计'
-					}
-					let arr = processList.map((item) => {
-						return item.size
+				let obj1 = {
+					name: '小计'
+				}
+				let arr = processList.map((item) => {
+					return item.size
+				})
+				arr.forEach((Item) => {
+					obj1[Item] = 0
+					processList.forEach(x => {
+						if (x.size == Item) {
+							obj1[Item] += Number(x.num)
+						}
 					})
-					arr.forEach((Item) => {
-						obj1[Item] = 0
-						processList.forEach(x => {
-							if (x.size == Item) {
-								obj1[Item] += Number(x.num)
-							}
-						})
-					})
-					this.tableData.push(obj1)
+				})
+				this.tableData.push({...obj1,total:this.allnum(obj1)})
 			},
 			// 小计
 			allnum(obj) {
@@ -398,14 +387,18 @@
 				}else{
 					this.list.receiveNum = 0
 				}
+				//我也是接盘，别读了，太恶心了
 				let arr = []
 				for (let i in this.change_num==1?this.change_list.tableData:this.tableData1) {
 					let new_list = {}
 					var old_list = this.change_num==1?this.change_list.tableData[i]:this.tableData1[i]
 					new_list.color = this.change_num==1?this.change_list.tableData[i].name:this.tableData1[i].name
 					delete old_list.name
+					delete old_list.undefined
 					for (let x of this.change_num==1?this.change_list.processData:this.processData1) {
-						old_list[x.size] = Number(old_list[x.size])
+						if(x.size){
+							old_list[x.size] = Number(old_list[x.size])
+						}
 					}
 					new_list.qtyFinalList = old_list
 					arr.push(new_list)
@@ -480,7 +473,6 @@
 		.info-active{
 			max-width: 540rpx !important;
 			color: #000;
-			// line-height: 70rpx;
 			margin-right: 15rpx;
 		}
 	}
@@ -493,7 +485,6 @@
 
 		.header-image {
 			width: 160rpx;
-			height: 160rpx;
 			display: flex;
 			flex-wrap: wrap;
 			justify-content: center;
@@ -506,6 +497,7 @@
 		}
 
 		.header-title {
+			width: 570rpx;
 			display: flex;
 			flex-wrap: wrap;
 			margin-left: 20rpx;
@@ -520,8 +512,8 @@
 
 			.header-grid-alllist {
 				width: 100%;
-				display: grid;
-				grid-template-columns: repeat(2, 50%);
+				display: flex;
+				flex-wrap: wrap;
 
 				.header-grid-all-list {
 					display: flex;
@@ -529,6 +521,7 @@
 					align-items: center;
 
 					.name {
+						color: #999;
 						width: 84rpx;
 						text-align: right;
 					}
@@ -567,10 +560,10 @@
 
 			.nav-grid-alllist {
 				width: 100%;
-				display: grid;
-				grid-template-columns: repeat(2, 50%);
-
+				display: flex;
+				flex-wrap: wrap;
 				.nav-grid-all-list {
+					width: 50%;
 					display: flex;
 					margin-top: 6rpx;
 					align-items: center;
@@ -610,7 +603,8 @@
 	.button {
 		width: 100%;
 		display: flex;
-		justify-content: space-evenly;
+		justify-content: center;
+		box-shadow: 0 -8rpx 10rpx #ddd;
 		align-items: center;
 		.btn{
 			width: 296rpx;
