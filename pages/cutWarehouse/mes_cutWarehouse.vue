@@ -160,8 +160,8 @@ export default{
 				font-size: 30rpx;
 				margin-right: 30rpx;
 				.image{
-					width: 90rpx;
-					height: 90rpx;
+					width: 100rpx;
+					height: 100rpx;
 					margin-bottom: 15rpx;
 				}
 				.boxItemTitle{

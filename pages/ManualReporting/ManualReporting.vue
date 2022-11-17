@@ -101,7 +101,6 @@
 	import selectCodeMultiple from '@/components/mulSelection/mulSelection.vue'
 	import searchSelect from "@/components/J-Picker/jPicker.vue"
 	import WyhTable from "@/uni_modules/wyh-table/components/wyh-table/wyh-table.vue"
-import { nextTick } from "vue"
 	let message = (msg) => uni.showToast({icon:'none', duration:3000, title: msg})
 	export default{
 		components: {
@@ -223,6 +222,7 @@ import { nextTick } from "vue"
 			},
 			//选择了某个生产单
 			async produceSelectSure(val){
+				if(Object.keys(val).length === 0) return
 				this.sectionAndCoutry = {}
 				this.section = ''
 				this.sectionList = []
@@ -308,6 +308,7 @@ import { nextTick } from "vue"
 			},
 			// 选择了某个用户
 			userSelectSure(val){
+				if(Object.keys(val).length === 0) return
 				this.userId = val.id
 				this.showName = val.showKey
 			},
@@ -320,14 +321,14 @@ import { nextTick } from "vue"
 						if(type === "count") {
 							this.count= null
 						} else {
-							nextTick(()=>{
+							this.$nextTick(()=>{
 								this.list[type][i] = null
 							})
 						}
 					})
 				}else{
 					if(type !== "count") {
-						nextTick(()=>{
+						this.$nextTick(()=>{
 							this.list[type][i] = Number(e.detail.value)
 						})
 					}
