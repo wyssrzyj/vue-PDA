@@ -74,8 +74,8 @@
 			  </tbody>
 			 <tfoot>
 			      <tr>
-					<th class="cart-table-th" v-for="(tdFooter,ind) in Object.keys(cartList[0])" :key="ind" v-if="tdFooter!=='total'">{{getAllTotal(tdFooter)}}</th>
-					<th class="cart-table-th">{{getAllTotal('total')}}</th>
+					<th class="cart-table-th" style="background-color: #F2FFF0;" v-for="(tdFooter,ind) in Object.keys(cartList[0])" :key="ind" v-if="tdFooter!=='total'">{{getAllTotal(tdFooter)}}</th>
+					<th class="cart-table-th" style="background-color: #F2FFF0;">{{getAllTotal('total')}}</th>
 			      </tr>
 			    </tfoot>
 			</table>

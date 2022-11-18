@@ -121,6 +121,8 @@ export default {
 						// uni.switchTab({
 						// 	url:'/pages/cutWarehouse/cutWarehouse'
 						// })
+					}else if(res.code === 10004){
+						toasting('用户名或密码错误！')
 					}
 				}).catch(res=>{
 					console.log(res)

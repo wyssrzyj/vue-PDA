@@ -62,11 +62,12 @@
 			  </tbody>
 			 <tfoot>
 			      <tr>
-					<th class="cart-table-th" v-for="(tdFooter,ind) in Object.keys(cartList[0])" :key="ind" v-if="tdFooter!=='total'">{{getAllTotal(tdFooter)}}</th>
-					<th class="cart-table-th">{{getAllTotal('total')}}</th>
+					<th class="cart-table-th" style="background-color: #F2FFF0;" v-for="(tdFooter,ind) in Object.keys(cartList[0])" :key="ind" v-if="tdFooter!=='total'">{{getAllTotal(tdFooter)}}</th>
+					<th class="cart-table-th" style="background-color: #F2FFF0;">{{getAllTotal('total')}}</th>
 			      </tr>
 			    </tfoot>
 			</table>
+			<!-- <wyh-table :rightBorder="true" :items="cartList.slice(1)" :thList="processData"></wyh-table> -->
 			<view class="foot-botttom">
 				<button @click="handleOutSourcing" class="btn" type="primary">提交保存</button>
 			</view>
@@ -91,19 +92,28 @@
 								<view class="header-image">
 									<image
 										:src="item.productionInfo?getimage(item.productionInfo):'../../static/qualityTesting/default.png'"
-										class="image" @click="bigimage(item)"></image>
-										<view style="font-size: 28rpx;color: #85da29;text-align: center;" v-if="item.billState===0">外发中</view>
-										<view style="font-size: 28rpx;color: #59b7ff;text-align: center;" v-else-if="item.billState===1">部分收货</view>
-										<view style="font-size: 28rpx;color: #e02020;text-align: center;" v-else-if="item.billState===2">已完成</view>
+										mode="scaleToFill"
+										class="image" 
+										@click="bigimage(item)"
+									>
+									</image>
+									<view style="font-size: 28rpx;color: #85da29;text-align: center;" v-if="item.billState===0">外发中</view>
+									<view style="font-size: 28rpx;color: #59b7ff;text-align: center;" v-else-if="item.billState===1">部分收货</view>
+									<view style="font-size: 28rpx;color: #e02020;text-align: center;" v-else-if="item.billState===2">已完成</view>
 								</view>
 								<view class="header-title">
-									<view class="title">
-										<view class="">单号：{{item.billNo}}</view>
+									<view class="title" style="height: 38rpx !important;">
+										<view class="" style="height: 38rpx !important;">单号：{{item.billNo}}</view>
 									</view>
 									<view class="header-grid-alllist">
-										<view class="header-grid-all-list">
+										<!-- <view class="header-grid-all-list">
 											<view class="name">生产单：</view>
-											<view class="code" style="margin-top: 5rpx;">{{item.productionInfo.productOrderNum}}</view>
+											<view class="code">{{item.productionInfo.productOrderNum}}</view>
+										</view> -->
+										<view class="header-grid-all-list">
+											<view class="name">款号：</view>
+											<!-- <view class="code">{{item.productionInfo.proName}}</view> -->
+											<view class="code">1111</view>
 										</view>
 										<view class="header-grid-all-list">
 											<view class="name">类型：</view>
@@ -120,6 +130,10 @@
 										<view class="header-grid-all-list">
 											<view class="name">收货：</view>
 											<view class="code" style="margin-top: 5rpx;">{{item.receiveNum}}</view>
+										</view>
+										<view class="header-grid-all-list">
+											<view class="name">部位：</view>
+											<view class="code" style="margin-top: 5rpx;">{{item.position}}</view>
 										</view>
 									</view>
 								</view>
@@ -651,6 +665,7 @@
 				width: 100%;
 				padding: 20rpx;
 				display: flex;
+				overflow: hidden;
 				background-color: white;
 				border-bottom: 1px dashed #ccc;
 				.header-image {
@@ -668,14 +683,13 @@
 				}
 				
 				.header-title {
-					width: 100%;
+					flex: 1;
 					display: flex;
 					flex-wrap: wrap;
 					margin-left: 20rpx;
 
 					.title {
 						width: 100%;
-						height: 45rpx;
 						font-size: 30rpx;
 						font-weight: 600;
 					}
@@ -688,17 +702,16 @@
 						.header-grid-all-list {
 							width: 50%;
 							display: flex;
-							margin-top: 3rpx;
 							font-size: 24rpx;
 							align-items: center;
 
 							.name {
 								color: #999;
-								width: 96rpx;
+								width: 80rpx;
 							}
 
 							.code {
-								width: 100rpx;
+								width: calc(100% - 80rpx);
 								overflow: hidden;
 								while-space: nowrap;
 								text-overflow: ellipsis;

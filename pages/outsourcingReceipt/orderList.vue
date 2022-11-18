@@ -21,7 +21,7 @@
 					<view class="header-image">
 						<image
 							:src="item.productionInfo?getimage(item.productionInfo):'../../static/qualityTesting/default.png'"
-							class="image" @click="bigimage(item)">
+							class="image" @click="goToIsComplete(item)">
 						</image>
 						<view :class="billStateColor(item.billState)" style="font-size: 32rpx;">
 							{{getbillState(item.billState)}}
@@ -42,6 +42,10 @@
 									<u-line dashed></u-line>
 									<view @click="outsourcingReceiptList(item)" class="button">
 										<view>收货列表</view>
+									</view>
+									<u-line dashed></u-line>
+									<view @click="goToIsComplete(item)" class="button">
+										<view>外协齐料</view>
 									</view>
 									<u-line dashed></u-line>
 									<view @click="updateOutsourcing(item)" class="button" v-if="item.existDetail===2">
@@ -308,27 +312,10 @@
 				// `http://${this.api}/upload${image.split('upload')[1]}`
 				return image
 			},
-			// 查看图片
-			bigimage(item) {
-				let imagelist = []
-				const {
-					productionInfo
-				} = item
-				if (productionInfo) {
-					const {
-						image
-					} = productionInfo
-					if (image == null) {
-						imagelist.push('../../static/qualityTesting/default.png')
-					} else {
-						imagelist.push(image)
-					}
-				} else {
-					imagelist.push('../../static/qualityTesting/default.png')
-				}
-				uni.previewImage({
-					urls: imagelist,
-					current: '',
+			// 跳转外协齐料列表
+			goToIsComplete(item){
+				uni.navigateTo({
+					url:`./outsourcingComplete?id=${item.id}`
 				})
 			},
 			// 外协收货跳转
