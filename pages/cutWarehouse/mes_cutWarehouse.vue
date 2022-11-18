@@ -1,95 +1,14 @@
 <template>
 	<view class="tabBox">
-		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:mespiecesmarket:cutInStorage')||
-		checkPermission($store.state.permissions,'mes:mespiecesmarket:repealCutInStorage')||
-		checkPermission($store.state.permissions,'mes:mespiecesmarket:cutOutStorage')
-		">
-			<view class="text">
-				本厂出入
-			</view>
-			<view class="factoryAccess">
-				<view v-for="(item, index) in cutWarehouseList" :key="index" @tap="toList(item)" >
-					<view class="factoryAccessItem" v-if="checkPermission($store.state.permissions,item.permissions)">
-						<image :src="item.src" class="image"></image>
-						<text class="boxItemTitle">{{ item.title }}</text>
-					</view>
-				</view>
-			</view>
-		</view>
-		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:mespiecesmarket:outsourcingReceipt')||checkPermission($store.state.permissions,'mes:mespiecesmarket:outsourcingDelivery')">
-			<view class="text">
-				外发加工出入
-			</view>
-			<view class="factoryAccess outboundProcessing" >
-			<view v-for="(item, index) in outwardProcessingList" :key="index"  @tap="toList(item)">
-				<view class="factoryAccessItem " v-if="checkPermission($store.state.permissions,item.permissions)">
-					<image :src="item.src" class="image"></image>
-					<text class="boxItemTitle">{{ item.title }}</text>
-				</view>
-			</view>
-			</view>
-		</view>
-		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:mesengineeringmanagement:workReport')">
-			<view class="text">
-				产量报工
-			</view>
-			<view class="factoryAccess workReport">
-			<view v-for="(item, index) in workReportList" :key="index"  @tap="toList(item)">
-				<view class="factoryAccessItem " >
-					<image :src="item.src" class="image"></image>
-					<text class="boxItemTitle">{{ item.title }}</text>
-				</view>
-			</view>
-			</view>
-		</view>
-		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:messpreadcloth:blanketDataCollect')">
-			<view class="text">
-				铺布数据采集
-			</view>
-			<view class="factoryAccess blanket" >
-				<view v-for="(item, index) in blanketDataList" :key="index" @tap="toList(item)" >
-					<view class="factoryAccessItem" >
-						<image :src="item.src" class="image"></image>
-						<text class="titleItem">{{ item.title }}</text>
-					</view>
-				</view>
-			</view>
-		</view>
-		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:assist:page')||checkPermission($store.state.permissions,'mes:assist:save')">
-			<view class="text">
-				外协收货
-			</view>
-			<view class="factoryAccess blanket" >
-				<view v-for="(item, index) in outsourcingDataList" :key="index" @tap="toList(item)" >
-					<view class="factoryAccessItem" v-if="checkPermission($store.state.permissions,item.permissions)">
-						<image :src="item.src" class="image"></image>
-						<text class="titleItem">{{ item.title }}</text>
-					</view>
-				</view>
-			</view>
-		</view>
-<!-- 		<view class="tabBoxItem">
-			<view class="text">
-				质检
-			</view>
-			<view class="factoryAccess blanket" >
-				<view v-for="(item, index) in qualityTestingDataList" :key="index" @tap="toList(item)" >
-					<view class="factoryAccessItem" >
-						<image :src="item.src" class="image"></image>
-						<text class="titleItem">{{ item.title }}</text>
-					</view>
-				</view>
-			</view>
-		</view> -->
-		<view class="tabBoxItem" v-if="checkPermission($store.state.permissions,'mes:mesengineeringmanagement:saveEngineeringManualPda') || checkPermission($store.state.permissions,'mes:mesengineeringmanagement:saveMaterialsReportingPda')">
-			<view class="text">
-				手动报工
-			</view>
-			<view class="factoryAccess blanket" >
-				<view v-for="(item, index) in ManualReportingList" :key="index" @tap="toList(item)" >
-					<view class="factoryAccessItem" v-if="checkPermission($store.state.permissions,item.permissions)">
-						<image :src="item.src" class="image"></image>
-						<text class="titleItem">{{ item.title }}</text>
+		<view v-for="item in houseList" :key="item.title">
+			<view class="tabBoxItem" v-if="checkPermission($store.state.permissions, item.permissions)">
+				<view class="text">{{item.name}}</view>
+				<view class="factoryAccess blanket" >
+					<view v-for="(i, index) in item.list" :key="index" @tap="toList(i)" >
+						<view class="factoryAccessItem" v-if="checkPermission($store.state.permissions, i.permissions)" :style="{backgroundColor: i.backgroundColor}">
+							<image :src="i.src" class="image"></image>
+							<text class="titleItem">{{ i.title }}</text>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -98,37 +17,22 @@
 </template>
 
 <script>
-import { 
-	cutWarehouseList,
-	outwardProcessingList,
-	blanketDataList,
-	workReportList,
-	qualityTestingDataList,
-	outsourcingDataList,
-	ManualReportingList
-	} from '../../utils/common.js';
+import { houseList} from '../../utils/common.js';
 import { checkPermission } from '../../utils/index.js'
 
 export default{
-	// name: 'cutWarehouse',
 	data(){
 		return{
-			cutWarehouseList,
-			outwardProcessingList,
-			blanketDataList,
-			workReportList,
-			qualityTestingDataList,
-			checkPermission,
-			outsourcingDataList,
-			ManualReportingList
+			houseList,
+			checkPermission
 		}
 	},
 	methods:{
 		toList(item){
-				uni.navigateTo({
-					url: item.link
-				});
-			}
+			uni.navigateTo({
+				url: item.link
+			});
+		}
 	}
 }
 </script>
@@ -171,18 +75,6 @@ export default{
 					text-align: center;
 					line-height: 16px;
 				}
-			}
-		}
-		.outboundProcessing{
-			justify-content: flex-start;
-			.factoryAccessItem{
-				background-color:#ecf8f3;
-			}
-		}
-		.workReport{
-			justify-content: flex-start;
-			.factoryAccessItem{
-				background-color:#fef7e4;
 			}
 		}
 		.blanket{
