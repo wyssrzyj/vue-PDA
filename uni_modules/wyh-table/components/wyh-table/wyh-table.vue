@@ -24,8 +24,8 @@
 			<scroll-view scroll-x="true">
 				<view class="th">
 					<template v-for="(th, ind) in thList">
-						<view class="td" :class="{active:nSortKey==th.sortKey&&th.sortKey}" v-if="!th.fixed" :key="ind" :style="{width: th.width||'250rpx'}" @click="bindSort(th.sortKey)" style="background-color: #F6F6F7;padding: 0 40rpx !important;">
-							<view v-html="th.text"></view>
+						<view class="td" :class="{active:nSortKey==th.sortKey&&th.sortKey}" v-if="!th.fixed" :key="ind" :style="{width: th.width||'250rpx'}" @click="bindSort(th.sortKey)" style="background-color: #F6F6F7;padding: 4rpx 40rpx !important;">
+							<view v-html="th.text" style="height: 100%;overflow: auto;display: flex;align-items: center;"></view>
 							<view class="ic" :class="nSort" v-if="th.sortKey"></view>
 						</view>
 					</template>
@@ -294,7 +294,7 @@
 				height: 80rpx;
 				font-size: 28rpx;
 				color: #333;
-				padding: 10rpx 14rpx;
+				padding: 4rpx 8rpx;
 				box-sizing: border-box;
 				border: 1px solid #f4f4f4;
 				.mark {
@@ -338,6 +338,7 @@
 				color: #666;
 				font-size: 32rpx;
 				text-align: center;
+				padding: 4rpx 8rpx;
 				.ic {
 					width: 28rpx;
 					height: 28rpx;

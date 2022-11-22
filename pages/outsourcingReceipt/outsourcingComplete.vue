@@ -84,7 +84,7 @@
 						if(item==='color'||item==='size'){ //颜色和包好
 							return {fixed:true,text:res.data.tableRow[0][item],dataKey:item,width:'180rpx'}
 						}else if(item==='packNum'){ //尺码
-							return {fixed:true,text:res.data.tableRow[0][item],dataKey:item,width:'150rpx'}
+							return {fixed:true,text:res.data.tableRow[0][item],dataKey:item,width:'100rpx'}
 						}else if(item==='supportingOrNot'){ //已完成
 							return {text:res.data.tableRow[0][item],dataKey:item,isSwitch:true,width:'180rpx'}
 						}else{ //部位字段
