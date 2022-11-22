@@ -35,7 +35,7 @@
 					</view>
 					<view class="com-nav-grid-all-list">
 						<view class="com-name">添加：</view>
-						<view class="com-code" style="margin-top: 6rpx;">{{assistForm.createDate}}</view>
+						<view class="com-code" style="margin-top: 6rpx;">{{datechange(assistForm.createDate)}}</view>
 					</view>
 					<view class="com-nav-grid-all-list">
 						<view class="com-name">数量：</view>
@@ -74,6 +74,10 @@
 			 this.getData()
 		},
 		methods:{
+			// 时间截取
+			datechange(time) {
+				return time ? time.slice(0, 10) : ''
+			},
 			getDictLabel,
 			async getData(){
 				const res=await Api.outsourcingComplete({...this.dataForm})
