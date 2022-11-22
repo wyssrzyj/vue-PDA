@@ -283,7 +283,15 @@ const Api = {
 	// 保存手动报工
 	submitManualReporting(url,reqData){
 		return requestApi(`${API_ADDRESS}${url}`, 'POST', reqData)
-	}
+	},
+	//外协齐货
+	outsourcingComplete(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/getOutsourcingDetails`, 'POST', reqData)
+	},
+	//外协手动齐货
+	outsourcingManualComplete(reqData){
+		return requestApi(`${API_ADDRESS}/mes/assist/updateSupportingOrNot`, 'GET', reqData)
+	},
 }
 
 export default Api

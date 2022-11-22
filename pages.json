@@ -127,6 +127,13 @@
 			}
 		},
 		{
+			"path": "pages/outsourcingReceipt/outsourcingComplete",
+			"style": {
+				"navigationBarTitleText": "外协齐料",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		{
 		    "path" : "pages/qualityTesting/mes-qualityTesting",
 			"style": {
 				"app-plus":{

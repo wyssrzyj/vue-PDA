@@ -183,7 +183,7 @@
 		onBackPress(options){
 			if (options.from === 'navigateBack') {
 					return false;
-				}
+			}
 			const {id,billNo,existDetail}=this.list
 			// 这里使用重定向比较好，不信可以自己多试几种，其余跳转方法在文章底部哦
 			if(id&&billNo&&existDetail){

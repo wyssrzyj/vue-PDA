@@ -282,6 +282,8 @@
 					})
 				})
 				this.tableData.push({...obj1,total:this.allnum(obj1)})
+				console.log(this.tableData)
+				console.log(this.processData)
 			},
 			// 小计
 			allnum(obj) {

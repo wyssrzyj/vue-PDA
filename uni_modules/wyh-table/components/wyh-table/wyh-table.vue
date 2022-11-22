@@ -4,7 +4,7 @@
 			<view class="th" style="background-color: #F6F6F7">
 				<view class="td tick" v-if="select" v-html="selectStr"></view>
 				<template v-for="(th, ind) in thList">
-					<view class="td" :class="{active:nSortKey==th.sortKey&&th.sortKey}" v-if="th.fixed" :key="ind" :style="{width: th.width||'250rpx'}"  @click="bindSort(th.sortKey)">
+					<view class="td" :class="{active:nSortKey==th.sortKey&&th.sortKey}" v-if="th.fixed" :key="ind" :style="{minWidth: th.width||'250rpx'}"  @click="bindSort(th.sortKey)">
 						<view v-html="th.text"></view>
 						<view class="ic" :class="nSort" v-if="th.sortKey"></view>
 					</view>
@@ -13,7 +13,7 @@
 			<view class="tr" v-for="(item, ind) in list" :key="ind" @click="links?bindLinks(item):bindClick(item)" :style="{backgroundColor:item.name==='小计'?'#F2FFF0':'white'}">
 				<view class="td tick" :class="{checked:item.checked,disabled:item.disabled}" @click.stop="bindSelect(ind)" v-if="select"></view>
 				<template v-for="(th, index) in thList">
-					<view class="td" v-if="th.fixed" :key="index" :style="{width: th.width||'250rpx'}">
+					<view class="td" v-if="th.fixed" :key="index" :style="{minWidth: th.width||'250rpx'}">
 						<view class="mark" v-if="th.markKey && item[th.markKey]">{{item[th.markKey]}}</view>
 						<view class="txt">{{ th.dataKey == 'index'?ind+1 : item[th.dataKey] }}</view>
 					</view>
@@ -33,11 +33,13 @@
 				<view class="tr" :class="{disabled:item.disabled}" v-for="(item, ind) in list" :key="ind" @click="links?bindLinks(item):bindClick(item)">
 					<template v-for="(th, index) in thList">
 						<view class="td" v-if="!th.fixed" :key="index" :style="{width: th.width||'250rpx',backgroundColor:item.name==='小计'?'#F2FFF0':'white'}">
-							<view class="mark" v-if="th.markKey && item[th.markKey]">{{item[th.markKey]}}</view>
+							<view class="mark" v-if="th.markKey && item[th.markKey]" :style="setColor(item,th)">{{item[th.markKey]}}</view>
 							<!-- <view v-if="th.markKey && item[th.markKey]" v-html="item[th.markKey]"></view> -->
 							<input class="val" :type="th.inputType" v-model="item[th.dataKey]" :placeholder="th.inputPlaceholder" @confirm="bindConfirm(ind)" @input="(e)=>bindInput(e,ind,th.dataKey)"  v-if="th.isInput" :style="{width: th.inputWidth||'80rpx', height: th.inputHeight||'44rpx', fontSize: th.inputSize||'28rpx', color: th.inputColor||'#333'}"/>
+							<!-- <switch :checked="item[th.dataKey]" v-if="th.isSwitch"/> -->
+							<evan-switch v-model="item[th.dataKey]" :active-value="true" :inactive-value="false" inactive-color="#C5C5C5" :size="20" v-if="th.isSwitch" @change="switchChange(item,th)"></evan-switch>
 							<!-- <uni-easyinput class="val" :type="th.inputType" v-model="th.unit" :placeholder="th.inputPlaceholder" :clearable="th.inputClearable" v-if="th.isInput"/> -->
-							<text v-else v-html="th.dataKey == 'index'?ind+1 : item[th.dataKey]"></text>
+							<text v-else v-html="getHtml(item,th)" :style="setColor(item,th)"></text>
 							<text class="unit" v-if="th.unit">{{th.unit}}</text>
 						</view>
 					</template>
@@ -48,8 +50,12 @@
 </template>
 
 <script>
+	import evanSwitch from "@/components/evan-switch/evan-switch.vue"
 	export default {
 		name:"wyh-table",
+		components:{
+			evanSwitch
+		},
 		props: {
 			// 表头
 			thList: {
@@ -130,6 +136,25 @@
 		},
 		
 		methods: {
+			getHtml(item,th){
+				if(item[th.dataKey].indexOf('/')>-1&&th.isColor){
+					return item[th.dataKey].split('/').slice(0,-1).join('/')
+				}else{
+					return th.dataKey == 'index'?ind+1 : item[th.dataKey]
+				}
+			},
+			switchChange(item,th){
+				this.$emit('switch-change',item,th)
+			},
+			//每一个单元格字段变颜色dataKey:'20/20/true'
+			setColor(item,th){
+				item[th.dataKey]=String(item[th.dataKey])
+				if(item[th.dataKey].indexOf('/')>-1&&th.isColor){
+					return {color:item[th.dataKey].split('/')[item[th.dataKey].split('/').length-1]==='true'?'green':'red'}
+				}else{
+					return {color:'black'}
+				}
+			},
 			// 排序
 			bindSort(sortKey) {
 				if(!sortKey) return false;
@@ -269,7 +294,7 @@
 				height: 80rpx;
 				font-size: 28rpx;
 				color: #333;
-				padding: 0 14rpx;
+				padding: 10rpx 14rpx;
 				box-sizing: border-box;
 				border: 1px solid #f4f4f4;
 				.mark {
