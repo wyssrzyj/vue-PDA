@@ -51,7 +51,7 @@
 										<view>外协齐料</view>
 									</view>
 									<u-line dashed></u-line>
-									<view @click="updateOutsourcing(item)" class="button" v-if="item.existDetail===2">
+									<view @click="updateOutsourcing(item)" class="button" v-if="item.existDetail===2&&item.receiveNum===0">
 										<view>修改</view>
 									</view>
 									<view class="de-button" v-else>
