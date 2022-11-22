@@ -37,7 +37,7 @@
 							<!-- <view v-if="th.markKey && item[th.markKey]" v-html="item[th.markKey]"></view> -->
 							<input class="val" :type="th.inputType" v-model="item[th.dataKey]" :placeholder="th.inputPlaceholder" @confirm="bindConfirm(ind)" @input="(e)=>bindInput(e,ind,th.dataKey)"  v-if="th.isInput" :style="{width: th.inputWidth||'80rpx', height: th.inputHeight||'44rpx', fontSize: th.inputSize||'28rpx', color: th.inputColor||'#333'}"/>
 							<!-- <switch :checked="item[th.dataKey]" v-if="th.isSwitch"/> -->
-							<evan-switch v-model="item[th.dataKey]" :active-value="true" :inactive-value="false" inactive-color="#C5C5C5" :size="20" v-if="th.isSwitch" @change="switchChange(item,th)"></evan-switch>
+							<evan-switch v-model="item[th.dataKey]" :active-value="true" :inactive-value="false" inactive-color="#C5C5C5" :size="20" v-else-if="th.isSwitch" @change="switchChange(item,th)"></evan-switch>
 							<!-- <uni-easyinput class="val" :type="th.inputType" v-model="th.unit" :placeholder="th.inputPlaceholder" :clearable="th.inputClearable" v-if="th.isInput"/> -->
 							<text v-else v-html="getHtml(item,th)" :style="setColor(item,th)"></text>
 							<text class="unit" v-if="th.unit">{{th.unit}}</text>
