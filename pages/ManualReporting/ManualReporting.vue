@@ -202,7 +202,8 @@
 				}
 				
 				// 人员
-				let userRes = await Api.getAlluser()
+				let url = this.type == '1' ? '/mes/mesemployee/packagingList' : '/mes/mesemployee/list'
+				let userRes = await Api.getAlluser(url)
 				if(userRes.code === 0){
 					this.userList = userRes.data.map(item => {
 						return {id: item.id,showKey:`${item.realName}-${item.staffId}`}
@@ -224,9 +225,7 @@
 			async produceSelectSure(val){
 				if(Object.keys(val).length === 0) return
 				this.sectionAndCoutry = {}
-				this.section = ''
 				this.sectionList = []
-				this.checkedList = []
 				this.coutryList = []
 				this.thList = [{text: '颜色 / 尺码',fixed: true, dataKey: 'name',  width: '200rpx'}],
 				this.list = []
@@ -257,7 +256,24 @@
 					this.sectionList = Object.keys(this.sectionAndCoutry).map(item => {
 						return {name: item}
 					})
+					
+					//判断工段是否删除
+					let sectionList = this.sectionList.map(item => item.name)
+					if (sectionList.includes(this.section)) {
+						let checkedList = JSON.parse(JSON.stringify(this.checkedList))
+						this.sectionSelectClick({name:this.section}) //设置工序列表
+						// 判断工序是否删除,只把没被删除的工序缓存取出来
+						let coutryList = this.coutryList.map(item => item.value)
+						checkedList.forEach(item => {
+							if (coutryList.includes(item.value)) this.checkedList.push(item)
+						})
+					} else {
+						this.section = ''
+						this.checkedList = []
+					}
 				} else {
+					this.section = ''
+					this.checkedList = []
 					message(sectionRes.msg)
 				}
 
@@ -523,37 +539,33 @@
 				}
 			}
 			// 表格
-			.cart-table{
-				width: 100%;
-				border-collapse: collapse;
-				border-spacing: 0;
-				margin: 20rpx 0;
-				.cart-table-th{
-					min-width: 220rpx;
-					// height: 100rpx;
-					// line-height: 90rpx;
-					box-sizing: border-box;
-					color: #666666;
-					border: solid 1px #666666;
-					vertical-align: center;
-					font-size: 30rpx;
-					text-align: center;
-					background-color: #f1f1f1;
-					padding: 20rpx 0;
-					overflow: scroll;
-				}
-				.cart-table-td{
-					background-color: #ffffff;
-					// height: 100rpx;
-					// line-height: 80rpx;
-					text-align: center;
-					border: solid 1px #666666;
-					color: #666666;
-					padding: 10rpx;
-					vertical-align: center;
-					box-sizing: border-box;
-				}
-			}
+			// .cart-table{
+			// 	width: 100%;
+			// 	border-collapse: collapse;
+			// 	border-spacing: 0;
+			// 	margin: 20rpx 0;
+			// 	.cart-table-th{
+			// 		min-width: 220rpx;
+			// 		box-sizing: border-box;
+			// 		color: #666666;
+			// 		border: solid 1px #666666;
+			// 		vertical-align: center;
+			// 		font-size: 30rpx;
+			// 		text-align: center;
+			// 		background-color: #f1f1f1;
+			// 		padding: 20rpx 0;
+			// 		overflow: scroll;
+			// 	}
+			// 	.cart-table-td{
+			// 		background-color: #ffffff;
+			// 		text-align: center;
+			// 		border: solid 1px #666666;
+			// 		color: #666666;
+			// 		padding: 10rpx;
+			// 		vertical-align: center;
+			// 		box-sizing: border-box;
+			// 	}
+			// }
 		}
 		.bottomBtns{
 			position: fixed;

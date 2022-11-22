@@ -120,8 +120,8 @@ const Api = {
 		return requestApi(`${API_ADDRESS}/mes/mesengineeringmanagement/user`, 'GET', reqData)
 	},
 	//获取所有员工列表
-	getAlluser(reqData){
-		return requestApi(`${API_ADDRESS}/mes/mesemployee/list`, 'GET', reqData)
+	getAlluser(url,reqData){
+		return requestApi(`${API_ADDRESS}${url}`, 'GET', reqData)
 	},
 	// 根据布条码获取收货数据
 	getReceiveData(reqData) {
