@@ -34,7 +34,7 @@
 							</view>
 							<view style="position: absolute;right: 40rpx;" @click.stop="handleShow(item)">
 								<u-icon name="plus-circle" color="#59b7ff" size="44"></u-icon>
-								<view style="position: absolute;right: -30rpx;top: 40rpx;"
+								<view style="position: absolute;right: -30rpx;top: 40rpx;z-index:99"
 									v-if="item.show">
 									<view @click="outsourcingReceiptindex(item)" class="button">
 										<view>外协收货</view>
@@ -282,8 +282,6 @@
 					})
 				})
 				this.tableData.push({...obj1,total:this.allnum(obj1)})
-				console.log(this.tableData)
-				console.log(this.processData)
 			},
 			// 小计
 			allnum(obj) {
