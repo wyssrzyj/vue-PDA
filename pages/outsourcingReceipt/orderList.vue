@@ -44,7 +44,10 @@
 										<view>收货列表</view>
 									</view>
 									<u-line dashed></u-line>
-									<view @click="goToIsComplete(item)" class="button">
+									<view @click="goToIsComplete(item)" class="button" v-if="item.existDetail===2">
+										<view>外协齐料</view>
+									</view>
+									<view class="de-button" v-else>
 										<view>外协齐料</view>
 									</view>
 									<u-line dashed></u-line>
@@ -314,9 +317,11 @@
 			},
 			// 跳转外协齐料列表
 			goToIsComplete(item){
-				uni.navigateTo({
-					url:`./outsourcingComplete?id=${item.id}`
-				})
+				if(item.existDetail===2){
+					uni.navigateTo({
+						url:`./outsourcingComplete?id=${item.id}`
+					})
+				}
 			},
 			// 外协收货跳转
 			outsourcingReceiptindex(item) {

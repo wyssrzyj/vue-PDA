@@ -87,7 +87,7 @@
 			<template #content>
 				<view class="popup">
 					<view class="pop-title"><view style="width: 12rpx;height: 32rpx;background-color: #1794D1;margin-right: 6rpx;"></view>选择外协单</view>
-					<radio-group @change="onChange" class="uni-list" style="max-height: 404rpx;overflow: auto;">
+					<radio-group @change="onChange" class="uni-list" style="width:100%;max-height: 404rpx;overflow: auto;">
 						<view class="header" v-for="(item,index) in delieveryList" :key="index">
 								<view class="header-image">
 									<image
@@ -103,17 +103,13 @@
 								</view>
 								<view class="header-title">
 									<view class="title" style="height: 38rpx !important;">
-										<view class="" style="height: 38rpx !important;">单号：{{item.billNo}}</view>
+										<view class="title-no" style="height: 38rpx !important;">单号：{{item.billNo}}</view>
 									</view>
 									<view class="header-grid-alllist">
-										<!-- <view class="header-grid-all-list">
-											<view class="name">生产单：</view>
-											<view class="code">{{item.productionInfo.productOrderNum}}</view>
-										</view> -->
 										<view class="header-grid-all-list">
 											<view class="name">款号：</view>
-											<!-- <view class="code">{{item.productionInfo.proName}}</view> -->
-											<view class="code">1111</view>
+											<view class="code">{{item.productionInfo.proName}}</view>
+											<!-- <view class="code">1111</view> -->
 										</view>
 										<view class="header-grid-all-list">
 											<view class="name">类型：</view>
@@ -226,7 +222,7 @@
 				popInputValue:"", //部位输入框
 				tagList:[], //tags列表
 				receiveId:"" ,//收货单id,
-				delieveryList:[], //带出所有的外协单
+				delieveryList:[{}], //带出所有的外协单
 				isAll:1, //是否完成
 				barCode:"",  //二维码信息
 				checkTagsList:[], //选中的部位
@@ -298,7 +294,6 @@
 				Api.outsourcingTakeDelieveryGetInfo({
 					receiveId:this.receiveId
 				}).then(res=>{
-					// console.log(res)
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
@@ -683,7 +678,7 @@
 				}
 				
 				.header-title {
-					flex: 1;
+					width: calc(100% - 204rpx);
 					display: flex;
 					flex-wrap: wrap;
 					margin-left: 20rpx;
@@ -692,6 +687,12 @@
 						width: 100%;
 						font-size: 30rpx;
 						font-weight: 600;
+						.title-no{
+							width: 100%;
+							white-space: nowrap;
+							text-overflow: ellipsis;
+							overflow: hidden;
+						}
 					}
 
 					.header-grid-alllist {
