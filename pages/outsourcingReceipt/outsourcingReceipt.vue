@@ -191,8 +191,9 @@
 					return false;
 			}
 			if(this.receiveId){
-				uni.redirectTo({
-					url: `/pages/outsourcingReceipt/outsourcingReceiptList`
+				const {assistId,billNo,existDetail}=this.modelData
+				uni.navigateTo({
+					url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}&receiptFlag=${true}`
 				})
 				return true;
 			}
@@ -209,7 +210,7 @@
 					//收货单信息
 					billType:"",  //外协类型
 					billName:"", //外协类型
-					assistId:"", //外协编号
+					assistId:"", //生产单id
 					position:"", //外协部位
 					completeFlag:0 //全部完成按钮
 				},
