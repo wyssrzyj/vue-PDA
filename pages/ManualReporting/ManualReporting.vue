@@ -50,29 +50,6 @@
 		</view>
 		
 		<view class="main-info" v-else>
-<!-- 			<view style="width: 100%;overflow-x: scroll;position: relative;" v-if="skuList[0]">
-				<table class="cart-table">
-				  <thead>
-					<tr>
-						<th class="cart-table-th">颜色 / 尺码</th>
-						<th class="cart-table-th" v-for="(item,index) in Object.keys(skuList[0].size)" :key="index">{{item}}</th>
-					</tr>
-				  </thead>
-				  <tbody>
-					<tr v-for="(item,index) in skuList" :key="index">
-					  <td class="cart-table-td">
-					  		<view>{{item.colorName}}</view>
-					  </td>
-					  <template v-if="item.size">
-						  <td class="cart-table-td" v-for="(i,indey) in Object.keys(skuList[0].size)" :key="indey">
-							  <input type="text" v-model="item.size[i]" style="border: 1px solid #aaa;width:100%;height: 70rpx;" @input="(e)=>handleInput(e,item,i)">
-						  </td>
-					  </template>
-
-					</tr>
-				  </tbody>
-				</table>
-			</view> -->
 			<wyh-table :thList="thList" :items="list" v-if="list.length > 0" @onInput="handleInput" />
 			<view v-else style="font-size: 30rpx;font-weight: bold;color: #ff6262;">请选择生产单</view>
 		</view>
@@ -174,19 +151,30 @@
 				// 判断生产单是否被删除，选择生产单
 				let p = this.produceList.find(item => item.id === stateStorage.produce.id)
 				//生产单被删除缓存中断
-				if (!p) return
+				if (!p) {
+					if(this.type == '1') {
+						this.section = '尾部'
+						this.checkedList = [{ id: '85387', productCode: 'bz', productName: '包装', section: '尾部', name: '包装', value: '包装' }]
+					}
+					return
+				}
 				// 选择生产单，获取sku和工段
 				await this.produceSelectSure({...stateStorage.produce,showKey:`${stateStorage.produce.productOrderNum}(${stateStorage.produce.proNum})`})
 				
-				//判断工段是否删除
-				let sectionList = this.sectionList.map(item => item.name)
-				if (sectionList.includes(stateStorage.section)) {
-				  this.sectionSelectClick({name:stateStorage.section}) //设置工序列表
-				  // 判断工序是否删除,只把没被删除的工序缓存取出来
-				  let coutryList = this.coutryList.map(item => item.value)
-				  stateStorage.checkedList.forEach(item => {
-					if (coutryList.includes(item.value)) this.checkedList.push(item)
-				  })
+				if(this.type == '1') {
+					this.section = '尾部'
+					this.checkedList = [{ id: '85387', productCode: 'bz', productName: '包装', section: '尾部', name: '包装', value: '包装' }]
+				} else {
+					//判断工段是否删除
+					let sectionList = this.sectionList.map(item => item.name)
+					if (sectionList.includes(stateStorage.section)) {
+					  this.sectionSelectClick({name:stateStorage.section}) //设置工序列表
+					  // 判断工序是否删除,只把没被删除的工序缓存取出来
+					  let coutryList = this.coutryList.map(item => item.value)
+					  stateStorage.checkedList.forEach(item => {
+						if (coutryList.includes(item.value)) this.checkedList.push(item)
+					  })
+					}
 				}
 			},
 			
@@ -250,6 +238,7 @@
 				}
 				
 				// 获取工段
+				if (this.type == '1') return
 				let sectionRes = await Api.produceSection({id:val.id})
 				if(sectionRes.code === 0) {
 					this.sectionAndCoutry = sectionRes.data || {}
@@ -538,34 +527,6 @@
 					color: #ffffff;
 				}
 			}
-			// 表格
-			// .cart-table{
-			// 	width: 100%;
-			// 	border-collapse: collapse;
-			// 	border-spacing: 0;
-			// 	margin: 20rpx 0;
-			// 	.cart-table-th{
-			// 		min-width: 220rpx;
-			// 		box-sizing: border-box;
-			// 		color: #666666;
-			// 		border: solid 1px #666666;
-			// 		vertical-align: center;
-			// 		font-size: 30rpx;
-			// 		text-align: center;
-			// 		background-color: #f1f1f1;
-			// 		padding: 20rpx 0;
-			// 		overflow: scroll;
-			// 	}
-			// 	.cart-table-td{
-			// 		background-color: #ffffff;
-			// 		text-align: center;
-			// 		border: solid 1px #666666;
-			// 		color: #666666;
-			// 		padding: 10rpx;
-			// 		vertical-align: center;
-			// 		box-sizing: border-box;
-			// 	}
-			// }
 		}
 		.bottomBtns{
 			position: fixed;
