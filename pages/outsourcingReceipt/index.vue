@@ -82,7 +82,8 @@
 		<view class="footer">
 			<u--form ref="form" :labelStyle="{'font-size':'30rpx','font-weight': 600}" labelAlign="right">
 				<u-form-item label="全部完成" borderBottom labelWidth="150">
-					<switch :checked="switch_value" class="switch" @change="change()" color="#2979ff !important" style="transform:scale(0.7)" />
+					<!-- <switch :checked="switch_value" class="switch" @change="change()" color="#2979ff !important" style="transform:scale(0.7)" /> -->
+					<evan-switch v-model="switch_value" :active-value="1" :inactive-value="0" inactive-color="#C5C5C5" :size="20"></evan-switch>
 				</u-form-item>
 				<u-form-item label="收货数量" :required="true" borderBottom labelWidth="150" v-if="list.existDetail === 0">
 					<u--input v-model="receiveNum" :clearable="true" border="none" placeholder="请输入数量" type="number">
@@ -169,7 +170,7 @@
 				tableData1: [],
 				processData1: [],
 				downupflag: false,
-				switch_value: false,
+				switch_value: 0,
 				change_list:{},
 				change_num:null,
 				popValue:false, //选择部位弹窗
@@ -207,7 +208,7 @@
 				this.change_list.tableData =this.change_list.tableData.splice(0,this.change_list.tableData.length-1)
 				this.receiveNum = this.change_list.num
 				this.receiveId=this.change_list.id
-				this.switch_value = this.change_list.completeFlag?true:false
+				this.switch_value = this.change_list.completeFlag
 			}
 			this.change_num = num
 			this.getdata(id)
@@ -371,9 +372,9 @@
 					current: '',
 				})
 			},
-			change() {
-				this.switch_value = !this.switch_value
-			},
+			// change() {
+			// 	this.switch_value = !this.switch_value
+			// },
 			submit() {
 				if(this.list.position===''){
 					return toasting('请选择部位',()=>{},3000)
@@ -405,7 +406,7 @@
 				}
 				let obj = {
 					"assistId": this.list.id,
-					"completeFlag": this.switch_value?1:0,
+					"completeFlag": this.switch_value,
 					"detailList": arr,
 					"position":this.list.position,
 					"existDetail": this.list.existDetail,

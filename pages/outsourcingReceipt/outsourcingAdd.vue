@@ -58,14 +58,18 @@
 			<table class="cart-table" v-if="tableVisible&&outSourcingList.length>0">
 			  <thead>
 				<tr>
-				  <th style="min-width: 160rpx;" class="cart-table-th" v-for="(tdItem,ind) in Object.keys(cartList[0])" v-if="tdItem!=='total'">{{cartList[0][tdItem]}}</th>
-				  <th class="cart-table-th">小计</th>
+				  <th style="min-width: 160rpx;" class="cart-table-th">颜色\尺码</th>
+				  <th style="min-width: 160rpx;" class="cart-table-th" v-for="(tdItem,ind) in cartTitleList">{{cartList[0][tdItem.name]}}</th>
+				  <th style="min-width: 160rpx;" class="cart-table-th">小计</th>
 				</tr>
 			  </thead>
 			  <tbody>
 				<tr v-for="(item, index) in cartList.slice(1)" :key="index">
-				  <td class="cart-table-td" v-for="(tdItem,ind) in Object.keys(item)" :key="ind" v-if="tdItem!=='total'">
-					<view>{{item[tdItem]}}</view>
+				  <td class="cart-table-td">
+					<view>{{item.color}}</view>
+				  </td>
+				  <td class="cart-table-td" v-for="(tdItem,ind) in cartTitleList" :key="ind">
+					<view>{{item[tdItem.name]}}</view>
 				  </td>
 				  <td class="cart-table-td">
 				  	 <view>{{item.total}}</view>
@@ -74,7 +78,8 @@
 			  </tbody>
 			 <tfoot>
 			      <tr>
-					<th class="cart-table-th" style="background-color: #F2FFF0;" v-for="(tdFooter,ind) in Object.keys(cartList[0])" :key="ind" v-if="tdFooter!=='total'">{{getAllTotal(tdFooter)}}</th>
+					<th class="cart-table-th" style="background-color: #F2FFF0;">总计</th>
+					<th class="cart-table-th" style="background-color: #F2FFF0;" v-for="(tdFooter,ind) in cartTitleList" :key="ind">{{getAllTotal(tdFooter.name)}}</th>
 					<th class="cart-table-th" style="background-color: #F2FFF0;">{{getAllTotal('total')}}</th>
 			      </tr>
 			    </tfoot>
@@ -171,6 +176,8 @@
 				cartList:[
 					{color:'颜色/尺码'},
 				],
+				cartTitleList:[],//外协分扎所有数据汇总
+				skuList: [], //该生产单sku数组
 				sectionList:[], //外协类型列表
 				sectionList1:[], //外协工厂列表
 				outSourcingList:[], //扎包条码列表
@@ -199,6 +206,13 @@
 			this.handleOutSourcing = useDebounce(this.handleOutSourcing); //防抖
 		},
 		methods:{
+			async getSku(id){
+			    let res = await Api.outsourcingGetSku({id})
+			    if (res.code !== 0) {
+			      return ui.error(res.msg)
+			    }
+			    this.skuList = res.data.size
+			},
 			handleTap(){
 				this.$refs.jpicker.showPicker()
 			},
@@ -217,6 +231,7 @@
 			//初始化
 			init(){
 				this.outSourcingList=[]
+				this.cartTitleList=[]
 				if(this.assistId){
 					this.getInfo(this.assistId)
 				}
@@ -301,10 +316,11 @@
 			},
 			//扫描包条码
 			handleScanPCS(barCode){
-				Api.outsourcingAddGet({barCode:String(barCode)}).then(res=>{
+				Api.outsourcingAddGet({barCode:String(barCode)}).then(async res=>{
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
+					await this.getSku(res.data.productionId)
 					//控制同一生产单
 					const produceFind=this.outSourcingList.find(item=>item.productionId===res.data.productionId)
 					if(!produceFind&&this.outSourcingList.length>0){
@@ -331,6 +347,10 @@
 							 }else{
 								 //不同类型赋值
 								 find[`${sizeKey}`]=res.data.num
+								 const aFind = this.skuList.find(aItem => aItem.name === sizeKey)
+								 if (!this.cartTitleList.find(bItem => bItem.name === aFind?.name)) {
+								   this.cartTitleList.push(aFind)
+								 }
 							 }
 							 // 表格没有值赋0
 							 this.cartList.forEach(k=>{
@@ -353,6 +373,10 @@
 								})
 								//赋值扫描的值
 								obj[`${sizeKey}`]=res.data.num
+								const aFind = this.skuList.find(aItem => aItem.name === sizeKey)
+								if (!this.cartTitleList.find(bItem => bItem.name === aFind?.name)) {
+								  this.cartTitleList.push(aFind)
+								}
 								this.cartList.push(obj)
 							}
 							//小计计算
@@ -367,6 +391,7 @@
 							})
 						}
 					}
+					this.cartTitleList = this.cartTitleList.sort((i, j) => i.index - j.index)
 				})
 			},
 			//总计

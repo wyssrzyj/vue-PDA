@@ -62,8 +62,8 @@
 						</view>
 						<view class="header-grid-alllist">
 							<view class="header-grid-all-list">
-								<view class="name" style="width: 96rpx;">生产单：</view>
-								<view class="code" style="margin-top: 5rpx;">{{item.productionInfo.productOrderNum}}</view>
+								<view class="name">款号：</view>
+								<view class="code">{{item.productionInfo.productOrderNum}}</view>
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">类型：</view>
@@ -75,22 +75,22 @@
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">添加：</view>
-								<view class="code" style="margin-top: 5rpx;">
+								<view class="code">
 									{{item.createDate?datechange(item.createDate):''}}</view>
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">交期：</view>
-								<view class="code" style="margin-top: 5rpx;">
+								<view class="code">
 									{{item.deliverTime?datechange(item.deliverTime):''}}</view>
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">完成：</view>
-								<view class="code" style="margin-top: 5rpx;">
+								<view class="code">
 									{{item.completeTime?datechange(item.completeTime):''}}</view>
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">数量：</view>
-								<view class="code" style="display: flex;align-items: center;margin-top: 5rpx;">
+								<view class="code" style="display: flex;align-items: center;">
 									<view>{{item.num}}</view>
 									<view v-if="item.existDetail!==0"
 										style="display: flex;margin-left: 10rpx;font-size: 12px;color: #0c99f2;margin-bottom: 3rpx;"
@@ -106,7 +106,11 @@
 							</view>
 							<view class="header-grid-all-list">
 								<view class="name">收货：</view>
-								<view class="code" style="margin-top: 5rpx;">{{item.receiveNum}}</view>
+								<view class="code">{{item.receiveNum}}</view>
+							</view>
+							<view class="header-grid-all-list" style="width: 100%;">
+								<view class="name">部位：</view>
+								<view>{{item.position}}</view>
 							</view>
 						</view>
 					</view>
@@ -212,9 +216,9 @@
 							list
 						} = res.data
 						if (list.length == 0) {
-							if (num == 1) {
-								this.allList = []
-							}
+							// if (num == 1) {
+							// 	this.allList = []
+							// }
 							toasting('暂无更多数据',()=>{},3000)
 						} else {
 							this.a++
@@ -438,7 +442,6 @@
 								overflow: hidden;
 								while-space: nowrap;
 								text-overflow: ellipsis;
-								white-space: nowrap;
 							}
 						}
 					}

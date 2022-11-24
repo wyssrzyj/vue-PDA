@@ -232,6 +232,9 @@ const Api = {
 	outsourcingAddSave(reqData){
 		return requestApi(`${API_ADDRESS}/mes/assist/pdasave`, 'POST', reqData)
 	},
+	outsourcingGetSku(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesordersubpackage/getSku`, 'GET', reqData)
+	},
 	//获取外协单信息
 	outsourcingAddGetInfo(reqData){
 		return requestApi(`${API_ADDRESS}/mes/assist/assistinfo`, 'GET', reqData)

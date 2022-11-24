@@ -8,7 +8,7 @@
 					<text class="info" style="color: #ccc;" v-else>历史记录</text>
 				</view>
 			</view>
-			<view class="ul">
+			<view class="ul" :style="{minHeight:outSourcingList.length>0?'60rpx':'90rpx'}">
 				<view class="ul-white" v-if="outSourcingList.length===0">
 					暂无数据
 				</view>
@@ -46,14 +46,18 @@
 			<table class="cart-table" v-if="cartList.length>1">
 			  <thead>
 				<tr>
-				  <th style="min-width: 160rpx;" class="cart-table-th" v-for="(tdItem,ind) in Object.keys(cartList[0])" v-if="tdItem!=='total'">{{cartList[0][tdItem]}}</th>
+				  <th style="min-width: 160rpx;" class="cart-table-th">颜色\尺码</th>
+				  <th style="min-width: 160rpx;" class="cart-table-th" v-for="(tdItem,ind) in cartTitleList">{{cartList[0][tdItem.name]}}</th>
 				  <th class="cart-table-th">小计</th>
 				</tr>
 			  </thead>
 			  <tbody>
 				<tr v-for="(item, index) in cartList.slice(1)" :key="index">
-				  <td class="cart-table-td" v-for="(tdItem,ind) in Object.keys(item)" :key="ind" v-if="tdItem!=='total'">
-					<view>{{item[tdItem]}}</view>
+				  <td class="cart-table-td">
+					<view>{{item.color}}</view>
+				  </td>
+				  <td class="cart-table-td" v-for="(tdItem,ind) in cartTitleList" :key="ind">
+					<view>{{item[tdItem.name]}}</view>
 				  </td>
 				  <td class="cart-table-td">
 				  	 <view>{{item.total}}</view>
@@ -62,7 +66,8 @@
 			  </tbody>
 			 <tfoot>
 			      <tr>
-					<th class="cart-table-th" style="background-color: #F2FFF0;" v-for="(tdFooter,ind) in Object.keys(cartList[0])" :key="ind" v-if="tdFooter!=='total'">{{getAllTotal(tdFooter)}}</th>
+					<th class="cart-table-th" style="background-color: #F2FFF0;">总计</th>
+					<th class="cart-table-th" style="background-color: #F2FFF0;" v-for="(tdFooter,ind) in cartTitleList" :key="ind">{{getAllTotal(tdFooter.name)}}</th>
 					<th class="cart-table-th" style="background-color: #F2FFF0;">{{getAllTotal('total')}}</th>
 			      </tr>
 			    </tfoot>
@@ -192,7 +197,7 @@
 			}
 			if(this.receiveId){
 				const {assistId,billNo,existDetail}=this.modelData
-				uni.navigateTo({
+				uni.redirectTo({
 					url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}&receiptFlag=${true}`
 				})
 				return true;
@@ -210,7 +215,7 @@
 					//收货单信息
 					billType:"",  //外协类型
 					billName:"", //外协类型
-					assistId:"", //生产单id
+					assistId:"", //外协单id
 					position:"", //外协部位
 					completeFlag:0 //全部完成按钮
 				},
@@ -218,6 +223,8 @@
 				cartList:[
 					{color:'颜色/尺码'},
 				],
+				cartTitleList:[],//外协分扎所有数据汇总
+				skuList: [], //该生产单sku数组
 				popValue:false, //选择部位弹窗
 				scanPopValue:false, //扫码弹窗
 				popInputValue:"", //部位输入框
@@ -227,7 +234,7 @@
 				isAll:1, //是否完成
 				barCode:"",  //二维码信息
 				checkTagsList:[], //选中的部位
-				position:"" //当前外协单的部位
+				position:"",//当前外协单的部位
 			}
 		},
 		mounted(){
@@ -235,6 +242,13 @@
 			this.init()
 		},
 		methods:{
+			async getSku(id){
+			    let res = await Api.outsourcingGetSku({id})
+			    if (res.code !== 0) {
+			      return ui.error(res.msg)
+			    }
+			    this.skuList = res.data.size
+			},
 			//删除部位
 			handleDelete({currentTag,allTags}){
 				//弹出框置灰
@@ -259,16 +273,17 @@
 					assistId:this.modelData.assistId,
 					barCode:this.barCode,
 					isAll:this.isAll
-				}).then(res=>{
+				}).then(async res=>{
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
+					await this.getSku(res.data.mesAssistDTO.productionId)
 					if(this.isAll===1){
 						this.outSourcingList=res.data.mesOrderSubpackageItemsList
 					}else{
 						this.outSourcingList=[{...res.data.mesOrderSubpackageItems}]
 					}
-					this.modelData.billNo=res.data.mesAssistDTO.billNo    //外协但编号
+					this.modelData.billNo=res.data.mesAssistDTO.billNo  //外协但编号
 					this.modelData.existDetail=res.data.mesAssistDTO.existDetail    //外协但编号
 					this.modelData.billType=res.data.mesAssistDTO.billType //外协类型
 					this.modelData.position=res.data.mesAssistDTO.position //收货单部位
@@ -276,6 +291,14 @@
 					this.modelData.billName=getDictLabel(this.$store.state.dicts,'outsourcing_type',res.data.mesAssistDTO.billType) //赋值外发类型
 					this.checkTagsList=this.modelData.position.split(',').map(item=>({partsName:item,flag:true}))
 					this.cartList=res.data.mesAssistOrReceiveVO.tableRow
+					for(let key in this.cartList[0]){
+						if(key!=='total'&&key!=='color'){
+							const aFind = this.skuList.find(aItem => aItem.name === key)
+							if (!this.cartTitleList.find(bItem => bItem.name === aFind?.name)) {
+							  this.cartTitleList.push(aFind)
+							}
+						}
+					}
 				})
 				this.scanPopValue=false
 			},
@@ -285,6 +308,7 @@
 			},
 			//初始化
 			init(){
+				this.cartTitleList=[]
 				if(this.receiveId){
 					this.getInfo(this.receiveId)
 				}
@@ -294,11 +318,21 @@
 			getInfo(id){
 				Api.outsourcingTakeDelieveryGetInfo({
 					receiveId:this.receiveId
-				}).then(res=>{
+				}).then(async res=>{
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
-					this.cartList=res.data.mesAssistOrReceiveVO.tableRow 
+					await this.getSku(res.data.mesAssistDTO.productionId)
+					this.cartList=res.data.mesAssistOrReceiveVO.tableRow
+					//汇总表标题
+					for(let key in this.cartList[0]){
+						if(key!=='total'&&key!=='color'){
+							const aFind = this.skuList.find(aItem => aItem.name === key)
+							if (!this.cartTitleList.find(bItem => bItem.name === aFind?.name)) {
+							  this.cartTitleList.push(aFind)
+							}
+						}
+					}
 					this.modelData={...res.data.mesAssistDTO}
 					this.modelData.assistId=res.data.mesAssistDTO.id //赋值外协单id
 					this.modelData.receiveId=this.receiveId //赋值收获单id
@@ -351,7 +385,7 @@
 				({
 					barCode:String(barCode),
 					assistId:this.modelData.assistId,
-				}).then(res=>{
+				}).then(async res=>{
 					if(res.code!==0){
 						return toasting(res.msg,()=>{},3000)
 					}
@@ -379,6 +413,10 @@
 							 }else{
 								 // 不同尺码赋值
 								 find[`${sizeKey}`]=res.data.mesOrderSubpackageItems.num
+								 const aFind = this.skuList.find(aItem => aItem.name === sizeKey)
+								 if (!this.cartTitleList.find(bItem => bItem.name === aFind?.name)) {
+								   this.cartTitleList.push(aFind)
+								 }
 							 }
 							 // 表格赋值0或者尺码
 							 this.cartList.forEach(k=>{
@@ -401,6 +439,10 @@
 								})
 								//复制当前属性数据
 								obj[`${sizeKey}`]=res.data.mesOrderSubpackageItems.num
+								const aFind = this.skuList.find(aItem => aItem.name === sizeKey)
+								if (!this.cartTitleList.find(bItem => bItem.name === aFind?.name)) {
+								  this.cartTitleList.push(aFind)
+								}
 								this.cartList.push(obj)
 							}
 							// 小计
@@ -415,6 +457,7 @@
 							})
 						}
 					}
+					this.cartTitleList = this.cartTitleList.sort((i, j) => i.index - j.index)
 				})
 			},
 			// 总计
@@ -563,7 +606,7 @@
 				}
 			}
 			.ul{
-				min-height: 90rpx;
+				// min-height: 90rpx;
 				max-height: 180rpx;
 				background-color: #FAFAFA;
 				border: 1px solid #EAEAEA;
