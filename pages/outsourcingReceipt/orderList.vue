@@ -150,6 +150,16 @@
 				key:"",
 			}
 		},
+		// onBackPress(options){
+		// 	if (options.from === 'navigateBack') {
+		// 			return false;
+		// 	}
+		// 	uni.redirectTo({
+		// 		url: `../cutWarehouse/mes_cutWarehouse`
+		// 	})
+		// 	return true;
+		// 	// 这里使用重定向比较好，不信可以自己多试几种，其余跳转方法在文章底部哦
+		// },
 		//设定扫码事件
 		onShow() {
 			const _this = this
@@ -440,7 +450,7 @@
 							.code {
 								width: 160rpx;
 								overflow: hidden;
-								while-space: nowrap;
+								white-space: nowrap;
 								text-overflow: ellipsis;
 							}
 						}

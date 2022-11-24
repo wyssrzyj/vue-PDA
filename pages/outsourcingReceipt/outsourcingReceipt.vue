@@ -198,7 +198,7 @@
 			if(this.receiveId){
 				const {assistId,billNo,existDetail}=this.modelData
 				uni.redirectTo({
-					url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}&receiptFlag=${true}`
+					url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}`
 				})
 				return true;
 			}
@@ -261,10 +261,17 @@
 			},
 			//跳转至收获列表页面
 			goToDelievery(){
-				const {assistId,billNo,existDetail}=this.modelData
-				uni.navigateTo({
-					url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}&receiptFlag=${true}`
-				})
+				const {assistId,billNo,existDetail,receiveId}=this.modelData
+				if(receiveId){
+					uni.redirectTo({
+						url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}&receiptFlag=${true}`
+					})
+				}else{
+					uni.navigateTo({
+						url: `./outsourcingReceiptList?productionId=${assistId}&id=${billNo}&existDetail=${existDetail}&receiptFlag=${true}`
+					})
+				}
+				
 			},
 			getDictLabel,
 			//确认选中的收货单
