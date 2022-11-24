@@ -138,7 +138,13 @@
 			//获取本地缓存
 			async getLocalStorage(){
 				let stateStorage = uni.getStorageSync('manualReporting') || {}
-				if(Object.keys(stateStorage).length === 0) return
+				if(Object.keys(stateStorage).length === 0) {
+					if(this.type == '1') {
+						this.section = '尾部'
+						this.checkedList = [{ id: '85387', productCode: 'bz', productName: '包装', section: '尾部', name: '包装', value: '包装' }]
+					}
+					return
+				}
 				//设置员工
 				this.userList.find((item)=>{
 				  if(item.id === stateStorage.userId) {
