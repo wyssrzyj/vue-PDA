@@ -26,11 +26,22 @@
 						<view :class="billStateColor(item.billState)" style="font-size: 32rpx;">
 							{{getbillState(item.billState)}}
 						</view>
+						<view v-if="item.existDetail!==0"
+							style="display: flex;margin-left: 10rpx;font-size: 12px;color: #0c99f2;margin-bottom: 3rpx;"
+							@click="downup(item.detailMap,item.id)">
+							<text style="margin-right: 8rpx;font-size: 24rpx;">明细</text>
+							<u-icon v-if="item.show1" name="arrow-up" size="24rpx" :bold="true"
+								color="#0c99f2">
+							</u-icon>
+							<u-icon v-else name="arrow-down" size="24rpx" :bold="true" color="#0c99f2">
+							</u-icon>
+						</view>
 					</view>
 					<view class="header-title">
 						<view class="title" style="display: flex;align-items: center;">
 							<view class="">
-								单号：{{item.billNo}}
+								<!-- 单号：{{item.billNo}} -->
+								{{item.productionInfo.productOrderNum}}
 							</view>
 							<view style="position: absolute;right: 40rpx;" @click.stop="handleShow(item)">
 								<u-icon name="plus-circle" color="#59b7ff" size="44"></u-icon>
@@ -61,10 +72,10 @@
 							</view>
 						</view>
 						<view class="header-grid-alllist">
-							<view class="header-grid-all-list">
+							<!-- <view class="header-grid-all-list">
 								<view class="name">款号：</view>
 								<view class="code">{{item.productionInfo.productOrderNum}}</view>
-							</view>
+							</view> -->
 							<view class="header-grid-all-list">
 								<view class="name">类型：</view>
 								<view class="code">{{getDictLabel($store.state.dicts,'outsourcing_type',item.billType)}}</view>
@@ -89,19 +100,14 @@
 									{{item.completeTime?datechange(item.completeTime):''}}</view>
 							</view>
 							<view class="header-grid-all-list">
+								<view class="name">部位：</view>
+								<view class="code">{{item.position}}</view>
+							</view>
+							<view class="header-grid-all-list">
 								<view class="name">数量：</view>
 								<view class="code" style="display: flex;align-items: center;">
 									<view>{{item.num}}</view>
-									<view v-if="item.existDetail!==0"
-										style="display: flex;margin-left: 10rpx;font-size: 12px;color: #0c99f2;margin-bottom: 3rpx;"
-										@click="downup(item.detailMap,item.id)">
-										<text style="margin-right: 8rpx;font-size: 24rpx;">明细</text>
-										<u-icon v-if="item.show1" name="arrow-up" size="24rpx" :bold="true"
-											color="#0c99f2">
-										</u-icon>
-										<u-icon v-else name="arrow-down" size="24rpx" :bold="true" color="#0c99f2">
-										</u-icon>
-									</view>
+									
 								</view>
 							</view>
 							<view class="header-grid-all-list">
@@ -109,18 +115,18 @@
 								<view class="code">{{item.receiveNum}}</view>
 							</view>
 							<view class="header-grid-all-list" style="width: 100%;">
-								<view class="name">部位：</view>
-								<view>{{item.position}}</view>
+								<view class="name">单号：</view>
+								<view>{{item.productionInfo.productOrderNum}}</view>
 							</view>
 						</view>
 					</view>
 				</view>
-				<scan-code></scan-code>
 				<view class="nav-table" v-if="item.show1">
 					<wyh-table :rightBorder="true" :items="tableData" :thList="processData"></wyh-table>
 				</view>
 			</view>
 		</view>
+		<scan-code></scan-code>
 	</view>
 </template>
 
@@ -150,16 +156,6 @@
 				key:"",
 			}
 		},
-		// onBackPress(options){
-		// 	if (options.from === 'navigateBack') {
-		// 			return false;
-		// 	}
-		// 	uni.redirectTo({
-		// 		url: `../cutWarehouse/mes_cutWarehouse`
-		// 	})
-		// 	return true;
-		// 	// 这里使用重定向比较好，不信可以自己多试几种，其余跳转方法在文章底部哦
-		// },
 		//设定扫码事件
 		onShow() {
 			const _this = this
@@ -359,9 +355,12 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	uni-view.u-input__content__subfix-icon {
 		font-size: 40rpx !important;
+	}
+	.wyh_table{
+		margin-top: 0;
 	}
 	.list {
 		height: 100%;
