@@ -85,9 +85,11 @@
 				if(res.data.tableRow){
 					this.items=res.data.tableRow.slice(1)
 					this.thList=Object.keys(res.data.tableRow[0]).filter(i=>i!=='id').map(item=>{
-						if(item==='color'||item==='size'){ //颜色和包好
+						if(item==='color'){ //颜色和尺码
 							return {fixed:true,text:res.data.tableRow[0][item],dataKey:item,width:'180rpx'}
-						}else if(item==='packNum'){ //尺码
+						}else if(item==='size'){
+							return {fixed:true,text:res.data.tableRow[0][item],dataKey:item,width:'240rpx'}
+						}else if(item==='packNum'){ //包号
 							return {fixed:true,text:res.data.tableRow[0][item],dataKey:item,width:'100rpx'}
 						}else if(item==='supportingOrNot'){ //已完成
 							return {text:res.data.tableRow[0][item],dataKey:item,isSwitch:true,width:'180rpx'}
