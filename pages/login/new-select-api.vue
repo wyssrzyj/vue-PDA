@@ -3,7 +3,7 @@
 		<view class="mask" @touchmove.stop.prevent="()=>{}" @click="maskClick"></view>
 		<view class="select">
 			<view class="uni-list">例：192.168.99.140:8081</view>
-			<input type="text" v-model="api" class="input" placeholder="请选择或输入环境地址">
+			<input type="text" v-model="api" class="input" placeholder="请选择或输入环境地址" placeholder-style="lineHeight:100rpx">
 			<button @click="query" class="btn">确定</button>
 		</view>
 	</view>
