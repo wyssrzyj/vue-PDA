@@ -112,7 +112,7 @@
 		},
 		mounted(){
 			// 获取员工列表
-			Api.getAlluser().then(res => {
+			Api.getAlluser('/mes/mesemployee/list').then(res => {
 				if(res.code=="0"){
 					this.userList = res.data.map(item => {
 						return {id: item.id,showKey:`${item.realName}-${item.staffId}`}
