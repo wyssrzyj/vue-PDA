@@ -471,12 +471,13 @@
 			getAllTotal(key){
 				let Num=0
 				this.cartList.slice(1).forEach(item=>{
-					Num+=Number(item[key])
+					Num+=Number(item[key]||0)
 				})
-				if(Num===0){
+				if(Num==0){
 					this.cartList.forEach(item=>{
 						this.$delete(item,key)
 					})
+					this.cartTitleList=this.cartTitleList.filter(item=>item.name!==key)
 				}
 				return key==='color'?'总计':Num
 			},

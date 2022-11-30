@@ -88,7 +88,7 @@
 				<button @click="handleOutSourcing" class="btn" type="primary">提交保存</button>
 			</view>
 		</view>
-		<SimpleDateTimePicker ref="myPicker" @submit="handleSubmit" :start-year="2000" :end-year="2030"/>
+		<SimpleDateTimePicker ref="myPicker" @submit="handleSubmit" :start-year="2000" :end-year="2100"/>
 		<popup type="3" v-if="popValue" @close="popValue=false" @closePort="closePort">
 			<template #content>
 				<view class="popup">
@@ -398,12 +398,13 @@
 			getAllTotal(key){
 				let Num=0
 				this.cartList.slice(1).forEach(item=>{
-					Num+=Number(item[key])
+					Num+=Number(item[key]||0)
 				})
-				if(Num===0){
+				if(Num==0){
 					this.cartList.forEach(item=>{
 						this.$delete(item,key)
 					})
+					this.cartTitleList=this.cartTitleList.filter(item=>item.name!==key)
 				}
 				return key==='color'?'总计':Num
 			},
