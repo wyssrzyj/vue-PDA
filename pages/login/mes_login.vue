@@ -123,6 +123,10 @@ export default {
 						// })
 					}else if(res.code === 10004){
 						toasting('用户名或密码错误！')
+					}else if(res.code!==1005){
+						toasting('账号已被停用！')
+					}else{
+						toasting(res.msg)
 					}
 				}).catch(res=>{
 					console.log(res)
