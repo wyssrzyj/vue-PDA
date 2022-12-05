@@ -178,7 +178,8 @@
 					  // 判断工序是否删除,只把没被删除的工序缓存取出来
 					  let coutryList = this.coutryList.map(item => item.value)
 					  stateStorage.checkedList.forEach(item => {
-						if (coutryList.includes(item.value)) this.checkedList.push(item)
+						const find=coutryList.find(i=>i.indexOf(item.value)>-1)
+						if (find) this.checkedList.push(item)
 					  })
 					}
 				}
@@ -260,7 +261,8 @@
 						// 判断工序是否删除,只把没被删除的工序缓存取出来
 						let coutryList = this.coutryList.map(item => item.value)
 						checkedList.forEach(item => {
-							if (coutryList.includes(item.value)) this.checkedList.push(item)
+							const find=coutryList.find(i=>i.indexOf(item.value)>-1)
+							if (find) this.checkedList.push(item)
 						})
 					} else {
 						this.section = ''
@@ -288,7 +290,7 @@
 				this.checkedList = []
 				this.coutryList = []
 				this.sectionAndCoutry[e.name].forEach(item => {
-					this.coutryList.push({name: item.productName, value: item.productName,...item,valid:1})
+					this.coutryList.push({name: `${item.idx} - ${item.productName}`, value: item.productName,...item,valid:1})
 				})
 			},
 			
@@ -304,7 +306,7 @@
 			getCodeMu(event) {
 				this.checkedList=[]
 				event.forEach(item=>{
-					this.checkedList.push({name:item.value,value:item.value,...item})
+					this.checkedList.push({name:`${item.idx} - ${item.value}`,value:item.value,...item})
 				})
 				this.showM = false
 			},

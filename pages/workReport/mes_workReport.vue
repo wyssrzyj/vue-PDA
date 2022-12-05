@@ -112,11 +112,22 @@
 		},
 		mounted(){
 			// 获取员工列表
-			Api.getAlluser('/mes/mesemployee/list').then(res => {
+			Api.getAlluser('/mes/mesemployee/user').then(res => {
 				if(res.code=="0"){
-					this.userList = res.data.map(item => {
-						return {id: item.id,showKey:`${item.realName}-${item.staffId}`}
-					})
+					// this.userList = res.data.map(item => {
+					// 	return {id: item.id,showKey:`${item.realName}-${item.staffId}`}
+					// })
+					this.workType = res.data
+				}
+			})
+			Api.getAlluser('/mes/mesemployee/packagingListByWorkType', { workType: -1 }).then(ret1 => {
+				if(ret1.code=="0"){
+					this.dataList.allEmployeeList = ret1.data.map(item => ({id: item.id,showKey:`${item.realName}-${item.staffId}`}))
+				}
+			})
+			Api.getAlluser('/mes/mesemployee/packagingListByWorkType', { workType: 4 }).then(ret4 => {
+				if(ret4.code=="0"){
+					this.dataList.THEmployeeList = ret4.data.map(item => ({id: item.id,showKey:`${item.realName}-${item.staffId}`}))
 				}
 			})
 			// Api.productionGetAdmin().then(res=>{
@@ -156,6 +167,11 @@
 				showMore:false,
 				list:[{name:'清空',color:'#FC361D'}],
 				tag: "1", //不必理会，固定 1 就好,
+				workType:"", //工序类型
+				dataList:{
+					allEmployeeList:[], //所有员工列表
+					THEmployeeList:[] //包装员工列表
+				}
 			}
 		},
 		methods:{
@@ -252,7 +268,7 @@
 				this.checkedList = []
 				this.coutryList = []
 				this.sectionAndCoutry[e.name].forEach(item => {
-					this.coutryList.push({name: item.productName, value: item.productName, valid: 1, ...item})
+					this.coutryList.push({name: `${item.idx} - ${item.productName}`, value: item.productName, valid: 1, ...item})
 				})
 			},
 			// 选择用户弹窗
@@ -314,12 +330,18 @@
 					this.sectionList = Object.keys(res.data.sectionsAndProcess).map(item => {
 						return {name: item}
 					})
+					if (this.workType == 4) {
+					  this.userList = this.dataList.THEmployeeList
+				    } else {
+					 this.userList = this.dataList.allEmployeeList
+				    }
 				// 组码报工工序
 				} else {
 					this.section = '尾部'
 					this.coutryList=res.data.processName.map(i=>{
 						return {...i,value:i.productName,name:i.productName}
 					})
+					this.userList = this.dataList.allEmployeeList
 				}
 				//报工工序
 				// let process=res.data.sectionsAndProductNames[0]
