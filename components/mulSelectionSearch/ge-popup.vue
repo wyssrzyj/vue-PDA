@@ -126,7 +126,7 @@
 		text-align:center;
 		background:#4884FF;
 		border-radius: 34px;
-		font-size: 30rpx;
+		font-size: 36rpx;
 		color:#fff;
 	}
 	//微信弹窗

@@ -106,6 +106,7 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		text-align: center;
 	}
 	.tagItemActive{
 		padding: 4rpx 8rpx;
@@ -122,6 +123,7 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space:nowrap;
+		text-align: center;
 	}
 	.tagBgDefault{
 		background-color: #cfcfcf;
