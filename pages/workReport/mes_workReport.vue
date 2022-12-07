@@ -20,7 +20,7 @@
 					</view>
 				</view>
 				<ul>
-					<li v-for="item in checkedList" :key="item.name" style="font-size: 30rpx;">{{item.value}}</li>
+					<li v-for="item in checkedList" :key="item.name" style="font-size: 30rpx;">{{`${item.idx} - ${item.value}`}}</li>
 				</ul>
 				<view class="storage-item">
 					<text class="storage-item-left"><text class="requier">*</text>当前员工</text>
