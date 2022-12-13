@@ -108,7 +108,7 @@ export const houseList = [
 			{
 				title: '产量查询',
 				permissions: 'mes:mesengineeringmanagement:outputQuery',
-				src: '../../static/menuIcon/ManualReportingType2.svg',
+				src: '../../static/menuIcon/ManualReportingType3.svg',
 				link: '/pages/ManualReporting/outQuery'
 			}
 		]
