@@ -403,6 +403,7 @@
 				Api.productionReportingPCS({
 					pcs:pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
+					console.log(res.data)
 					if (res.code === 0) {
 						if(this.outStorageArr.length===0){
 							if(checkFunc('codeToWork') && !checkFunc('packBarCodeReportWork')) { // 只有组码报工

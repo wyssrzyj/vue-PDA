@@ -104,6 +104,12 @@ export const houseList = [
 				permissions: 'mes:mesengineeringmanagement:saveMaterialsReportingPda',
 				src: '../../static/menuIcon/ManualReportingType2.svg',
 				link: '/pages/ManualReporting/ManualReporting?type=0'
+			},
+			{
+				title: '产量查询',
+				permissions: 'mes:mesengineeringmanagement:outputQuery',
+				src: '../../static/menuIcon/ManualReportingType2.svg',
+				link: '/pages/ManualReporting/outQuery'
 			}
 		]
 	}

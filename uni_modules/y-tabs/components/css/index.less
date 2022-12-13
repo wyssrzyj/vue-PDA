@@ -1,0 +1,317 @@
+.yui-tabs {
+	position: relative;
+}
+
+// 依赖元素
+.yui-tabs__depend {
+	position: absolute;
+	top: 0;
+}
+
+// 文字省略
+.yui-tabs__ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+// 导航区域包裹层
+.yui-tabs__wrap {
+	position: relative;
+	display: flex;
+	align-items: center;
+	overflow: hidden;
+	visibility: visible;
+	background: #fff;
+	touch-action: none;
+}
+
+.yui-tabs__placeholder{
+	position: relative;
+}
+
+// 不显示滚动条
+.yui-tabs__scroll ::-webkit-scrollbar {
+	display: none;
+	width: 0;
+	height: 0;
+	-webkit-appearance: none;
+	background: transparent;
+	color: transparent;
+}
+
+// 粘性定位布局下的导航区域包裹层
+.yui-tabs__wrap--fixed {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	z-index: 99;
+}
+
+// 透明的导航区域包裹层
+.yui-tabs__wrap--transparent {
+	background: rgba(255, 255, 255, 0);
+}
+
+// 导航区域包裹层--卡片风格
+.yui-tabs__wrap--card {
+	margin: 0 16px;
+	border-radius: 4px;
+	box-sizing: border-box;
+	border: 1px solid #0022ab;
+}
+// 导航区域包裹层--按钮风格
+.yui-tabs__wrap--button,
+.yui-tabs__wrap--line-button {
+	padding: 0 8px;
+}
+
+// scroll-view组件样式
+.yui-tabs__scroll {
+	position: relative;
+	width: 100%;
+}
+
+// 允许滚动
+.yui-tabs__scroll--enable {
+	white-space: nowrap; // 使用横向滚动时，需要给<scroll-view>添加white-space: nowrap;样式
+}
+
+// 导航区域
+.yui-tabs__nav {
+	position: relative;
+	box-sizing: border-box;
+	user-select: none;
+	flex: 1;
+	display: flex;
+}
+
+// 导航标签
+.yui-tab {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	height: 40px;
+	font-size: 28rpx;
+	color: #646566;
+	text-align: center;
+	padding: 0 4px;
+	flex: 1;
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	transition-duration: .2s;
+	transition-property: background;
+	flex-shrink: 0;
+}
+
+//卡片风格
+.yui-tab--card{
+	height: 28px;
+	line-height: 28px;
+}
+// 按钮风格
+.yui-tab--button,
+.yui-tab--line-button {
+	height: 25px;
+	line-height: 25px;
+	margin: 7.5px 0;
+	flex: auto;
+	border-radius: 25px;
+	padding: 0 10px;
+}
+
+// 线性按钮风格
+.yui-tab--line-button {
+	border: 1px solid transparent;
+}
+
+// 选中状态
+.yui-tab--active {
+	color: #323233;
+	font-weight: 500;
+}
+
+// 禁用状态
+.yui-tab--disabled {
+	color: #c8c9cc !important;
+	cursor: not-allowed;
+}
+
+.yui-tab--animated {
+	transition: all 0.2s;
+}
+
+// 标题区域
+.yui-tab__title {
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	height: inherit;
+}
+
+.yui-tab__title--top,
+.yui-tab__title--bottom {
+	flex-direction: column;
+}
+
+// 标题文字
+.yui-tab__text {
+	position: relative;
+	display: block;
+	line-height: 1;
+	order: 2;
+}
+
+// 使用order排序
+.yui-tab__text--left,
+.yui-tab__text--top {
+	order: 0;
+}
+
+// 标题图标/图片包裹层
+.yui-tab__icons {
+	display: flex;
+	align-items: center;
+	order: 1;
+}
+
+//标题图片
+.yui-tab__image {
+	width: 20px;
+	height: 20px;
+}
+
+// 右上角信息区域
+.yui-tab__info {
+	display: inline-flex;
+	position: relative;
+}
+
+.yui-tab__info--dot,
+.yui-tab__info--badge {
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	box-sizing: border-box;
+	background-color: #e53935;
+	transform-origin: 100%;
+}
+
+// 小红点
+.yui-tab__info--dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 100%;
+	transform: translate(0%, -180%);
+}
+
+// 徽标
+.yui-tab__info--badge {
+	line-height: 13px;
+	min-width: 18px;
+	border-radius: 18px;
+	padding: 0 2px;
+	transform: translate(0%, -120%);
+	font-size: 18rpx;
+	font-weight: 500;
+	text-align: center;
+	color: #fff;
+}
+
+// 标签左侧、右侧的补充区域
+.yui-tabs__nav-left,
+.yui-tabs__nav-right {
+	position: relative;
+	display: inline-flex;
+	white-space: nowrap;
+}
+
+// 底部线条
+.yui-tabs__line {
+	position: absolute;
+	bottom: 3px;
+	left: 0;
+	width: 20px;
+	height: 3px;
+	background-color: #0022ab;
+	border-radius: 3px;
+	transform: translateX(-100%) translateX(0%);
+}
+
+// 垂直方位下的底部线条
+.yui-tabs__line--vertical {
+	position: absolute;
+	bottom: 0;
+	left: 4px;
+	transform: translateY(-100%) translateY(-50%);
+	width: 3px;
+	height: 20px;
+}
+
+// 标签内容的滑动轨道容器
+.yui-tabs__track {
+	position: relative;
+	display: flex;
+	width: 100%;
+	will-change: left;
+}
+
+// 标签内容
+.yui-tabs__content {
+	position: relative;
+	overflow: hidden;
+}
+
+// 标签内容卡片
+.yui-tab__pane {
+	flex-shrink: 0;
+	box-sizing: border-box;
+	width: 100%;
+	height: 0;
+}
+
+.yui-tab__pane--active {
+	height: auto;
+}
+
+// 标签内容卡片转场动画样式
+.yui-tab__pane--animated {
+	overflow: hidden;
+}
+
+// 滚动导航模式下内容卡片垂直排列
+.yui-tabs__track--scrollspy {
+	flex-direction: column;
+}
+.yui-tabs__pane--scrollspy {
+	height: auto !important;
+}
+
+// 垂直方位下的样式
+.yui-tabs--vertical {
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	justify-content: flex-end;
+	flex: 1;
+}
+
+.yui-tabs__wrap--vertical {
+	width: 100px;
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+}
+
+.yui-tabs__nav--vertical {
+	flex-direction: column;
+	height: auto;
+}
+.yui-tabs__content--vertical {
+	width: calc(100% - 100px);
+	flex-shrink: 0;
+}

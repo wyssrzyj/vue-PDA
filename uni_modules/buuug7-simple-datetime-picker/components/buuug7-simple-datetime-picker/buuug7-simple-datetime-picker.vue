@@ -23,7 +23,7 @@
               {{ formatNum(item) + "月" }}
             </view>
           </picker-view-column>
-          <picker-view-column>
+          <picker-view-column v-if="!$props.isYear">
             <view class="column-item" v-for="item in days" :key="item">
               {{ formatNum(item) + "日" }}
             </view>
@@ -56,6 +56,10 @@ export default {
       type: Number,
       default: 2030,
     },
+	isYear:{
+	  type: Boolean,
+	  default: false,
+	}
   },
 
   data() {

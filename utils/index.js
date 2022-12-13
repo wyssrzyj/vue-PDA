@@ -84,7 +84,7 @@ export const toasting = (message, func = () => {}, time = 1000) => {
 }
 
 //将当前时间戳转换成时间格式
-export const formateDate = ()=> {
+export const formateDate = (type)=> {
       let date = new Date();
       let y = date.getFullYear();
       let m = (date.getMonth() + 1);
@@ -96,7 +96,22 @@ export const formateDate = ()=> {
       h = h > 9 ? h : "0" + h;
       mi = mi > 9 ? mi : "0" + mi;
       s = s > 9 ? s : "0" + s;
-      return y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + s;
+	  if(type==='month'){
+		  return y + "-" + m + "-" + d;
+	  }else if(type==='year'){
+		  return y + "-" + m;
+	  }else{
+		  return y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + s;
+	  }
+}
+//获取当前月份最后一天
+export const getLastDay=(y,m)=>{
+    var y = y; //获取年份
+    var m = m; //获取月份
+    var d = new Date(y, m, 0).getDate(); //获取当月最后一日
+    m = m < 10 ? '0' + m : m; //月份补 0
+    d = d < 10 ? '0' + d : d; //日数补 0
+    return [y,m,d].join("-")
 }
 
 //通过value寻找key

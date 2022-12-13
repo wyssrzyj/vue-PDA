@@ -155,6 +155,13 @@
 				"navigationBarTitleText": "手动报工",
 				"backgroundColor": "#FFFFFF"
 			}
+		},
+		{
+		    "path" : "pages/ManualReporting/outQuery",
+			"style": {
+				"navigationBarTitleText": "产量查询",
+				"backgroundColor": "#FFFFFF"
+			}
 		}
 	],
 	"globalStyle": {

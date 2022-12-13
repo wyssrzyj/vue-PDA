@@ -9,24 +9,50 @@ export default new Vuex.Store({
 	is_b_link:"",
 	permissions: [],
 	func:[],
-	dicts:[]
+	dicts:[],
+	user: {
+	  createDate: '',
+	  deptId: '',
+	  deptName: '',
+	  email: '',
+	  gender: 0,
+	  headUrl: '',
+	  id: '',
+	  mobile: '',
+	  postIdList: '',
+	  realName: '',
+	  roleIdList: '',
+	  status: 0,
+	  superAdmin: 0,
+	  username: '',
+	  staffId:"",
+	  staffName:""
+	} //用户信息
 	},
   mutations: {
-	set_is_b_link(state,val){
-		state.is_b_link=val
+		set_is_b_link(state,val){
+			state.is_b_link=val
 		},
-	setPermissions (state,val) {
-		state.permissions = val
+		setPermissions (state,val) {
+			state.permissions = val
 		},
-	updateState(state, payload) {
-	  Object.keys(payload).forEach((x) => {
-		state[x] = payload[x]
-		})
-	  }
+		updateState(state, payload) {
+		Object.keys(payload).forEach((x) => {
+			state[x] = payload[x]
+			})
+		},
+		setStaff(state,val) {
+			state.user.staffId = val.staffId
+			state.user.staffName = val.realName
+		},
 	},
 	actions: {
 		updateState(ctx, { payload }) {
 		  ctx.commit('updateState', payload)
+		},
+		async updateStaff(ctx){
+			const res=await Api.getUserInfo()
+			ctx.commit('setStaff',res.data)
 		},
 		initApp(ctx) {
 		  return Promise.all([
@@ -38,7 +64,7 @@ export default new Vuex.Store({
 			})
 			ctx.commit('updateState', {
 			  func: func || [],
-			  dicts: dicts.data || [],
+			  dicts: dicts.data || []
 			})
 		  })
 		}

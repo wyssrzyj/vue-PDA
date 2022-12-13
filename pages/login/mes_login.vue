@@ -118,6 +118,7 @@ export default {
 							this.$store.commit('setPermissions', res.data)
 						})
 						this.$store.dispatch('initApp')
+						this.$store.dispatch('updateStaff')
 						// uni.switchTab({
 						// 	url:'/pages/cutWarehouse/cutWarehouse'
 						// })

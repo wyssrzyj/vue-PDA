@@ -22,6 +22,9 @@ const Api = {
 	login(reqData) {
 	  return requestApi(`${API_ADDRESS}/mes/pdalogin/login`, 'POST', reqData)
 	},
+	getUserInfo(reqData) {
+	  return requestApi(`${API_ADDRESS}/mes/mesengineeringmanagement/user`, 'GET', reqData)
+	},
 	// 导航窗格接口
 	pdaNav(reqData) {
 	  return requestApi(`${API_ADDRESS}/mes/pdalogin/nav`, 'GET', reqData)
@@ -294,6 +297,10 @@ const Api = {
 	//外协手动齐货
 	outsourcingManualComplete(reqData){
 		return requestApi(`${API_ADDRESS}/mes/assist/updateSupportingOrNot`, 'GET', reqData)
+	},
+	//产量查询
+	outputQuery(reqData){
+		return requestApi(`${API_ADDRESS}/mes/mesengineeringmanagement/outputQuery`, 'GET', reqData)
 	},
 }
 
