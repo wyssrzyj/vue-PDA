@@ -18,8 +18,8 @@
 							<image :src="item.img||'../../static/qualityTesting/default.png'" class="out-recoed-info-left"></image>
 							<view class="out-record-info-right">
 								<view><text class="out-recoed-info-desicribe">生产单：</text>{{item.produceNum}}</view>
-								<view><text class="out-recoed-info-desicribe">款号：</text>{{item.proNum}}</view>
-								<view><text class="out-recoed-info-desicribe">款名：</text>{{item.productName}} </view>
+								<view><text class="out-recoed-info-desicribe">款&emsp;号：</text>{{item.proNum}}</view>
+								<view><text class="out-recoed-info-desicribe">款&emsp;名：</text>{{item.productName}} </view>
 							</view>
 						</view>
 						<view class="ul">
@@ -49,8 +49,8 @@
 			    			<image :src="item.img||'../../static/qualityTesting/default.png'" class="out-recoed-info-left"></image>
 			    			<view class="out-record-info-right">
 			    				<view><text class="out-recoed-info-desicribe">生产单：</text>{{item.produceNum}}</view>
-			    				<view><text class="out-recoed-info-desicribe">款号：</text>{{item.proNum}}</view>
-			    				<view><text class="out-recoed-info-desicribe">款名：</text>{{item.productName}} </view>
+			    				<view><text class="out-recoed-info-desicribe">款&emsp;号：</text>{{item.proNum}}</view>
+			    				<view><text class="out-recoed-info-desicribe">款&emsp;名：</text>{{item.productName}} </view>
 			    			</view>
 			    		</view>
 			    		<view class="ul">

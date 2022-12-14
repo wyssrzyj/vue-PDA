@@ -20,7 +20,7 @@
 					</view>
 				</view>
 				<ul>
-					<li v-for="item in checkedList" :key="item.name" style="font-size: 30rpx;">{{`${item.idx} - ${item.value}`}}</li>
+					<li v-for="item in checkedList" :key="item.name" style="font-size: 30rpx;">{{`${item.idx?item.index+' - ':''}${item.value}`}}</li>
 				</ul>
 				<view class="storage-item">
 					<text class="storage-item-left"><text class="requier">*</text>当前员工</text>
@@ -87,7 +87,6 @@
 	import selectCodeMultiple from '@/components/mulSelection/mulSelection.vue'
 	import {KEY_MAP} from "../../constant/index.js"
 	import searchSelect from "@/components/J-Picker/jPicker.vue"
-	// const longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen')
 	var timer;
 	var preKeyCode = '';
 	var allKeyCodeTemp = '';
@@ -97,12 +96,6 @@
 			scanCode,
 			searchSelect
 		},
-		// onLoad() {
-		// 	this.setOnKeyEventListener();
-		// },
-		// onUnload(){
-		// 	this.disableAllOnKeyEventListener(); //取消所有监听
-		// },
 		onShow() {
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
 			uni.$on('scancodedate', (data) => {
@@ -114,9 +107,6 @@
 			// 获取员工列表
 			Api.getAlluser('/mes/mesemployee/user').then(res => {
 				if(res.code=="0"){
-					// this.userList = res.data.map(item => {
-					// 	return {id: item.id,showKey:`${item.realName}-${item.staffId}`}
-					// })
 					this.workType = res.data
 				}
 			})
@@ -130,12 +120,6 @@
 					this.dataList.THEmployeeList = ret4.data.map(item => ({id: item.id,showKey:`${item.realName}-${item.staffId}`}))
 				}
 			})
-			// Api.productionGetAdmin().then(res=>{
-				// if(res.code=="0"){
-					// console.log(res)
-					// this.employeeName=res.data.realName
-				// }
-			// })
 		},
 		data(){
 			return{
@@ -175,28 +159,6 @@
 			}
 		},
 		methods:{
-			// setOnKeyEventListener() {
-			// 	let that = this;
-			// 	// longyoungKeyEventListen = uni.requireNativePlugin('longyoung-KeyEventListen');//引用插件
-			// 	//设置监听，可设置多个，回调按 tag 区分哪个监听返回。
-			// 	longyoungKeyEventListen.setOnKeyEventListenerLy({
-			// 		tag: that.tag //不必理会，固定 1 就好
-			// 	}, result => {
-			// 		if (!result.keyCode) {
-			// 			that.resultStr += '\n' + JSON.stringify(result) + '\n';
-			// 		}
-			// 		if (result && result.return_code == 'SUCCESS') {
-			// 			if (result.return_type == 'dataBack') { //return_type=dataBack是返回数据标识，返回的数据在此获取
-			
-			// 				//页面只显示1和a，供查看数据结构
-			// 				if (result.keyCode == 'KEYCODE_1' || result.keyCode == 'KEYCODE_A') {
-			// 					that.resultStr += '\n' + JSON.stringify(result) + '\n';
-			// 				}
-			// 				that.handleData(result);
-			// 			}
-			// 		}
-			// 	});
-			// },
 			handleData(result) {
 				let that = this;
 				if (result.return_type == 'dataBack') {
@@ -225,16 +187,6 @@
 					}
 				}
 			},
-			// disableAllOnKeyEventListener() {
-			// 	let that = this;
-			// 	//取消所有监听
-			// 	longyoungKeyEventListen.disableAllOnKeyEventListenerLy({}, result => {
-			// 		that.resultStr += '\n' + JSON.stringify(result) + '\n';
-			// 		if (result && result.return_code == 'SUCCESS') {
-			// 			console.log("取消所有监听成功")
-			// 		}
-			// 	});
-			// },
 			//打开多选
 			showMultiple() {
 				this.showM = true
@@ -403,7 +355,6 @@
 				Api.productionReportingPCS({
 					pcs:pcs, // 'PD20211118073139826-0-00153638'
 				}).then(res => {
-					console.log(res.data)
 					if (res.code === 0) {
 						if(this.outStorageArr.length===0){
 							if(checkFunc('codeToWork') && !checkFunc('packBarCodeReportWork')) { // 只有组码报工
@@ -583,7 +534,6 @@
 						// 			this.showErrorPop = false
 						// 		}, 2000)
 						// 	}
-							
 						// }
 					}else{
 						this.showErrorMessage = res.msg
