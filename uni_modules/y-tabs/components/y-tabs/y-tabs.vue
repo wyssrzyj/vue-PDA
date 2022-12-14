@@ -641,10 +641,12 @@
 						const { diffWidth, diffHeight } = this.tabs[index];
 						let translateX
 						if(index%2===0){
-							translateX = diffWidth + (rect?.width || 0) / 2 - this.lineWidthValue / 2 + 54;
+							translateX = diffWidth + (rect?.width || 0) / 2 - this.lineWidthValue / 2 + 57;
 						}else{
-							translateX = diffWidth + (rect?.width || 0) / 2 - this.lineWidthValue / 2 - 54;
+							translateX = diffWidth + (rect?.width || 0) / 2 - this.lineWidthValue / 2 - 57;
 						}
+						//为了缩小中间距离
+						// const translateX = diffWidth + (rect?.width || 0) / 2 - this.lineWidthValue / 2;
 						const translateY = diffHeight + (rect?.height || 0) / 2 - this.lineHeightValue / 2;
 						const scrollLeft = translateX - this.halfWrapWidth;
 						resolve({ translateX, scrollLeft, translateY });
@@ -663,7 +665,6 @@
 							transform = `translateY(${isDef(translateY) ? `-${translateY}px` : '-100%'})`;
 						} else {
 							transform = `translateX(${isDef(translateX) ? `${translateX}px` : '-100%'})`;
-							console.log(transform)
 						}
 						this.$set(this.lineAnimatedStyle, 'transform', transform);
 						this.$set(this.lineAnimatedStyle, 'transition', this.lineAnimated ? `transform ${this.duration}s linear` : 'none');
