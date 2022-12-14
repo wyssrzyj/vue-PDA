@@ -2,7 +2,7 @@
 	<div class="out-qeurty">
 		<view class="line"></view>
 		<y-tabs v-model="activeIndex" background="#0c99f2" color="#fff" title-inactive-color="#D0D0D0" title-active-color="#fff" @change="tabChange">
-		    <y-tab title="日产量">
+		    <y-tab title="日产量" :line-style="{left:'54px'}">
 				<view class="out-select">
 					<view class="out-time">
 						<text>{{currentTime}}</text><text class="iconfont icon-youjiantou" @click="openDatetimePicker"></text>
