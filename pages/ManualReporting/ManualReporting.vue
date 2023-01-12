@@ -253,7 +253,6 @@
 					this.sectionList = Object.keys(this.sectionAndCoutry).map(item => {
 						return {name: item}
 					})
-					
 					//判断工段是否删除
 					let sectionList = this.sectionList.map(item => item.name)
 					if (sectionList.includes(this.section)) {
@@ -276,7 +275,6 @@
 				}
 
 			},
-			
 			// 弹出工段选择----------------------------------------------------------
 			clickSection(){
 				if(Object.keys(this.sectionAndCoutry).length === 0) {
@@ -291,7 +289,7 @@
 				this.checkedList = []
 				this.coutryList = []
 				this.sectionAndCoutry[e.name].forEach(item => {
-					this.coutryList.push({name: `${item.idx} - ${item.productName}`, value: item.productName,...item,valid:1})
+					this.coutryList.push({name: `${item.productName}`, value: item.productName,...item,valid:1})
 				})
 			},
 			
