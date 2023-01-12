@@ -97,7 +97,8 @@
 		border-radius: 4rpx;
 		margin: 10upx;
 		min-height: 52rpx;
-		line-height: 52rpx;
+		display: inline-flex;
+		align-items: center;
 		border: 1px solid rgba(0, 0, 0, 0.5);
 		background-color:  white !important;
 		color: rgba(0, 0, 0, 0.5) !important;
@@ -113,7 +114,8 @@
 		border-radius: 8rpx;
 		margin: 10upx;
 		min-height: 52rpx;
-		line-height: 52rpx;
+		display: inline-flex;
+		align-items: center;
 		justify-content: center;
 		border: 1px solid #1794D1;
 		background-color: #E3F5FE !important;

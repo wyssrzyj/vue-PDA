@@ -20,7 +20,7 @@
 					</view>
 				</view>
 				<ul>
-					<li v-for="item in checkedList" :key="item.name" style="font-size: 30rpx;">{{`${item.idx?item.index+' - ':''}${item.value}`}}</li>
+					<li v-for="item in checkedList" :key="item.name" style="font-size: 30rpx;">{{`${item.idx?item.idx+' - ':''}${item.value}`}}</li>
 				</ul>
 				<view class="storage-item">
 					<text class="storage-item-left"><text class="requier">*</text>当前员工</text>
@@ -105,17 +105,17 @@
 		},
 		mounted(){
 			// 获取员工列表
-			Api.getAlluser('/mes/mesemployee/user').then(res => {
+			Api.getAlluser('/njp-plus-mes-api/mes/mesemployee/user').then(res => {
 				if(res.code=="0"){
 					this.workType = res.data
 				}
 			})
-			Api.getAlluser('/mes/mesemployee/packagingListByWorkType', { workType: -1 }).then(ret1 => {
+			Api.getAlluser('/njp-plus-mes-api/mes/mesemployee/packagingListByWorkType', { workType: -1 }).then(ret1 => {
 				if(ret1.code=="0"){
 					this.dataList.allEmployeeList = ret1.data.map(item => ({id: item.id,showKey:`${item.realName}-${item.staffId}`}))
 				}
 			})
-			Api.getAlluser('/mes/mesemployee/packagingListByWorkType', { workType: 4 }).then(ret4 => {
+			Api.getAlluser('/njp-plus-mes-api/mes/mesemployee/packagingListByWorkType', { workType: 4 }).then(ret4 => {
 				if(ret4.code=="0"){
 					this.dataList.THEmployeeList = ret4.data.map(item => ({id: item.id,showKey:`${item.realName}-${item.staffId}`}))
 				}

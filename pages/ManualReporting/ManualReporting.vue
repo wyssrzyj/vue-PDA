@@ -197,8 +197,9 @@
 				}
 				
 				// 人员
-				let url = this.type == '1' ? '/mes/mesemployee/packagingList' : '/mes/mesemployee/list'
-				let userRes = await Api.getAlluser(url)
+				let url = this.type == '1' ? '/njp-plus-mes-api/mes/mesemployee/packagingList' : '/njp-plus-mes-api/mes/mesemployee/list'
+				const {systemId,tenantCode}=this.$store.state.user
+				let userRes = await Api.getAlluser(url,{systemId,tenantCode})
 				if(userRes.code === 0){
 					this.userList = userRes.data.map(item => {
 						return {id: item.id,showKey:`${item.realName}-${item.staffId}`}
@@ -420,7 +421,7 @@
 						unit: this.type == '0' ? this.unit : undefined,
 						skuList: this.type == '1' ? skuList : undefined
 					}
-				let url = this.type == '0' ? '/mes/mesengineeringmanagement/saveMaterialsReporting' : '/mes/mesengineeringmanagement/saveEngineeringManual'
+				let url = this.type == '0' ? '/njp-plus-mes-api/mes/mesengineeringmanagement/saveMaterialsReporting' : '/njp-plus-mes-api/mes/mesengineeringmanagement/saveEngineeringManual'
 				Api.submitManualReporting(url, dataForm).then(async res => {
 					if (res.code === 0) {
 						// 删除缓存

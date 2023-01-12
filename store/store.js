@@ -26,7 +26,9 @@ export default new Vuex.Store({
 	  superAdmin: 0,
 	  username: '',
 	  staffId:"",
-	  staffName:""
+	  staffName:"",
+	  systemId:"",
+	  tenantCode:""
 	} //用户信息
 	},
   mutations: {
@@ -44,6 +46,8 @@ export default new Vuex.Store({
 		setStaff(state,val) {
 			state.user.staffId = val.staffId
 			state.user.staffName = val.realName
+			state.user.systemId=val.systemId
+			state.user.tenantCode=val.tenantCode
 		},
 	},
 	actions: {

@@ -129,7 +129,7 @@
 				this.dataForm.startDate = `${this.currentTime} 00:00:00`;
 				this.dataForm.endDate = `${this.currentTime} 23:59:59`;
 				// 人员
-				let url = '/mes/mesemployee/list'
+				let url = '/njp-plus-mes-api/mes/mesemployee/list'
 				let userRes = await Api.getAlluser(url)
 				if(userRes.code === 0){
 					this.userList = userRes.data.map(item => {

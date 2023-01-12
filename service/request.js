@@ -5,16 +5,19 @@ export const requestApi = async (url, method, options = {}) => {
     uni.showLoading({
       title: '加载中...'
     })
+	let header = {
+		// 'content-type':'application/x-www-form-urlencoded',
+		'Content-Type': 'application/json;charset=UTF-8',
+		"X-AjaxPro-Method": "ShowList",
+		'Access-Control-Allow-Origin': '*',
+		'Origin-Terminal': 'PDA',
+	  }
+	if (uni.getStorageSync('token')) header['token']= uni.getStorageSync('token')
+	if (!header['systemId']&&options['systemId']) header['systemId']=options.systemId
+	if (!header['tenantCode']&&options['tenantCode']) header['tenantCode']=options.tenantCode
     uni.request({
       method: method ? method : "GET",
-      header: {
-        // 'content-type':'application/x-www-form-urlencoded',
-        'Content-Type': 'application/json;charset=UTF-8',
-        "X-AjaxPro-Method": "ShowList",
-        'Access-Control-Allow-Origin': '*',
-        'Origin-Terminal': 'PDA',
-        token: uni.getStorageSync('token')
-      },
+      header:header,
       url: url,
       data: options,
 	  // #ifdef APP
