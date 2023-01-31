@@ -13,7 +13,9 @@ export const requestApi = async (url, method, options = {}) => {
 		'Origin-Terminal': 'PDA',
 	  }
 	if (uni.getStorageSync('token')) header['token']= uni.getStorageSync('token')
+	//系统id判断新恒还是可祺员工
 	if (!header['systemId']&&options['systemId']) header['systemId']=options.systemId
+	//租户的编码
 	if (!header['tenantCode']&&options['tenantCode']) header['tenantCode']=options.tenantCode
     uni.request({
       method: method ? method : "GET",
