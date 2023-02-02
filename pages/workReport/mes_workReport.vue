@@ -105,17 +105,15 @@
 		},
 		mounted(){
 			// 获取员工列表
-			Api.getAlluser('/njp-plus-mes-api/mes/mesemployee/user').then(res => {
-				if(res.code=="0"){
-					this.workType = res.data
-				}
-			})
-			Api.getAlluser('/njp-plus-mes-api/mes/mesemployee/packagingListByWorkType', { workType: -1 }).then(ret1 => {
+			const {systemId,tenantCode,workType}=this.$store.state.user
+			this.workType=workType
+			//按包报工关联工种
+			Api.getAlluser('/njp-plus-mes-api/mes/mesemployee/packagingList',{systemId,tenantCode}).then(ret1 => {
 				if(ret1.code=="0"){
 					this.dataList.allEmployeeList = ret1.data.map(item => ({id: item.id,showKey:`${item.realName}-${item.staffId}`}))
 				}
 			})
-			Api.getAlluser('/njp-plus-mes-api/mes/mesemployee/packagingListByWorkType', { workType: 4 }).then(ret4 => {
+			Api.getAlluser('/njp-plus-mes-api/mes/mesemployee/list', {systemId,tenantCode}).then(ret4 => {
 				if(ret4.code=="0"){
 					this.dataList.THEmployeeList = ret4.data.map(item => ({id: item.id,showKey:`${item.realName}-${item.staffId}`}))
 				}
@@ -128,6 +126,7 @@
 				showErrorPop: false,
 				showSuccessMessage: '',
 				showErrorMessage: '',
+				workType:"",
 				productNum: '',
 				supplierId:'',
 				outStorageArr: [],
@@ -279,10 +278,10 @@
 				// 扎包报工工序
 				if (res.data.pcsType==0) {
 					this.sectionAndCoutry = res.data.sectionsAndProcess || {}
-					this.sectionList = Object.keys(res.data.sectionsAndProcess).map(item => {
+					this.sectionList = res.data.sectionsAndProcess&&Object.keys(res.data.sectionsAndProcess).map(item => {
 						return {name: item}
 					})
-					if (this.workType == 4) {
+					if (this.workType == 3) {
 					  this.userList = this.dataList.THEmployeeList
 				    } else {
 					 this.userList = this.dataList.allEmployeeList

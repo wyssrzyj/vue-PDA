@@ -79,7 +79,7 @@ export default {
 		changeRemember(e){
 			e.detail.value.length === 0 ? this.remember = false : this.remember = true
 		},
-		formSubmit(e){
+		async formSubmit(e){
 			if(!this.$refs.select.api) {
 				toasting('请先点击右上角并输入环境地址！', ()=>{}, 3000)
 				return
@@ -93,46 +93,44 @@ export default {
 					toasting('请输入密码')
 					return
 				}
-				Api.login({  
+				const res=await Api.login({  
 					username: username,
 					password: password,
-				}).then(res => {
-					if (res.code === 0) {
-						toasting('登录成功')
-						uni.removeStorageSync('token')
-						uni.setStorageSync('token', res.data.token)
-						if (this.remember) {
-							uni.setStorageSync('username', this.username)
-							uni.setStorageSync('password', this.password)
-						} else {
-							uni.removeStorageSync('username')
-							uni.removeStorageSync('password')
-						}
-						uni.navigateTo({
-							url: '/pages/cutWarehouse/mes_cutWarehouse'
-						})
-						Api.pdaNav({}).then(res => {
-						})
-						Api.getPermissions().then(res => {
-							// $store.commit('set_is_b_link', true)
-							this.$store.commit('setPermissions', res.data)
-						})
-						this.$store.dispatch('initApp')
-						this.$store.dispatch('updateStaff')
-						// uni.switchTab({
-						// 	url:'/pages/cutWarehouse/cutWarehouse'
-						// })
-					}else if(res.code === 10004){
-						toasting('用户名或密码错误！')
-					}else if(res.code!==1005){
-						toasting('账号已被停用！')
-					}else{
-						toasting(res.msg)
-					}
-				}).catch(res=>{
-					console.log(res)
 				})
+				if (res.code === 0) {
+					toasting('登录成功')
+					uni.removeStorageSync('token')
+					uni.setStorageSync('token', res.data.token)
+					if (this.remember) {
+						uni.setStorageSync('username', this.username)
+						uni.setStorageSync('password', this.password)
+					} else {
+						uni.removeStorageSync('username')
+						uni.removeStorageSync('password')
+					}
+					uni.navigateTo({
+						url: '/pages/cutWarehouse/mes_cutWarehouse'
+					})
+					Api.pdaNav({}).then(res => {
+					})
+					Api.getPermissions().then(res => {
+						// $store.commit('set_is_b_link', true)
+						this.$store.commit('setPermissions', res.data)
+					})
+					this.$store.dispatch('initApp')
+					this.$store.dispatch('updateStaff')
+					// uni.switchTab({
+					// 	url:'/pages/cutWarehouse/cutWarehouse'
+					// })
+				}else if(res.code === 10004){
+					toasting('用户名或密码错误！')
+				}else if(res.code!==1005){
+					toasting('账号已被停用！')
+				}else{
+					toasting(res.msg)
+				}
 			} catch (error) {
+				toasting('请输入正确的地址！')
 				console.log(error)
 			}
 		}

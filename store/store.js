@@ -28,7 +28,8 @@ export default new Vuex.Store({
 	  staffId:"",
 	  staffName:"",
 	  systemId:"", //系统id
-	  tenantCode:"" //租户编号
+	  tenantCode:"", //租户编号
+	  workType:""
 	} //用户信息
 	},
   mutations: {
@@ -49,6 +50,7 @@ export default new Vuex.Store({
 			// 系统id
 			state.user.systemId=val.systemId
 			state.user.tenantCode=val.tenantCode
+			state.user.workType=val.workType
 		},
 	},
 	actions: {
