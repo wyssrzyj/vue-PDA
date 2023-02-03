@@ -118,6 +118,7 @@
 					this.dataList.THEmployeeList = ret4.data.map(item => ({id: item.id,showKey:`${item.realName}-${item.staffId}`}))
 				}
 			})
+			this.handleScanPCS('1619967867542663170')
 		},
 		data(){
 			return{
@@ -230,7 +231,8 @@
 			// 选择了某个用户
 			userSelectSure(val){
 				this.userId = val.id
-				this.realName = val.showKey
+				this.realName = val.showKey.split('-')[0]
+				this.staffId = val.showKey.split('-')[1]
 			},
 			handleInput(e,item){
 				if(Number(e.target.value)<=Number(item.limitCount)&&e.target.value){
