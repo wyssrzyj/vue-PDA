@@ -118,7 +118,6 @@
 					this.dataList.THEmployeeList = ret4.data.map(item => ({id: item.id,showKey:`${item.realName}-${item.staffId}`}))
 				}
 			})
-			this.handleScanPCS('1619967867542663170')
 		},
 		data(){
 			return{
