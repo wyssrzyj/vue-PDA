@@ -596,7 +596,7 @@
 		height: 100%;
 		margin: 30rpx 0;
 		width: 100%;
-		padding: 20rpx;
+		padding: 20rpx 20rpx 20rpx 40rpx;
 		background-color: white;
 		
 	}
