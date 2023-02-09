@@ -39,6 +39,8 @@ export default{
 
 <style lang="scss" scoped>
 .tabBox {
+	box-sizing: border-box;
+	height: calc(100vh - 88rpx);
 	padding: 36rpx 30rpx 0 30rpx;
 	background-color: #FFFFFF;
 	.tabBoxItem{

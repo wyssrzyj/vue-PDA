@@ -15,7 +15,7 @@
 				<text>收货</text>
 			</view>
 		</view>
-		<view class="list-list" @click="handleClick">
+		<view class="list-list" @click="handleClick" v-if="allList.length>0">
 			<view style="margin-bottom: 16rpx;height: 100%;" v-for="item in allList" :key="item.billNo">
 				<view class="header">
 					<view class="header-image">
@@ -126,6 +126,9 @@
 				</view>
 			</view>
 		</view>
+		<view class="" v-else style="height: calc(100vh - 88rpx);display: flex;align-items: center;justify-content: center;">
+			<u-empty mode="data" iconSize="150" :textSize="18"></u-empty>
+		</view>
 		<scan-code></scan-code>
 	</view>
 </template>
@@ -222,9 +225,9 @@
 							list
 						} = res.data
 						if (list.length == 0) {
-							// if (num == 1) {
-							// 	this.allList = []
-							// }
+							if (num == 1) {
+								this.allList = []
+							}
 							toasting('暂无更多数据',()=>{},3000)
 						} else {
 							this.a++

@@ -26,7 +26,7 @@
 				</view>
 			</view>
 			<view class="storage-item">
-				<text class="storage-item-left">部位</text>
+				<text class="storage-item-left"><span style="color: red;">*</span>部位</text>
 				<view class="storage-item-right" @tap="selectUser">
 					<view class="info-active" v-if="modelData.position">
 						<robby-tags :value="checkTagsList" :enable-del="true" @delete="handleDelete"></robby-tags>
@@ -577,8 +577,9 @@
 				height: 100%;
 			}
 			.storage-item-left{
-				width: 70rpx;
+				width: 90rpx;
 				display: flex;
+				justify-content: flex-end;
 				align-items: center;
 			}
 			.storage-item-right{

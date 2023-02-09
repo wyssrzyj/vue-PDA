@@ -120,7 +120,7 @@
 			getLastDay, //获取当前月份最后一天
 			// 获取所有生产单列表和人员列表
 			async getUserList(){
-				const {staffId,staffName}=this.$store.state.user
+				const {staffId,staffName,systemId,tenantCode}=this.$store.state.user
 				//默认显示员工
 				this.dataForm.staffId=staffId
 				this.dataForm.staffName=staffName
@@ -130,7 +130,7 @@
 				this.dataForm.endDate = `${this.currentTime} 23:59:59`;
 				// 人员
 				let url = '/njp-plus-mes-api/mes/mesemployee/list'
-				let userRes = await Api.getAlluser(url)
+				let userRes = await Api.getAlluser(url,{systemId,tenantCode})
 				if(userRes.code === 0){
 					this.userList = userRes.data.map(item => {
 						return {id: item.id,showKey:`${item.realName}-${item.staffId}`,staffName:item.realName,staffId:item.staffId}

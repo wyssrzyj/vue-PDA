@@ -80,17 +80,17 @@
 			</view>
 		</view>
 		<view class="footer">
-			<u--form ref="form" :labelStyle="{'font-size':'30rpx','font-weight': 600}" labelAlign="right">
-				<u-form-item label="全部完成" borderBottom labelWidth="150">
+			<u--form ref="form" :labelStyle="{'font-size':'30rpx','font-weight': 600}" labelAlign="right" labelWidth="130">
+				<u-form-item label="全部完成" borderBottom >
 					<!-- <switch :checked="switch_value" class="switch" @change="change()" color="#2979ff !important" style="transform:scale(0.7)" /> -->
 					<evan-switch v-model="switch_value" :active-value="1" :inactive-value="0" inactive-color="#C5C5C5" :size="20"></evan-switch>
 				</u-form-item>
-				<u-form-item label="收货数量" :required="true" borderBottom labelWidth="150" v-if="list.existDetail === 0">
+				<u-form-item label="收货数量" :required="true" borderBottom  v-if="list.existDetail === 0">
 					<u--input v-model="receiveNum" :clearable="true" border="none" placeholder="请输入数量" type="number">
 					</u--input>
 					<view class="">{{list.unit}}</view>
 				</u-form-item>
-				<u-form-item borderBottom labelWidth="150"  @tap="selectUser" v-if="list.existDetail !== 0" :required="true">
+				<u-form-item borderBottom  @tap="selectUser" v-if="list.existDetail !== 0" :required="true">
 					<template #label>
 						<div style="display: flex;align-items: center;width: 130rpx;font-size: 30rpx;font-weight: 600;justify-content: flex-end;padding: 10rpx;">
 							<span style="color: red;">*</span>部位
