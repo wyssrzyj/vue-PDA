@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view class="container" :style="bodyStyle">
 		<view class="logoBox">
 			<image src="../../static/login/logo.png" mode="widthFix" class="logo"/>
 		</view>
@@ -73,6 +73,11 @@ export default {
 			this.$refs.select1.showSelect = !this.$refs.select1.showSelect
 			this.$refs.select1.getInfo()
 		}
+	},
+	computed:{
+			bodyStyle(){
+				return {'min-height':`calc(100vh - ${uni.getSystemInfoSync().windowTop * 2}rpx)`}
+			}
 	},
 	methods:{
 		// 是否记住密码
@@ -150,7 +155,6 @@ export default {
 }
 .container {
 	width: 100%;
-	height: calc(100vh - 88rpx);
 	display: flex;
 	flex-direction: column;
 	justify-content: center;

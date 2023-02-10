@@ -105,21 +105,6 @@
 				</u-form-item>
 			</u--form>
 			<view class="footer-table">
-				<!-- <uni-table border emptyText="暂无更多数据" v-if="list.existDetail!==0">
-					<uni-tr>
-						<uni-th align="center" width="100px">颜色\尺码</uni-th>
-						<uni-th align="center" v-for="(item, index) in change_num==1?change_list.processData:processData1" :key="index">{{item.size}}
-						</uni-th>
-					</uni-tr>
-					<uni-tr v-for="(item, index) in change_num==1?change_list.tableData:tableData1" :key="index">
-						<uni-td align="center">{{item.name}}</uni-td>
-						<uni-td align="center" v-for="(i, index) in change_num==1?change_list.processData:processData1" :key="index">
-							<view class="uni-group">
-								<u--input v-model="item[i.size]" type="number" inputAlign="center" />
-							</view>
-						</uni-td>
-					</uni-tr>
-				</uni-table> -->
 				<wyh-table :rightBorder="true" :items="change_num==1?change_list.tableData:tableData1" :thList="change_num==1?change_list.processData:processData1"></wyh-table>
 			</view>
 		</view>
@@ -380,7 +365,7 @@
 					return toasting('请选择部位',()=>{},3000)
 				}
 				this.list.receiveNum = this.receiveNum
-				if (this.list.existDetail === 0) {
+				if (this.list.existDetail === 0||this.list.existDetail===2) {
 					if (!this.list.receiveNum) {
 						uni.$u.toast('请输入收货数量')
 						return

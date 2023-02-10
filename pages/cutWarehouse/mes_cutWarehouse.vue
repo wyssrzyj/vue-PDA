@@ -1,5 +1,5 @@
 <template>
-	<view class="tabBox">
+	<view class="tabBox" :style="bodyStyle">
 		<view v-for="item in houseList" :key="item.title">
 			<view class="tabBoxItem" v-if="checkPermission($store.state.permissions, item.permissions)">
 				<view class="text">{{item.name}}</view>
@@ -27,6 +27,11 @@ export default{
 			checkPermission
 		}
 	},
+	computed:{
+		bodyStyle(){
+			return {'min-height':`calc(100vh - ${uni.getSystemInfoSync().windowTop * 2}rpx)`}
+		}
+	},
 	methods:{
 		toList(item){
 			uni.navigateTo({
@@ -40,7 +45,7 @@ export default{
 <style lang="scss" scoped>
 .tabBox {
 	box-sizing: border-box;
-	height: calc(100vh - 88rpx);
+	// min-height: calc(100vh - 88rpx);
 	padding: 36rpx 30rpx 0 30rpx;
 	background-color: #FFFFFF;
 	.tabBoxItem{

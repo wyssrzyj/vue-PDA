@@ -2,9 +2,10 @@
 	<view class="list">
 		<view class="list-header">
 			<view class="list-header-input">
-				<u--input placeholder="输入搜索" prefixIcon="search" prefixIconStyle="font-size: 44rpx;color: #909399"
-					suffixIcon="scan" suffixIconStyle="font-size: 44rpx;color: #909399" v-model="key" fontSize="28rpx" :clearable="true">
-				</u--input>
+				<!-- <u--input placeholder="输入搜索" prefixIcon="search" prefixIconStyle="font-size: 44rpx;color: #909399"
+					suffixIcon="scan" suffixIconStyle="font-size: 44rpx;color: #909399" v-model="key" fontSize="28rpx" :clearabled="true">
+				</u--input> -->
+				<u-search shape="square" clearabled placeholder="输入搜索" v-model="key" bgColor="#fff" :height="64" :showAction="false" :searchIconSize="44" actionIcon="scan" actionIconSize="44"></u-search>
 			</view>
 			<view class="list-header-text" @click="query()">
 				搜索
@@ -126,7 +127,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="" v-else style="height: calc(100vh - 88rpx);display: flex;align-items: center;justify-content: center;">
+		<view class="" v-else style="min-height: calc(100vh - 88rpx);display: flex;align-items: center;justify-content: center;" :style="bodyStyle">
 			<u-empty mode="data" iconSize="150" :textSize="18"></u-empty>
 		</view>
 		<scan-code></scan-code>
@@ -178,6 +179,11 @@
 			uni.showNavigationBarLoading()
 			this.getData(this.key);
 			uni.hideNavigationBarLoading()
+		},
+		computed:{
+			bodyStyle(){
+				return {'min-height':`calc(100vh - ${uni.getSystemInfoSync().windowTop * 2}rpx - 116rpx)`}
+			}
 		},
 		methods: {
 			//事件委托
