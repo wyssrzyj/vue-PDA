@@ -200,7 +200,7 @@
 				let url = this.type == '1' ? '/njp-plus-mes-api/mes/mesemployee/packagingList' : '/njp-plus-mes-api/mes/mesemployee/list'
 				const {systemId,tenantCode}=this.$store.state.user
 				//租户编码和系统id
-				let userRes = await Api.getAlluser(url,{systemId,tenantCode})
+				let userRes = await Api.getAlluser(url,{systemId,tenantCode,orgType:'shop'})
 				if(userRes.code === 0){
 					this.userList = userRes.data.map(item => {
 						return {id: item.id,showKey:`${item.realName}-${item.staffId}`}

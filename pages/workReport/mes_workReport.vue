@@ -108,12 +108,12 @@
 			const {systemId,tenantCode,workType}=this.$store.state.user
 			this.workType=workType
 			//按包报工关联工种
-			Api.getAlluser('/njp-plus-mes-api/mes/mesemployee/packagingList',{systemId,tenantCode}).then(ret1 => {
+			Api.getAlluser('/njp-plus-mes-api/mes/mesemployee/packagingList',{systemId,tenantCode,orgType:'shop'}).then(ret1 => {
 				if(ret1.code=="0"){
 					this.dataList.allEmployeeList = ret1.data.map(item => ({id: item.id,showKey:`${item.realName}-${item.staffId}`}))
 				}
 			})
-			Api.getAlluser('/njp-plus-mes-api/mes/mesemployee/list', {systemId,tenantCode}).then(ret4 => {
+			Api.getAlluser('/njp-plus-mes-api/mes/mesemployee/list', {systemId,tenantCode,orgType:'shop'}).then(ret4 => {
 				if(ret4.code=="0"){
 					this.dataList.THEmployeeList = ret4.data.map(item => ({id: item.id,showKey:`${item.realName}-${item.staffId}`}))
 				}
