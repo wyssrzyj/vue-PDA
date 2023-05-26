@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"uview-ui@^2.0.29":
-  "integrity" "sha512-d5SttbPcowomrgpL7A1LMKRbemXtyyzpPCy98/+VQR3jfSyyHC9tfj/ZeAOKpqTn1rf9gOj2wc5tda/kVmYX2Q=="
-  "resolved" "https://registry.npmjs.org/uview-ui/-/uview-ui-2.0.29.tgz"
-  "version" "2.0.29"
+"uview-ui@^2.0.35":
+  "integrity" "sha512-ASSZT6M8w3GTO1eFPbsgEFV0U5UujK+8pTNr+MSUbRNcRMC1u63DDTLJVeArV91kWM0bfAexK3SK9pnTqF9TtA=="
+  "resolved" "https://registry.npmjs.org/uview-ui/-/uview-ui-2.0.36.tgz"
+  "version" "2.0.36"

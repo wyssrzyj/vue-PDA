@@ -125,6 +125,7 @@
 			JPicker
 		},
 		onShow() {
+			// this.handleScanPCS('1650794241510608897')
 			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器
 			uni.$on('scancodedate', (data) => {
 				try{

@@ -1,18 +1,18 @@
 {
-    "id": "lzc-picker",
-    "displayName": "picker选择框带有搜索功能",
-    "version": "1.0.2",
-    "description": "一个支持搜索功能的picker选择框，解决数据过多时需要滑动很长时间的问题",
-    "keywords": [
-        "picker",
-        "select",
-        "搜索",
-        "选择"
-    ],
-    "dcloudext": {
-        "category": [
-            "前端组件",
-            "通用组件"
-        ]
-    }
+  "name": "jack-mes-pda",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">     <img alt=\"logo\" src=\"https://uviewui.com/common/logo.png\" width=\"120\" height=\"120\" style=\"margin-bottom: 10px;\"> </p> <h3 align=\"center\" style=\"margin: 30px 0 30px;font-weight: bold;font-size:40px;\">uView</h3> <h3 align=\"center\">多平台快速开发的UI框架</h3>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@192.168.99.141:jack-mes/mes-mobile-pda.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "uview-ui": "^2.0.35"
+  }
 }
