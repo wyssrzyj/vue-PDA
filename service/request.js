@@ -46,7 +46,7 @@ export const requestApi = async (url, method, options = {}) => {
 			// 504: "网关超时",
 			// 505: "HTTP版本不受支持"
 			uni.hideLoading()
-			uni.navigateTo({
+			uni.reLaunch({
 				url: '/pages/login/mes_login',
 			})
 			setTimeout(()=>{
