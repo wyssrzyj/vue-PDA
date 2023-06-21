@@ -43,7 +43,7 @@ export const houseList = [
 	// 		}
 	// 	]
 	// },
-	//旧 
+	//旧  查看 common-2.js
 	// {
 	// 	name: '按包报工',
 	// 	backgroundColor: '#ecf8f3',
