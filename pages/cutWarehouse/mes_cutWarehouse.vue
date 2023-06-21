@@ -34,6 +34,7 @@ export default{
 	},
 	methods:{
 		toList(item){
+			// console.log( item.link);
 			uni.navigateTo({
 				url: item.link
 			});

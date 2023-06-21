@@ -1,27 +1,27 @@
 {
 	"easycom": {
-			"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
 			"path": "pages/login/mes_login",
 			"style": {
 				"navigationBarTitleText": "登录",
-				"backgroundColor": "#FFFFFF", 
-				"app-plus":{
-					"titleNView":{
-						"buttons":[//按钮
+				"backgroundColor": "#FFFFFF",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [ //按钮
 							{
-								"type":"favorite",
-								"fontSize":"30",
+								"type": "favorite",
+								"fontSize": "30",
 								"float": "right",
-								"background":"rgba(0,0,0,0)"
+								"background": "rgba(0,0,0,0)"
 							},
 							{
-								"type":"menu",
-								"fontSize":"30",
+								"type": "menu",
+								"fontSize": "30",
 								"float": "right",
-								"background":"rgba(0,0,0,0)"
+								"background": "rgba(0,0,0,0)"
 							}
 						]
 					}
@@ -35,6 +35,8 @@
 				"backgroundColor": "#FFFFFF"
 			}
 		},
+
+
 		{
 			"path": "pages/blanket/blanketDataCollect",
 			"style": {
@@ -134,34 +136,44 @@
 			}
 		},
 		{
-		    "path" : "pages/qualityTesting/mes-qualityTesting",
+			"path": "pages/qualityTesting/mes-qualityTesting",
 			"style": {
-				"app-plus":{
-					"titleNView":false
+				"app-plus": {
+					"titleNView": false
 				}
-			} 
+			}
 		},
 		{
-		    "path" : "pages/qualityTesting/mes-repairList",
+			"path": "pages/qualityTesting/mes-repairList",
 			"style": {
-				"app-plus":{
-					"titleNView":false
+				"app-plus": {
+					"titleNView": false
 				}
-			} 
+			}
 		},
 		{
-		    "path" : "pages/ManualReporting/ManualReporting",
+			"path": "pages/ManualReporting/ManualReporting",
 			"style": {
 				"navigationBarTitleText": "手动报工",
 				"backgroundColor": "#FFFFFF"
 			}
 		},
 		{
-		    "path" : "pages/ManualReporting/outQuery",
+			"path": "pages/ManualReporting/outQuery",
 			"style": {
 				"navigationBarTitleText": "产量查询",
 				"backgroundColor": "#FFFFFF"
 			}
+		},
+		
+		{
+			"path": "pages/workReport/workReportRecordQuery",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+
 		}
 	],
 	"globalStyle": {
