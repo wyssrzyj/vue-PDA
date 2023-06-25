@@ -14,10 +14,11 @@
 						<view>颜色：{{item.colorName}}</view>
 						<view>尺码：{{item.sizeCode}}</view>
 					</view>
-					<view class="other-info" v-for="i in item.processStr" :key="`${i.productName}-${i.employeeStr}`">
-						<view>工序：{{i.productName}}</view>
-						<view>人员：{{i.employeeStr}}</view>
+					<view v-for="i in item.processStr" :key="`${i.productName}-${i.employeeStr}`">
+						<view  class="other-info">工序：{{i.productName}}</view>
+						<view  class="other-info">人员：{{i.employeeStr}}</view>
 					</view>
+					
 				</view>
 			</view>
 			<view class="dialog-bottom">
@@ -71,7 +72,7 @@
 	overflow: hidden!important;
 }
 .dialog-popup{
-	width: 55vw;
+	width: 85vw;
 	height: 70vh;
 	border-radius: 8rpx;
 	display: flex;
@@ -118,9 +119,9 @@
 				display: flex;
 				padding: 0 30rpx;
 				line-height: 60rpx;
-				view{
-					margin-right: 80rpx;
-				}
+				// view{
+				// 	margin-right: 80rpx;
+				// }
 			}
 		}
 	}	
