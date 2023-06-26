@@ -14,13 +14,17 @@ let API_ADDRESS = ''
 
 export const changeApi=(api)=>{
 	API_ADDRESS = `http://${api}`
-	// console.log("当前环境:"+API_ADDRESS)
+	console.log("当前环境:"+API_ADDRESS)
 }
 
 const Api = {
 	// 登录
 	login(reqData) {
 	  return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/pdalogin/login`, 'POST', reqData)
+	},
+	//扫码登录
+	scanLogin(reqData) {
+	  return requestApi(`${API_ADDRESS}/njp-plus-admin-api/loginForQRCode`, 'POST', reqData)
 	},
 	getUserInfo(reqData) {
 	  return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesengineeringmanagement/user`, 'GET', reqData)
@@ -29,7 +33,6 @@ const Api = {
 	pdaNav(reqData) {
 	  return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/pdalogin/nav`, 'GET', reqData)
 	},
-	
 	// 权限标识
 	getPermissions(reqData) {
 	  return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/pdalogin/permissions`, 'GET', reqData)
@@ -37,9 +40,6 @@ const Api = {
 	// 功能标识
 	getFunc() {
 	  return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/sysconfigpage/selectAllAuthorization`, 'GET')
-	},
-	getDicts(){
-		return requestApi(`${API_ADDRESS}/njp-plus-admin-api/sys/dict/type/all`, 'GET')
 	},
 	// 扫描库位
 	getLocation(reqData) {
@@ -122,6 +122,18 @@ const Api = {
 	productionGetAdmin(reqData){
 		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesengineeringmanagement/user`, 'GET', reqData)
 	},
+	//根据id获取员工信息
+	getStaffInfo(reqData){
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesemployee/${reqData}`, 'GET')
+	},
+	// 根据包条码和员工ID获取员工信息和工段工序缓存
+	getStaffInfoCache(reqData){
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesengineeringmanagement/getEmployeeLastReport`, 'GET',reqData)
+	},
+	// 获取组码报工今日报工数量
+	getReportNum(reqData){
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesengineeringmanagement/getEmployeeTodayReport`, 'GET', reqData)
+	},
 	//获取所有员工列表
 	getAlluser(url,reqData){
 		return requestApi(`${API_ADDRESS}${url}`, 'GET', reqData)
@@ -142,7 +154,7 @@ const Api = {
 	// 裁片出库
 	//查询生产单号
 	// queryProductionNum(reqData){
-	//   return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mespiecesmarket/outWarehouseProduce`, 'GET', reqData)
+	//   return requestApi(`${API_ADDRESS}/mes/mespiecesmarket/outWarehouseProduce`, 'GET', reqData)
 	// },
 	queryProductionNum(reqData){
 	  return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mespiecesmarket/outWarehouseProduce`, 'GET', reqData)
@@ -180,16 +192,44 @@ const Api = {
 		return upload(`${API_ADDRESS}/njp-plus-mes-api/mes/oss/upload`, reqData)
 	},
 	//质检提交
+	// submitMesqualit(reqData){
+	// 	return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesqualityinspection/submitPad`, 'POST', reqData)
+	// },
+	//质检提交，只有数量和质检原因
 	submitMesqualit(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesqualityinspection/submitPad`, 'POST', reqData)
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesqualityinspection/savaOrderSubpackageCodeInfo`, 'POST', reqData)
 	},
-	//返工获取数据
+	//返修获取数据
 	mesRepairInfo(reqData){
 		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesqualityinspection/scanningReworkCode`, 'GET', reqData)
 	},
-	// 修改返工状态
-	updateRepairStatus(url,reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/${url}`, 'GET', reqData)
+	// 修改返修状态
+	// updateRepairStatus(url,reqData){
+	// 	return requestApi(`${API_ADDRESS}/${url}`, 'GET', reqData)
+	// },
+	// 获取瑕疵点
+	getDefects(){
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesdefectsgruop/selectDefectsToPda`, 'GET')
+	},
+	// 修改返修
+	updateRepairStatus(reqData){
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesreworkscrapinfo/reworkSubmit`, 'POST', reqData)
+	},
+	// 获取单个生产单购物车信息
+	getCartList(reqData){
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesreworkscrapcart/selectReworkCart`, 'GET', reqData)
+	},
+	// 获取全部返修车信息
+	getAllCartList(reqData){
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesqualityinspection/hengReworkPage`, 'GET', reqData)
+	},
+	// 获取质检记录
+	getDefectsRecordList(reqData){
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesqualityinspection/qualityRecordPage`, 'GET', reqData)
+	},
+	// 提交某个生产单的购物车
+	submitCart(reqData){
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesqualityinspection/reworkCartSubmit`, 'POST', reqData)
 	},
 	// 外协列表
 	outsourcingReceipt(reqData){
@@ -215,64 +255,11 @@ const Api = {
 	outsourcingReceiptheadinfo(reqData){
 		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/assist/headinfo`, 'GET', reqData)
 	},
-	//获取版本
 	changeVersoin(reqData){
 		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/softwareversion/getnewver`, 'GET', reqData)
 	},
-	//添加外协外协工厂
-	outsourcingFactory(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesfactorymanager/list`, 'GET', reqData)
-	},
-	//外协单扫码添加外协记录
-	outsourcingAddGet(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/assist/getdetailbysn`, 'GET', reqData)
-	},
-	//修改外协单
-	outsourcingAddUpdate(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api//mes/assist/pdaupdate`, 'POST', reqData)
-	},
-	//新增外协单
-	outsourcingAddSave(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/assist/pdasave`, 'POST', reqData)
-	},
-	outsourcingGetSku(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesordersubpackage/getSku`, 'GET', reqData)
-	},
-	//获取外协单信息
-	outsourcingAddGetInfo(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/assist/assistinfo`, 'GET', reqData)
-	},
-	//外协保存部位
-	outsourcingAddSavePort(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mespartsinfo/save`, 'POST', reqData)
-	},
-	//外协获取部位
-	outsourcingAddGetPort(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mespartsinfo/getAllPartsInfo`, 'GET', reqData)
-	},
-	//外协收货保存(扫码收货)
-	outsourcingTakeDelieverySave(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/assist/scanCodeReceiveSave`, 'POST', reqData)
-	},
-	//外协收货修改(扫码收货)
-	outsourcingTakeDelieveryUpdate(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/assist/scanCodeReceiveUpdate`, 'POST', reqData)
-	},
-	//外协收货扫码(扫码收货)
-	outsourcingTakeDelieveryPCS(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/assist/scanCodeGoods`, 'GET', reqData)
-	},
-	//外协收货获取数据
-	outsourcingTakeDelieveryGetInfo(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/assist/getScanCodeGoods`, 'GET', reqData)
-	},
-	// 通过条形码获取外协信息列表
-	getScanCodeGoodsList(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/assist/getScanCodeGoodsList`, 'GET', reqData)
-	},
-	// 通过条形码获取外协多条信息
-	scanCodeGoodsAllDetail(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/assist/scanCodeGoodsAllDetail`, 'GET', reqData)
+	getDicts(){
+		return requestApi(`${API_ADDRESS}/njp-plus-admin-api/sys/dict/type/all`, 'GET')
 	},
 	// 获取所有生产单
 	allProduce(reqData){
@@ -290,18 +277,22 @@ const Api = {
 	submitManualReporting(url,reqData){
 		return requestApi(`${API_ADDRESS}${url}`, 'POST', reqData)
 	},
-	//外协齐货
-	outsourcingComplete(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/assist/getOutsourcingDetails`, 'POST', reqData)
+	// 获取个人报工记录
+	getIndividualWorkReportRecordList(reqData){
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesengineeringmanagement/page`, 'get', reqData)
 	},
-	//外协手动齐货
-	outsourcingManualComplete(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/assist/updateSupportingOrNot`, 'GET', reqData)
+	// 删除个人报工记录,组长报工记录
+	deleteIndividualWorkReportRecordList(reqData){
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesengineeringmanagement`, 'delete', reqData)
 	},
-	//产量查询
-	outputQuery(reqData){
-		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesengineeringmanagement/outputQuery`, 'GET', reqData)
+	// 查询组长报工记录
+	getWorkReportRecordQueryList(reqData){
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mesengineeringmanagement/selectReportRecord`, 'get', reqData)
 	},
+	// 根据员工id查询对应工段信息
+	getProcessByUser(reqData){
+		return requestApi(`${API_ADDRESS}/njp-plus-mes-api/mes/mespdproductprocess/getProcessByProduce`, 'get', reqData)
+	}
 }
 
 export default Api
