@@ -246,9 +246,7 @@
 
 			uni.$on("scancodedate", (data) => {
 				// 扫描PCS码
-				message(decodeURI(data.code));
-				console.log(decodeURI(data.code));
-				// this.handleScanPCS(decodeURI(data.code));
+				this.handleScanPCS(decodeURI(data.code));
 			
 			});
 
